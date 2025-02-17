@@ -1,6 +1,4 @@
 from app.routes import router
-from app.router.member import member_router
-from app.router.favorites import favorites_router
 
 from fastapi import FastAPI, Depends, HTTPException, status
 # from jose import JWTError, jwt
