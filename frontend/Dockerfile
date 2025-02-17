@@ -2,7 +2,8 @@
 FROM node:18
 
 # 작업 디렉토리 설정
-WORKDIR /home/node/app
+WORKDIR /app
+
 
 # pnpm 설치
 RUN corepack enable && corepack prepare pnpm@latest --activate
