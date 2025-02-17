@@ -1,3 +1,3 @@
 <template>
-  <div>CICD테스트</div>
+  <div>CICD테스트!!</div>
 </template>
