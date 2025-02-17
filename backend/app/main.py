@@ -1,5 +1,3 @@
-from app.routes import router
-
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 
