@@ -1,9 +1,20 @@
-from fastapi import FastAPI
+from app.routes import router
+
+from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI()
 
-# 라우터 정의
-@app.get("/api")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+        
+@app.get("/api/hi")
 def read_root():
-    return {"message": "Hello, World!"}
-
+    return {"message": "Hello, FastAPI!"}
