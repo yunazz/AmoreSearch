@@ -1,14 +1,9 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-# from jose import JWTError, jwt
-# from passlib.context import CryptContext
-# from datetime import datetime,  timedelta, timezone
-# from typing import Optional, List
-# from typing import Annotated
-
-
+from fastapi import FastAPI
 
 app = FastAPI()
 
+# 라우터 정의
 @app.get("/")
 def read_root():
-    return {"message": "Hello, FastAPI!"}
+    return {"message": "Hello, World!"}
+
