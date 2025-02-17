@@ -169,3 +169,37 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Nuxt build outputs
+.nuxt/
+dist/
+output/
+
+# Static & cache
+static/
+*.log
+*.lock
+.cache/
+
+# Environment variables
+.env
+.env.*
+
+# Editor & OS specific files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Optional: If using Docker
+docker-compose.override.yml
+.dockerignore
+
+# Optional: If using VSCode Extensions
+.vscode/extensions.json
