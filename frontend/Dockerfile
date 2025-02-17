@@ -2,7 +2,8 @@
 FROM node:18
 
 # 작업 디렉토리 설정
-WORKDIR /app
+WORKDIR /frontend
+
 
 # pnpm 설치
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -14,7 +15,7 @@ COPY frontend/package.json frontend/pnpm-lock.yaml ./
 RUN pnpm install
 
 # 모든 파일 복사
-COPY frontend .
+COPY . /frontend
 
 # Nuxt 빌드
 RUN pnpm run build
