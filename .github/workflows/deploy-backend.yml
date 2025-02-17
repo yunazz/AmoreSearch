@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "backend/**"
+      - "backend/**"  # 백엔드 디렉토리 변경시 실행
 
 jobs:
   deploy:
@@ -21,9 +21,14 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu || mkdir -p /home/ubuntu/projects/amore_search_backend && cd /home/ubuntu/projects/amore_search_backend
+            cd /home/ubuntu/projects/amore_search  # 프로젝트 루트로 이동
             git pull origin main
+
+            cd backend
+            # 기존 컨테이너 중지 및 삭제
             sudo docker stop amoresearch-backend || true
             sudo docker rm amoresearch-backend || true
-            sudo docker build -t amoresearch-backend ./backend
-            sudo docker run -d --name amoresearch-backend -p 8000:8000 amoresearch-backend
+
+            # 새 컨테이너 빌드 및 실행
+            sudo docker build -t amoresearch-backend -f Dockerfile .
+            sudo docker run -d --name amoresearch-backend -p 8000:8000 --restart=always amoresearch-backend
