@@ -4,14 +4,15 @@ FROM python:3.9-slim
 # 2. 작업 디렉토리 설정
 WORKDIR /app
 
-# 3. 의존성 파일을 컨테이너에 복사
+# 3. 의존성 파일을 컨테이너에 복사 (requirements.txt)
 COPY requirements.txt ./
 
 # 4. 의존성 설치 (캐시를 사용하지 않도록 설정)
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 5. 애플리케이션 파일을 컨테이너에 복사
-COPY . . 
+# backend/app 내의 모든 파일을 /app으로 복사
+COPY backend/app /app/
 
 # 6. FastAPI 서버 실행
 CMD ["uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]
