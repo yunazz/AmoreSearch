@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - "/**"
+      - "backend/**"
 
 jobs:
   deploy:
@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu || mkdir -p /home/ubuntu/amoresearch/backend && cd /home/ubuntu/amoresearch/backend
+            cd /home/ubuntu || mkdir -p /home/ubuntu/projects/amore_search_backend && cd /home/ubuntu/projects/amore_search_backend
             git pull origin main
             sudo docker stop amoresearch-backend || true
             sudo docker rm amoresearch-backend || true
