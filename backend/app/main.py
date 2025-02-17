@@ -25,14 +25,3 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "Hello, FastAPI!"}
-
-
-app = FastAPI()
-
-# 모든 라우터 등록
-app.include_router(member_router)
-app.include_router(favorites_router)
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
