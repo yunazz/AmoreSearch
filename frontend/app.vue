@@ -1,3 +1,3 @@
 <template>
-  <div>CICD테스트!!</div>
+  <div>CI/CD 테스트 완료</div>
 </template>
