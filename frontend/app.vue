@@ -1,4 +1,4 @@
 <template>
-  <div>
+  <div>CICD테스트
   </div>
 </template>
