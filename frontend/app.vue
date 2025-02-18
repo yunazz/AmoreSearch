@@ -1,3 +1,37 @@
+<script>
+useSeoMeta({
+  title: "AmoreSearch",
+  description: "AmoreSearch App",
+  keywords: "AmoreSearch",
+  author: "AmoreSearch",
+  publisher: "AmoreSearch",
+  formatDetection: "telephone=no",
+  ogType: "website",
+  ogUrl: "http://15.165.170.3",
+  ogTitle: "AmoreSearch",
+  ogImage: "",
+  ogDescription: "AmoreSearch",
+  ogSiteName: "AmoreSearch",
+  ogLocale: "ko_KR",
+  ogKeyword: "AmoreSearch",
+  ogAuthor: "AmoreSearch",
+  ogRich_attachment: true,
+});
+
+useHead({
+  lang: "ko",
+  meta: [
+    {
+      name: "viewport",
+      content:
+        "viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no",
+    },
+  ],
+  title: "남선",
+  noscript: [{ children: "JavaScript is required" }],
+});
+</script>
+
 <template>
   <NuxtLayout>
     <v-app>
