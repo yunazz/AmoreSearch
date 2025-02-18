@@ -452,10 +452,6 @@
   -ms-use-select: text;
   user-select: text;
 }
-/* etc */
-.btn--ml {
-  font-size: 17px !important;
-}
-.v-label {
-  font-size: 0.875rem !important; 14px (16px * 0.875)
+.input_wrap > div {
+  margin: 0.625rem 0;
 }

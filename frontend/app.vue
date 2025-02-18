@@ -1,7 +1,7 @@
-<script>
+<script setup>
 useSeoMeta({
   title: "AmoreSearch",
-  description: "AmoreSearch App",
+  description: "AI AmoreSearch",
   keywords: "AmoreSearch",
   author: "AmoreSearch",
   publisher: "AmoreSearch",
@@ -27,15 +27,15 @@ useHead({
         "viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no",
     },
   ],
-  title: "남선",
+  title: "AmoreSearch - 아모레서치",
   noscript: [{ children: "JavaScript is required" }],
 });
 </script>
 
 <template>
-  <NuxtLayout>
-    <v-app>
+  <v-app>
+    <NuxtLayout>
       <NuxtPage />
-    </v-app>
-  </NuxtLayout>
+    </NuxtLayout>
+  </v-app>
 </template>

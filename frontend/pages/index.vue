@@ -1,7 +1,29 @@
-<script>
+<script setup>
 definePageMeta({
   layout: false,
 });
+
+const router = useRouter();
+const formData = ref({
+  identify: "",
+  password: "",
+});
+async function login() {
+  // 유효성 체크
+  // post
+  const response = { code: 0, result: true, msg: "" };
+  const { result } = response;
+  result ? loginSuccess() : loginFail();
+}
+
+function loginSuccess() {
+  // 토큰 관련
+  router.push("/home");
+}
+
+function loginFail(msg) {
+  // toast msg
+}
 </script>
 <template>
   <div id="loginPage">
@@ -19,15 +41,30 @@ definePageMeta({
     </div>
     <div class="login_right">
       <div class="login_form">
-        <v-text-field
-          :loading="loading"
-          density="compact"
-          label="사원번호"
-          variant="solo"
-          hide-details
-          single-line
-          @click:append-inner="onClick"
-        ></v-text-field>
+        <h3 class="text-center fw-600 mb-4">로그인</h3>
+        <div class="input_wrap">
+          <v-text-field
+            :loading="loading"
+            density="compact"
+            label="사원번호"
+            variant="outlined"
+            hide-details
+            single-line
+            @click:append-inner="onClick"
+            v-model="formData.emp_no"
+          />
+          <v-text-field
+            :loading="loading"
+            density="compact"
+            label="비밀번호"
+            variant="outlined"
+            hide-details
+            single-line
+            @click:append-inner="onClick"
+            v-model="formData.password"
+          />
+          <v-btn class="w-full" color="primary" @click="login"> 로그인 </v-btn>
+        </div>
       </div>
     </div>
   </div>
@@ -58,6 +95,6 @@ definePageMeta({
   align-items: center;
 }
 .login_form {
-  width: 300px;
+  width: 280px;
 }
 </style>
