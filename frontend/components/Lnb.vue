@@ -26,6 +26,7 @@ function active_menu(path) {
 
 function logout() {}
 </script>
+
 <template>
   <nav id="lnb">
     <div class="lnb_top">
