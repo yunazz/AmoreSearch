@@ -108,7 +108,6 @@ function loginFail(msg) {
           </v-btn>
         </div>
       </v-form>
-      </div>
     </div>
   </div>
 </template>
