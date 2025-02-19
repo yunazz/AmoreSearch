@@ -3,18 +3,11 @@
   <div class="wrap">
     <Lnb />
     <main class="main">
-      <slot></slot>
+      <div class="main_wrap">
+        <div class="main_container">
+          <slot></slot>
+        </div>
+      </div>
     </main>
   </div>
 </template>
-
-<style>
-.wrap {
-  display: flex;
-  background-color: #f5f5f5;
-}
-main.main {
-  height: 100vh;
-  background: #fff;
-}
-</style>
