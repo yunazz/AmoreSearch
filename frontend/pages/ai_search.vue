@@ -7,7 +7,6 @@ const member = ref({
 });
 const formData = ref({});
 </script>
-
 <template>
   <div id="AiSearch" class="page">
     <div class="contents">
