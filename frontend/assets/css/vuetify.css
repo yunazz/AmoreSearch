@@ -30,11 +30,10 @@ nav#lnb .v-date-picker-month__day .v-btn.v-date-picker-month__day-btn {
 }
 nav#lnb
   .v-btn.v-btn--icon.v-theme--light.text-black.v-date-picker-month__day-btn {
-  /* border: 1px solid white; */
   border: none;
   color: black !important;
   background-color: rgba(255, 255, 255, 0.816) !important;
-  border-radius: 4px !important;
+  border-radius: 6px !important;
   width: 20px;
   height: 20px;
   line-height: 20px;

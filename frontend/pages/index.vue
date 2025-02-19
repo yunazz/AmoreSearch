@@ -8,6 +8,7 @@ const formData = ref({
   identify: "",
   password: "",
 });
+const visible = ref(false);
 async function login() {
   // 유효성 체크
   // post
@@ -82,17 +83,23 @@ function loginFail(msg) {
           <v-text-field
             density="compact"
             label="사원번호"
+            placeholder="사원번호"
             variant="outlined"
             hide-details
             single-line
             v-model="formData.emp_no"
           />
           <v-text-field
-            density="compact"
+            :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+            :type="visible ? 'text' : 'password'"
+            prepend-inner-icon="mdi-lock-outline"
+            placeholder="비밀번호"
             label="비밀번호"
+            density="compact"
             variant="outlined"
             hide-details
             single-line
+            @click:append-inner="visible = !visible"
             v-model="formData.password"
           />
           <v-btn class="w-full mb-4" color="main" @click="login" size="large">

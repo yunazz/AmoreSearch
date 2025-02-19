@@ -178,6 +178,14 @@ main.main {
   padding: 0 40px;
 }
 .main_container {
-  max-width: 1200px;
   width: 100%;
+}
+.contents {
+  margin-top: 40px;
+  padding: 0 30px;
+}
+.input--search {
+  border: 3px solid var(--main-color);
+  border-radius: 60px;
+  padding: 4px 10px;
 }

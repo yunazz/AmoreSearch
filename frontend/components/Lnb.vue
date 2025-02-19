@@ -33,7 +33,7 @@ function logout() {}
         <nuxt-img class="logo" src="/img/logo_w.svg"></nuxt-img>
       </h1>
       <nuxt-link class="lnb_myprofile" to="/mypage">
-        <nuxt-img src="/img/icon/account.png" width="46" />
+        <nuxt-img src="/img/icon/account.png" width="44" />
         <div>
           <div class="text-gray-01 fw-500">
             <span>{{ member.department }}</span>
