@@ -9,7 +9,6 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "node .output/server/index.mjs",
-    "production": "pm2-runtime start ecosystem.config.mjs"
   },
   "dependencies": {
     "@mdi/font": "^7.4.47",
