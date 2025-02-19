@@ -106,7 +106,8 @@ function loginFail(msg) {
           <v-btn class="w-full mb-4" color="main" @click="login" size="large">
             로그인
           </v-btn>
-        </v-form>
+        </div>
+      </v-form>
       </div>
     </div>
   </div>
