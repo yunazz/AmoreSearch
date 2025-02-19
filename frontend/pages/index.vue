@@ -17,8 +17,8 @@ async function login() {
   result ? loginSuccess() : loginFail();
 }
 
-function loginSuccess() {
-  router.push("/ai_search");
+async function loginSuccess() {
+  await navigateTo("/ai_search");
 }
 
 function loginFail(msg) {
