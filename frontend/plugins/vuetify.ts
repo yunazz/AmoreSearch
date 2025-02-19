@@ -6,6 +6,9 @@ import 'vuetify/styles';
 export default defineNuxtPlugin((app) => {
   const vuetify = createVuetify({
     components,
+    icons: {
+      iconfont: 'mdi', 
+    },
     theme: {
       themes: {
         light: {

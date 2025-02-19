@@ -3,7 +3,7 @@ import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
-  css: ['~/assets/css/font.css','~/assets/css/common.css','~/assets/css/main.css', '~/assets/css/vuetify.css','@mdi/font/css/materialdesignicons.min.css'],
+  css: ['~/assets/css/font.css','~/assets/css/common.css','~/assets/css/main.css', '~/assets/css/vuetify.css'],
   build: {
     transpile: ['vuetify'],
   },
