@@ -4,7 +4,7 @@ FROM node:18
 WORKDIR /app 
 
 # Corepack 활성화 후 pnpm 설정
-RUN corepack enable && corepack prepare pnpm@latest --activate 
+RUN corepack enable && npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./ 
 
