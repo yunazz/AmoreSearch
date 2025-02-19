@@ -1,8 +1,9 @@
-module.exports = {
+export default {
   apps: [
     {
       name: "nuxt-app",
-      script: ".output/server/index.mjs", // Nuxt3 빌드된 서버 파일 경로
+      script: ".output/server/index.mjs",
+      interpreter: "node",
       exec_mode: "cluster",
       instances: "max",
       env: {
