@@ -76,9 +76,9 @@ function loginFail(msg) {
       </div>
     </div>
     <div class="login_right">
-      <div class="login_form">
+      <v-form class="login_form">
         <h1 class="text-center fw-600 mb-2">
-          <nuxt-img class="logo" src="img/logo.svg"></nuxt-img>
+          <NuxtImg class="logo" src="img/logo.svg"></NuxtImg>
         </h1>
         <div class="input_wrap">
           <v-text-field
@@ -106,7 +106,7 @@ function loginFail(msg) {
           <v-btn class="w-full mb-4" color="main" @click="login" size="large">
             로그인
           </v-btn>
-        </div>
+        </v-form>
       </div>
     </div>
   </div>

@@ -31,10 +31,10 @@ function logout() {}
   <nav id="lnb">
     <div class="lnb_top">
       <h1 class="buri">
-        <nuxt-img class="logo" src="img/logo_w.svg"></nuxt-img>
+        <NuxtImg class="logo" src="img/logo_w.svg"></NuxtImg>
       </h1>
-      <nuxt-link class="lnb_myprofile" to="/mypage">
-        <nuxt-img src="img/icon/account.png" width="44" />
+      <NuxtLink class="lnb_myprofile" to="/mypage">
+        <NuxtImg src="img/icon/account.png" width="44" />
         <div>
           <div class="text-gray-01 fw-500">
             <span>{{ member.department }}</span>
@@ -44,7 +44,7 @@ function logout() {}
             <span class="fw-500"> {{ member.position }}</span>
           </p>
         </div>
-      </nuxt-link>
+      </NuxtLink>
       <div class="lnb_menu">
         <small class="text-gray-01">OVERVIEW</small>
         <ul class="lnb_list">
@@ -53,10 +53,10 @@ function logout() {}
             :key="item.label"
             :class="{ active: active_menu(item.path) }"
           >
-            <nuxt-link :to="item.path">
-              <nuxt-img class="ml-1 mr-3" :src="item.img_path" width="20" />
+            <NuxtLink :to="item.path">
+              <NuxtImg class="ml-1 mr-3" :src="item.img_path" width="20" />
               <span>{{ item.name }}</span>
-            </nuxt-link>
+            </NuxtLink>
           </li>
         </ul>
         <small class="text-gray-01">ADMIN</small>
@@ -66,10 +66,10 @@ function logout() {}
             :key="item.label"
             :class="{ active: active_menu(item.path) }"
           >
-            <nuxt-link :to="item.path">
-              <nuxt-img class="ml-1 mr-3" :src="item.img_path" width="20" />
+            <NuxtLink :to="item.path">
+              <NuxtImg class="ml-1 mr-3" :src="item.img_path" width="20" />
               <span>{{ item.name }}</span>
-            </nuxt-link>
+            </NuxtLink>
           </li>
         </ul>
       </div>
