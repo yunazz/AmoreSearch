@@ -18,8 +18,7 @@ async function login() {
 }
 
 function loginSuccess() {
-  // 토큰 관련
-  router.push("/ai_search");
+  router.push({ name: "ai_search" });
 }
 
 function loginFail(msg) {
