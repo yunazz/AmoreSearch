@@ -2,3 +2,42 @@
 .input_wrap .v-field {
   font-size: 0.875rem !important;
 }
+.v-date-picker-month__day {
+  height: 30px;
+  width: 20px;
+}
+
+nav#lnb .v-date-picker-month__day .v-btn.v-date-picker-month__day-btn {
+  width: 18px;
+}
+nav#lnb .v-date-picker-month {
+  pointer-events: none;
+}
+nav#lnb .v-date-picker-controls,
+nav#lnb .bg-black {
+  display: none !important;
+}
+nav#lnb .v-date-picker-month__day {
+  height: 23px !important;
+  width: 20px !important;
+  color: white;
+}
+nav#lnb .v-date-picker-month__day .v-btn.v-date-picker-month__day-btn {
+  height: 20px !important;
+  letter-spacing: 0px;
+  background: black;
+  color: white;
+}
+nav#lnb
+  .v-btn.v-btn--icon.v-theme--light.text-black.v-date-picker-month__day-btn {
+  border: 1px solid white;
+  color: white !important;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 10px;
+}
+.lnb_bottom .v-btn--icon.v-btn--density-default {
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+}

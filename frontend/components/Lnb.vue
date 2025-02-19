@@ -1,21 +1,26 @@
 <script setup>
 const lnb_items = [
-  { name: 'AI서치', path: '/ai_search' },
-  { name: '아모레스토리', path: '/amorestory' },
-  { name: 'NEWS', path: '/news' },
-  { name: '화장품', path: '/products' },
-  { name: '즐겨찾기', path: '/favorites' },
+  { name: "AI서치", path: "/ai_search", img_path: "/img/icon/search.svg" },
+  {
+    name: "아모레스토리",
+    path: "/amorestory",
+    img_path: "/img/icon/story.svg",
+  },
+  { name: "NEWS", path: "/news", img_path: "/img/icon/news.svg" },
+  { name: "화장품", path: "/products", img_path: "/img/icon/cosmetics_1.png" },
+  { name: "즐겨찾기", path: "/favorites", img_path: "/img/icon/star.svg" },
 ];
-const admin_items = [{ name: '사원관리', path: '/members' }];
+const admin_items = [
+  { name: "사원관리", path: "/members", img_path: "/img/icon/member.svg" },
+];
 const member = ref({
-  name: '홍길동',
-  position: '사원',
-  department: 'HR',
+  name: "홍길동",
+  position: "사원",
+  department: "HR",
 });
 const route = useRoute();
 
 function active_menu(path) {
-  console.log(route.path.indexOf(path));
   return route.path.indexOf(path) > -1;
 }
 
@@ -24,8 +29,10 @@ function logout() {}
 <template>
   <nav id="lnb">
     <div class="lnb_top">
-      <h1 class="buri">AmoreSearch</h1>
-      <NuxtLink class="lnb_myprofile" to="/mypage">
+      <h1 class="buri">
+        <nuxt-img class="logo" src="/img/logo_w.svg"></nuxt-img>
+      </h1>
+      <nuxt-link class="lnb_myprofile" to="/mypage">
         <v-icon class="ma-2" icon="mdi-account-circle" variant="text" />
         <div>
           <div class="text-gray-01 fw-500">
@@ -36,7 +43,7 @@ function logout() {}
             <span class="fw-500"> {{ member.position }}</span>
           </p>
         </div>
-      </NuxtLink>
+      </nuxt-link>
       <div class="lnb_menu">
         <small class="text-gray-01">OVERVIEW</small>
         <ul class="lnb_list">
@@ -45,10 +52,10 @@ function logout() {}
             :key="item.label"
             :class="{ active: active_menu(item.path) }"
           >
-            <NuxtLink :to="item.path">
-              <v-icon class="ma-2" icon="mdi-menu" variant="text" />
+            <nuxt-link :to="item.path">
+              <nuxt-img class="ml-1 mr-3" :src="item.img_path" width="20" />
               <span>{{ item.name }}</span>
-            </NuxtLink>
+            </nuxt-link>
           </li>
         </ul>
         <small class="text-gray-01">ADMIN</small>
@@ -58,17 +65,18 @@ function logout() {}
             :key="item.label"
             :class="{ active: active_menu(item.path) }"
           >
-            <NuxtLink :to="item.path">
-              <v-icon class="ma-2" icon="mdi-menu" variant="text" />
+            <nuxt-link :to="item.path">
+              <nuxt-img class="ml-1 mr-3" :src="item.img_path" width="20" />
               <span>{{ item.name }}</span>
-            </NuxtLink>
+            </nuxt-link>
           </li>
         </ul>
       </div>
     </div>
     <div class="lnb_bottom">
+      <v-date-picker show-adjacent-months width="190" color="black" />
       <div>
-        <v-btn class="ma-2" icon="mdi-logout" variant="text" />
+        <button class="btn--logout" variant="text ">로그아웃</button>
       </div>
     </div>
   </nav>
@@ -89,18 +97,32 @@ nav#lnb h1 {
   font-size: 24px;
   padding: 36px 20px 0 20px;
 }
+.lnb_top img {
+  width: 150px;
+}
+.lnb_bottom {
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 2px solid #3f3f3f;
+}
 .lnb_bottom > div {
   display: flex;
   justify-content: flex-end;
+  background: black;
+}
+.lnb_bottom .btn--logout {
+  font-size: 14px;
+  color: #868686;
+  font-weight: 500;
+  height: 36px;
+  margin: 0 16px 6px;
 }
 .lnb_myprofile {
   display: flex;
   align-items: center;
-  column-gap: 0.25rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
-  padding: 0 12px;
-  padding-bottom: 6px;
+  column-gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 8px 12px;
   text-decoration: none;
   color: white;
 }
@@ -114,12 +136,10 @@ nav#lnb h1 {
 .lnb_myprofile div div {
   font-size: 0.75rem;
 }
-.lnb_menu {
-  border-top: 1px solid #454545;
-}
 .lnb_menu small {
   display: block;
-  margin-top: 16px;
+  font-size: 10px;
+  margin-top: 12px;
   padding: 0 20px;
 }
 .lnb_list {
@@ -127,7 +147,11 @@ nav#lnb h1 {
   margin-top: 4px;
 }
 .lnb_list li {
+  font-size: 15px;
   margin: 2px 0;
+}
+.lnb_list li img {
+  width: 24px;
 }
 .lnb_list li a {
   display: flex;
@@ -136,9 +160,10 @@ nav#lnb h1 {
   column-gap: 0.25rem;
   padding: 0 16px;
   color: white;
+  line-height: 38px;
 }
 .lnb_list li a i {
-  margin-left: 0 !important;
+  margin-left: 2px !important;
 }
 .lnb_list li.active {
   /* background: #f5f5f5; */

@@ -9,7 +9,7 @@ useSeoMeta({
   ogType: "website",
   ogUrl: "http://15.165.170.3",
   ogTitle: "AmoreSearch",
-  ogImage: "",
+  ogImage: "/img/logo.svg",
   ogDescription: "AmoreSearch",
   ogSiteName: "AmoreSearch",
   ogLocale: "ko_KR",

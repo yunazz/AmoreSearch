@@ -5,20 +5,20 @@ definePageMeta({
 
 const router = useRouter();
 const formData = ref({
-  identify: '',
-  password: '',
+  identify: "",
+  password: "",
 });
 async function login() {
   // 유효성 체크
   // post
-  const response = { code: 0, result: true, msg: '' };
+  const response = { code: 0, result: true, msg: "" };
   const { result } = response;
   result ? loginSuccess() : loginFail();
 }
 
 function loginSuccess() {
   // 토큰 관련
-  router.push('/ai_search');
+  router.push("/ai_search");
 }
 
 function loginFail(msg) {
@@ -75,29 +75,29 @@ function loginFail(msg) {
     </div>
     <div class="login_right">
       <div class="login_form">
-        <h3 class="text-center fw-600 mb-4">로그인</h3>
+        <h1 class="text-center fw-600 mb-2">
+          <nuxt-img class="logo" src="/img/logo.svg"></nuxt-img>
+        </h1>
         <div class="input_wrap">
           <v-text-field
-            :loading="loading"
             density="compact"
             label="사원번호"
             variant="outlined"
             hide-details
             single-line
-            @click:append-inner="onClick"
             v-model="formData.emp_no"
           />
           <v-text-field
-            :loading="loading"
             density="compact"
             label="비밀번호"
             variant="outlined"
             hide-details
             single-line
-            @click:append-inner="onClick"
             v-model="formData.password"
           />
-          <v-btn class="w-full" color="main" @click="login">로그인</v-btn>
+          <v-btn class="w-full mb-4" color="main" @click="login" size="large">
+            로그인
+          </v-btn>
         </div>
       </div>
     </div>
@@ -154,155 +154,154 @@ function loginFail(msg) {
   width: 48%;
   align-items: center;
 }
+.login_right h1 {
+  margin-bottom: 0.5rem;
+}
+.login_right h1 .logo {
+  width: 200px;
+}
 .login_form {
   width: 280px;
 }
 
+/* 그라디언트 블롭 */
 .gradient-bg {
   width: 52%;
   min-width: 700px;
   height: 100vh;
-  position: fixed;
+  position: absolute;
   overflow: hidden;
   background: linear-gradient(40deg, var(--color-bg1), var(--color-bg2));
   top: 0;
   left: 0;
+}
+.gradient-bg svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+.gradient-bg .gradients-container {
+  filter: url(#goo) blur(40px);
+  width: 100%;
+  height: 100%;
+}
+.gradient-bg .g1 {
+  position: absolute;
+  background: radial-gradient(
+      circle at center,
+      rgba(var(--color1), 0.8) 0,
+      rgba(var(--color1), 0) 50%
+    )
+    no-repeat;
+  mix-blend-mode: var(--blending);
 
-  svg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 0;
-  }
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
 
-  .gradients-container {
-    filter: url(#goo) blur(40px);
-    width: 100%;
-    height: 100%;
-  }
+  transform-origin: center center;
+  animation: moveVertical 30s ease infinite;
 
-  .g1 {
-    position: absolute;
-    background: radial-gradient(
-        circle at center,
-        rgba(var(--color1), 0.8) 0,
-        rgba(var(--color1), 0) 50%
-      )
-      no-repeat;
-    mix-blend-mode: var(--blending);
+  opacity: 1;
+}
+.gradient-bg .g2 {
+  position: absolute;
+  background: radial-gradient(
+      circle at center,
+      rgba(var(--color2), 0.8) 0,
+      rgba(var(--color2), 0) 50%
+    )
+    no-repeat;
+  mix-blend-mode: var(--blending);
 
-    width: var(--circle-size);
-    height: var(--circle-size);
-    top: calc(50% - var(--circle-size) / 2);
-    left: calc(50% - var(--circle-size) / 2);
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
 
-    transform-origin: center center;
-    animation: moveVertical 30s ease infinite;
+  transform-origin: calc(50% - 400px);
+  animation: moveInCircle 20s reverse infinite;
 
-    opacity: 1;
-  }
+  opacity: 1;
+}
+.gradient-bg .g3 {
+  position: absolute;
+  background: radial-gradient(
+      circle at center,
+      rgba(var(--color3), 0.8) 0,
+      rgba(var(--color3), 0) 50%
+    )
+    no-repeat;
+  mix-blend-mode: var(--blending);
 
-  .g2 {
-    position: absolute;
-    background: radial-gradient(
-        circle at center,
-        rgba(var(--color2), 0.8) 0,
-        rgba(var(--color2), 0) 50%
-      )
-      no-repeat;
-    mix-blend-mode: var(--blending);
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size) / 2 + 200px);
+  left: calc(50% - var(--circle-size) / 2 - 500px);
 
-    width: var(--circle-size);
-    height: var(--circle-size);
-    top: calc(50% - var(--circle-size) / 2);
-    left: calc(50% - var(--circle-size) / 2);
+  transform-origin: calc(50% + 400px);
+  animation: moveInCircle 40s linear infinite;
 
-    transform-origin: calc(50% - 400px);
-    animation: moveInCircle 20s reverse infinite;
+  opacity: 1;
+}
+.gradient-bg .g4 {
+  position: absolute;
+  background: radial-gradient(
+      circle at center,
+      rgba(var(--color4), 0.8) 0,
+      rgba(var(--color4), 0) 50%
+    )
+    no-repeat;
+  mix-blend-mode: var(--blending);
 
-    opacity: 1;
-  }
+  width: var(--circle-size);
+  height: var(--circle-size);
+  top: calc(50% - var(--circle-size) / 2);
+  left: calc(50% - var(--circle-size) / 2);
 
-  .g3 {
-    position: absolute;
-    background: radial-gradient(
-        circle at center,
-        rgba(var(--color3), 0.8) 0,
-        rgba(var(--color3), 0) 50%
-      )
-      no-repeat;
-    mix-blend-mode: var(--blending);
+  transform-origin: calc(50% - 200px);
+  animation: moveHorizontal 40s ease infinite;
 
-    width: var(--circle-size);
-    height: var(--circle-size);
-    top: calc(50% - var(--circle-size) / 2 + 200px);
-    left: calc(50% - var(--circle-size) / 2 - 500px);
+  opacity: 0.7;
+}
+.gradient-bg .g5 {
+  position: absolute;
+  background: radial-gradient(
+      circle at center,
+      rgba(var(--color5), 0.8) 0,
+      rgba(var(--color5), 0) 50%
+    )
+    no-repeat;
+  mix-blend-mode: var(--blending);
 
-    transform-origin: calc(50% + 400px);
-    animation: moveInCircle 40s linear infinite;
+  width: calc(var(--circle-size) * 2);
+  height: calc(var(--circle-size) * 2);
+  top: calc(50% - var(--circle-size));
+  left: calc(50% - var(--circle-size));
 
-    opacity: 1;
-  }
+  transform-origin: calc(50% - 800px) calc(50% + 200px);
+  animation: moveInCircle 20s ease infinite;
 
-  .g4 {
-    position: absolute;
-    background: radial-gradient(
-        circle at center,
-        rgba(var(--color4), 0.8) 0,
-        rgba(var(--color4), 0) 50%
-      )
-      no-repeat;
-    mix-blend-mode: var(--blending);
+  opacity: 1;
+}
+.gradient-bg .interactive {
+  position: absolute;
+  background: radial-gradient(
+      circle at center,
+      rgba(var(--color-interactive), 0.8) 0,
+      rgba(var(--color-interactive), 0) 50%
+    )
+    no-repeat;
+  mix-blend-mode: var(--blending);
 
-    width: var(--circle-size);
-    height: var(--circle-size);
-    top: calc(50% - var(--circle-size) / 2);
-    left: calc(50% - var(--circle-size) / 2);
+  width: 100%;
+  height: 100%;
+  top: -50%;
+  left: -50%;
 
-    transform-origin: calc(50% - 200px);
-    animation: moveHorizontal 40s ease infinite;
-
-    opacity: 0.7;
-  }
-
-  .g5 {
-    position: absolute;
-    background: radial-gradient(
-        circle at center,
-        rgba(var(--color5), 0.8) 0,
-        rgba(var(--color5), 0) 50%
-      )
-      no-repeat;
-    mix-blend-mode: var(--blending);
-
-    width: calc(var(--circle-size) * 2);
-    height: calc(var(--circle-size) * 2);
-    top: calc(50% - var(--circle-size));
-    left: calc(50% - var(--circle-size));
-
-    transform-origin: calc(50% - 800px) calc(50% + 200px);
-    animation: moveInCircle 20s ease infinite;
-
-    opacity: 1;
-  }
-
-  .interactive {
-    position: absolute;
-    background: radial-gradient(
-        circle at center,
-        rgba(var(--color-interactive), 0.8) 0,
-        rgba(var(--color-interactive), 0) 50%
-      )
-      no-repeat;
-    mix-blend-mode: var(--blending);
-
-    width: 100%;
-    height: 100%;
-    top: -50%;
-    left: -50%;
-
-    opacity: 0.7;
-  }
+  opacity: 0.7;
 }
 </style>

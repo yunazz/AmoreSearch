@@ -1,9 +1,9 @@
 <script setup>
 // const router = useRouter();
 const member = ref({
-  name: '홍길동',
-  position: '사원',
-  department: 'HR',
+  name: "홍길동",
+  position: "사원",
+  department: "HR",
 });
 const formData = ref({});
 </script>
@@ -17,6 +17,16 @@ const formData = ref({});
         </span>
         <br />무엇을 도와드릴까요?
       </h2>
+    </div>
+    <div>
+      <v-text-field
+        append-inner-icon="mdi-magnify"
+        density="compact"
+        label="Search templates"
+        variant="solo"
+        hide-details
+        single-line
+      ></v-text-field>
     </div>
   </div>
 </template>
