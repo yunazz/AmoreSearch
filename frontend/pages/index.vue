@@ -18,6 +18,7 @@ async function login() {
 }
 
 async function loginSuccess() {
+  console.log("헬로우");
   await navigateTo("/ai_search");
 }
 
