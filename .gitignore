@@ -197,9 +197,6 @@ static/
 .DS_Store
 Thumbs.db
 
-# Optional: If using Docker
-docker-compose.override.yml
-.dockerignore
 
 # Optional: If using VSCode Extensions
 .vscode/extensions.json
