@@ -18,7 +18,7 @@ async function login() {
 }
 
 function loginSuccess() {
-  router.push({ name: "ai_search" });
+  router.push("/ai_search");
 }
 
 function loginFail(msg) {
