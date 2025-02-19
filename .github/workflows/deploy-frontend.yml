@@ -22,14 +22,23 @@ jobs:
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/projects/amore_search  # 프로젝트 루트로 이동
+            
+            # 최신 코드 가져오기
+            git fetch --all
+            git reset --hard origin/main
             git pull origin main
 
             cd frontend 
             
-            # 기존 컨테이너 중지 및 강제 삭제
-            sudo docker stop amoresearch-frontend || true
-            sudo docker rm -f amoresearch-frontend || true
-            docker image prune -af 
+            # 기존 컨테이너 중지 및 삭제
+            if [ $(docker ps -q -f name=amoresearch-frontend) ]; then
+              sudo docker stop amoresearch-frontend
+              sudo docker rm -f amoresearch-frontend
+            fi
+
+            # 사용하지 않는 Docker 이미지 삭제
+            sudo docker image prune -af 
             
+            # 새 이미지 빌드 및 실행
             sudo docker build --no-cache -t amoresearch-frontend -f Dockerfile .
             sudo docker run -d --name amoresearch-frontend -p 3000:3000 --restart=always amoresearch-frontend
