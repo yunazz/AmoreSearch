@@ -104,6 +104,7 @@ function loginFail(msg) {
             single-line
             @click:append-inner="visible = !visible"
             v-model="formData.password"
+            autocomplete="off"
           />
           <v-btn class="w-full mb-4" color="main" @click="login" size="large">
             로그인
