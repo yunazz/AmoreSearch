@@ -7,7 +7,7 @@ const lnb_items = [
     img_path: "/img/icon/story.svg",
   },
   { name: "NEWS", path: "/news", img_path: "/img/icon/news.svg" },
-  { name: "화장품", path: "/products", img_path: "/img/icon/cosmetics_1.png" },
+  { name: "화장품", path: "/products", img_path: "/img/icon/cosmetics.png" },
   { name: "즐겨찾기", path: "/favorites", img_path: "/img/icon/star.svg" },
 ];
 const admin_items = [
@@ -33,7 +33,7 @@ function logout() {}
         <nuxt-img class="logo" src="/img/logo_w.svg"></nuxt-img>
       </h1>
       <nuxt-link class="lnb_myprofile" to="/mypage">
-        <v-icon class="ma-2" icon="mdi-account-circle" variant="text" />
+        <nuxt-img src="/img/icon/account.png" width="46" />
         <div>
           <div class="text-gray-01 fw-500">
             <span>{{ member.department }}</span>
@@ -76,7 +76,7 @@ function logout() {}
     <div class="lnb_bottom">
       <v-date-picker show-adjacent-months width="190" color="black" />
       <div>
-        <button class="btn--logout" variant="text ">로그아웃</button>
+        <button class="btn--logout">로그아웃</button>
       </div>
     </div>
   </nav>
@@ -97,8 +97,8 @@ nav#lnb h1 {
   font-size: 24px;
   padding: 36px 20px 0 20px;
 }
-.lnb_top img {
-  width: 150px;
+.lnb_top h1 img {
+  width: 152px;
 }
 .lnb_bottom {
   margin-top: 12px;
@@ -111,7 +111,7 @@ nav#lnb h1 {
   background: black;
 }
 .lnb_bottom .btn--logout {
-  font-size: 14px;
+  font-size: 13px;
   color: #868686;
   font-weight: 500;
   height: 36px;
@@ -122,7 +122,8 @@ nav#lnb h1 {
   align-items: center;
   column-gap: 0.5rem;
   margin-top: 0.5rem;
-  padding: 8px 12px;
+  margin: 0.75rem 12px 1rem;
+  /* padding: 8px 12px; */
   text-decoration: none;
   color: white;
 }

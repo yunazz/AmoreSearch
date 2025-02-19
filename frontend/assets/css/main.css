@@ -101,7 +101,7 @@ listing {
   margin: 0;
   padding: 0;
   outline: 0;
-  font-family: 'Noto Sans KR', 'Malgun Gothic', dotum, 'Helvetica Neue',
+  font-family: "Noto Sans KR", "Malgun Gothic", dotum, "Helvetica Neue",
     Helvetica, Arial, sans-serif;
 }
 
@@ -178,6 +178,6 @@ main.main {
   padding: 0 40px;
 }
 .main_container {
-  /* max-width: 1200px; */
+  max-width: 1200px;
   width: 100%;
 }
