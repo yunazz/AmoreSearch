@@ -7,6 +7,7 @@ const member = ref({
 });
 const formData = ref({});
 </script>
+
 <template>
   <div id="AiSearch" class="page">
     <div class="contents">
@@ -21,6 +22,7 @@ const formData = ref({});
       <div class="input--search mt-3">
         <v-text-field
           prepend-inner-icon="mdi-magnify"
+          variant
           hide-details
           single-line
           density="compact"

@@ -76,7 +76,7 @@ function loginFail(msg) {
       </div>
     </div>
     <div class="login_right">
-      <v-form class="login_form">
+      <form class="login_form" onsubmit="return false;">
         <h1 class="text-center fw-600 mb-2">
           <NuxtImg class="logo" src="img/logo.svg"></NuxtImg>
         </h1>
@@ -89,6 +89,8 @@ function loginFail(msg) {
             hide-details
             single-line
             v-model="formData.emp_no"
+            oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
+            maxLength="8"
           />
           <v-text-field
             :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
@@ -107,7 +109,7 @@ function loginFail(msg) {
             로그인
           </v-btn>
         </div>
-      </v-form>
+      </form>
     </div>
   </div>
 </template>
