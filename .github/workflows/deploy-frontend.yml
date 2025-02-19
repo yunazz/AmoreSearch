@@ -21,32 +21,24 @@ jobs:
           username: ${{ secrets.AWS_EC2_USER }}
           key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/projects/amore_search  # 프로젝트 루트로 이동
+            cd /home/ubuntu/projects/amore_search 
             
-            # 최신 코드 가져오기
             git fetch --all
-            git reset --hard origin/main  # 완전 초기화 후 최신 코드로 덮어쓰기
+            git reset --hard origin/main 
             git pull origin main
 
             cd frontend 
             
-            # 기존 컨테이너 중지 및 삭제
             if [ $(sudo docker ps -q -f name=amoresearch-frontend) ]; then
               sudo docker stop amoresearch-frontend
               sudo docker rm -f amoresearch-frontend
             fi
 
-            # 사용하지 않는 Docker 이미지 삭제
-            sudo docker image prune -af 
+            sudo docker container prune -f  
+            sudo docker image prune -af     
+            sudo docker volume prune -f     
+            sudo docker network prune -f    
+            sudo docker system prune -af --volumes  
             
-            # Docker 빌드 실행 (로그 확인)
-            if ! sudo docker build --no-cache -t amoresearch-frontend -f Dockerfile .; then
-              echo "🚨 Docker build failed!"
-              exit 1
-            fi
-
-            # Docker 실행
+            sudo docker build --no-cache -t amoresearch-frontend -f Dockerfile .
             sudo docker run -d --name amoresearch-frontend -p 3000:3000 --restart=always amoresearch-frontend
-
-            # 컨테이너 상태 확인
-            sudo docker ps -a
