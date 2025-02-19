@@ -27,13 +27,13 @@ RUN npm install -g pnpm pm2
 
 # 프로젝트 파일 복사
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm i
 
 # 프로젝트 전체 복사
 COPY . .
 
 # Nuxt 빌드 실행
-RUN pnpm build
+RUN pnpm run build
 
 # PM2로 Nuxt 서버 실행
 CMD ["pm2-runtime", "start", "ecosystem.config.mjs"]
