@@ -3,12 +3,12 @@ FROM node:18
 
 WORKDIR /app 
 
-# Corepack 활성화 후 pnpm 설정
-RUN npm install -g pnpm@latest
+# pnpm 설치
+RUN npm install -g pnpm
 
-COPY package.json pnpm-lock.yaml ./ 
+COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 COPY . .  
 
