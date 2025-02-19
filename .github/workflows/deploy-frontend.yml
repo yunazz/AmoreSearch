@@ -25,8 +25,6 @@ jobs:
             git pull origin main
 
             cd frontend 
-            pnpm install
-            pnpm build
             
             # 기존 컨테이너 중지 및 강제 삭제
             sudo docker stop amoresearch-frontend || true
