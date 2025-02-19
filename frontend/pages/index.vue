@@ -26,7 +26,6 @@ function loginFail(msg) {
   // toast msg
 }
 </script>
-
 <template>
   <div id="LoginPage">
     <div class="gradient-bg">
