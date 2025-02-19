@@ -36,4 +36,4 @@ COPY . .
 RUN pnpm build
 
 # PM2로 Nuxt 서버 실행
-CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+CMD ["pm2-runtime", "start", "ecosystem.config.mjs"]
