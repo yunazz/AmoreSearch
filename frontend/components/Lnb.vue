@@ -1,17 +1,17 @@
 <script setup>
 const lnb_items = [
-  { name: "AI서치", path: "/ai_search", img_path: "/img/icon/search.svg" },
+  { name: "AI서치", path: "/ai_search", img_path: "img/icon/search.svg" },
   {
     name: "아모레스토리",
     path: "/amorestory",
-    img_path: "/img/icon/story.svg",
+    img_path: "img/icon/story.svg",
   },
-  { name: "NEWS", path: "/news", img_path: "/img/icon/news.svg" },
-  { name: "화장품", path: "/products", img_path: "/img/icon/cosmetics.png" },
-  { name: "즐겨찾기", path: "/favorites", img_path: "/img/icon/star.svg" },
+  { name: "NEWS", path: "/news", img_path: "img/icon/news.svg" },
+  { name: "화장품", path: "/products", img_path: "img/icon/cosmetics.png" },
+  { name: "즐겨찾기", path: "/favorites", img_path: "img/icon/star.svg" },
 ];
 const admin_items = [
-  { name: "사원관리", path: "/members", img_path: "/img/icon/member.svg" },
+  { name: "사원관리", path: "/members", img_path: "img/icon/member.svg" },
 ];
 const member = ref({
   name: "홍길동",
@@ -31,10 +31,10 @@ function logout() {}
   <nav id="lnb">
     <div class="lnb_top">
       <h1 class="buri">
-        <nuxt-img class="logo" src="/img/logo_w.svg"></nuxt-img>
+        <nuxt-img class="logo" src="img/logo_w.svg"></nuxt-img>
       </h1>
       <nuxt-link class="lnb_myprofile" to="/mypage">
-        <nuxt-img src="/img/icon/account.png" width="44" />
+        <nuxt-img src="img/icon/account.png" width="44" />
         <div>
           <div class="text-gray-01 fw-500">
             <span>{{ member.department }}</span>
