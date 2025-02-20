@@ -75,7 +75,7 @@ function logout() {}
       </div>
     </div>
     <div class="lnb_bottom">
-      <v-date-picker show-adjacent-months width="190" color="black" />
+      <v-date-picker show-adjacent-months width="200" color="black" />
       <div>
         <button class="btn--logout">로그아웃</button>
       </div>
