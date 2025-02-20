@@ -18,8 +18,8 @@ nav#lnb .bg-black {
   display: none !important;
 }
 nav#lnb .v-date-picker-month__day {
-  height: 23px !important;
-  width: 20px !important;
+  height: 25px !important;
+  width: 22px !important;
   color: white;
 }
 nav#lnb .v-date-picker-month__day .v-btn.v-date-picker-month__day-btn {

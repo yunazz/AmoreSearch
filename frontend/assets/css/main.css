@@ -163,7 +163,7 @@ img {
   /* display: flex; */
   display: grid;
   grid-template-columns: 200px 1fr;
-  background-color: #f5f5f5;
+  background-color: var(--background-color);
   height: 100vh;
 }
 main.main {
@@ -180,12 +180,6 @@ main.main {
 .main_container {
   width: 100%;
 }
-.contents {
-  margin-top: 40px;
+.container_inner {
   padding: 0 30px;
-}
-.input--search {
-  border: 3px solid var(--main-color);
-  border-radius: 60px;
-  padding: 4px 10px;
 }

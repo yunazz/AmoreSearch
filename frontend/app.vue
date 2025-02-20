@@ -9,7 +9,7 @@ useSeoMeta({
   ogType: "website",
   ogUrl: "http://15.165.170.3",
   ogTitle: "AmoreSearch",
-  ogImage: "/img/logo.svg",
+  ogImage: "",
   ogDescription: "AmoreSearch",
   ogSiteName: "AmoreSearch",
   ogLocale: "ko_KR",
@@ -29,6 +29,14 @@ useHead({
   ],
   title: "AmoreSearch - 아모레서치",
   noscript: [{ children: "JavaScript is required" }],
+  head: {
+    link: [
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/@mdi/font@5.x/css/materialdesignicons.min.css",
+      },
+    ],
+  },
 });
 </script>
 

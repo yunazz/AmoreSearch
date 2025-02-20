@@ -3,7 +3,6 @@ definePageMeta({
   layout: false,
 });
 
-const router = useRouter();
 const formData = ref({
   identify: "",
   password: "",
@@ -17,15 +16,15 @@ async function login() {
   result ? loginSuccess() : loginFail();
 }
 
-function loginSuccess() {
-  // 토큰 관련
-  router.push("/ai_search");
+async function loginSuccess() {
+  await navigateTo("/ai_search");
 }
 
 function loginFail(msg) {
   // toast msg
 }
 </script>
+
 <template>
   <div id="LoginPage">
     <div class="gradient-bg">
@@ -75,9 +74,9 @@ function loginFail(msg) {
       </div>
     </div>
     <div class="login_right">
-      <div class="login_form">
+      <form class="login_form" onsubmit="return false;">
         <h1 class="text-center fw-600 mb-2">
-          <nuxt-img class="logo" src="/img/logo.svg"></nuxt-img>
+          <NuxtImg class="logo" src="img/logo.svg"></NuxtImg>
         </h1>
         <div class="input_wrap">
           <v-text-field
@@ -88,6 +87,9 @@ function loginFail(msg) {
             hide-details
             single-line
             v-model="formData.emp_no"
+            oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
+            maxLength="8"
+            autocomplete="off"
           />
           <v-text-field
             :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
@@ -101,16 +103,16 @@ function loginFail(msg) {
             single-line
             @click:append-inner="visible = !visible"
             v-model="formData.password"
+            autocomplete="off"
           />
           <v-btn class="w-full mb-4" color="main" @click="login" size="large">
             로그인
           </v-btn>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </template>
-
 <style scoped>
 #LoginPage {
   display: flex;
@@ -127,7 +129,7 @@ function loginFail(msg) {
   line-height: 34px;
   opacity: 0;
   animation: fadeInDown 1.5s forwards;
-  animation-delay: 0.05s;
+  animation-delay: 0.075s;
 }
 .login_left > div p:nth-of-type(2) {
   opacity: 0;

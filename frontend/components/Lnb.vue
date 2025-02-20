@@ -1,23 +1,20 @@
 <script setup>
 const lnb_items = [
-  { name: "AI서치", path: "/ai_search", img_path: "/img/icon/search.svg" },
+  { name: "AI서치", path: "/ai_search", img_path: "img/icon/search.svg" },
   {
     name: "아모레스토리",
     path: "/amorestory",
-    img_path: "/img/icon/story.svg",
+    img_path: "img/icon/story.svg",
   },
-  { name: "NEWS", path: "/news", img_path: "/img/icon/news.svg" },
-  { name: "화장품", path: "/products", img_path: "/img/icon/cosmetics.png" },
-  { name: "즐겨찾기", path: "/favorites", img_path: "/img/icon/star.svg" },
+  { name: "NEWS", path: "/news", img_path: "img/icon/news.svg" },
+  { name: "화장품", path: "/products", img_path: "img/icon/cosmetics.png" },
+  { name: "즐겨찾기", path: "/favorites", img_path: "img/icon/star.svg" },
 ];
 const admin_items = [
-  { name: "사원관리", path: "/members", img_path: "/img/icon/member.svg" },
+  { name: "사원관리", path: "/members", img_path: "img/icon/member.svg" },
 ];
-const member = ref({
-  name: "홍길동",
-  position: "사원",
-  department: "HR",
-});
+
+const member = useMember();
 const route = useRoute();
 
 function active_menu(path) {
@@ -26,14 +23,15 @@ function active_menu(path) {
 
 function logout() {}
 </script>
+
 <template>
   <nav id="lnb">
     <div class="lnb_top">
       <h1 class="buri">
-        <nuxt-img class="logo" src="/img/logo_w.svg"></nuxt-img>
+        <NuxtImg class="logo" src="img/logo_w.svg"></NuxtImg>
       </h1>
-      <nuxt-link class="lnb_myprofile" to="/mypage">
-        <nuxt-img src="/img/icon/account.png" width="44" />
+      <NuxtLink class="lnb_myprofile" to="/mypage">
+        <NuxtImg src="img/icon/account.png" width="44" />
         <div>
           <div class="text-gray-01 fw-500">
             <span>{{ member.department }}</span>
@@ -43,7 +41,7 @@ function logout() {}
             <span class="fw-500"> {{ member.position }}</span>
           </p>
         </div>
-      </nuxt-link>
+      </NuxtLink>
       <div class="lnb_menu">
         <small class="text-gray-01">OVERVIEW</small>
         <ul class="lnb_list">
@@ -52,10 +50,10 @@ function logout() {}
             :key="item.label"
             :class="{ active: active_menu(item.path) }"
           >
-            <nuxt-link :to="item.path">
-              <nuxt-img class="ml-1 mr-3" :src="item.img_path" width="20" />
+            <NuxtLink :to="item.path">
+              <NuxtImg class="ml-1 mr-3" :src="item.img_path" width="20" />
               <span>{{ item.name }}</span>
-            </nuxt-link>
+            </NuxtLink>
           </li>
         </ul>
         <small class="text-gray-01">ADMIN</small>
@@ -65,16 +63,16 @@ function logout() {}
             :key="item.label"
             :class="{ active: active_menu(item.path) }"
           >
-            <nuxt-link :to="item.path">
-              <nuxt-img class="ml-1 mr-3" :src="item.img_path" width="20" />
+            <NuxtLink :to="item.path">
+              <NuxtImg class="ml-1 mr-3" :src="item.img_path" width="20" />
               <span>{{ item.name }}</span>
-            </nuxt-link>
+            </NuxtLink>
           </li>
         </ul>
       </div>
     </div>
     <div class="lnb_bottom">
-      <v-date-picker show-adjacent-months width="190" color="black" />
+      <v-date-picker show-adjacent-months width="200" color="black" />
       <div>
         <button class="btn--logout">로그아웃</button>
       </div>
@@ -115,7 +113,7 @@ nav#lnb h1 {
   color: #868686;
   font-weight: 500;
   height: 36px;
-  margin: 0 16px 6px;
+  margin: 0 16px 8px;
 }
 .lnb_myprofile {
   display: flex;

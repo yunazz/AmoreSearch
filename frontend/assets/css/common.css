@@ -1,5 +1,8 @@
 /* brand custom */
 :root {
+  --background-color: #fff;
+  --border-color: rgba(0, 0, 0, 0.12);
+
   --lnb-width: 200px;
   --lnb-bg-color: black;
   --font-size: 16px;
@@ -35,10 +38,9 @@
   --color-green: #0cbc64;
   --color-black: #111;
 
-  --border-color: var(--color-gray-01);
-
   --radius-1: 0.25rem;
   --radius-2: 0.5rem;
+  --radius-3: 0.75rem;
 
   /* 로그인페이지 그라디언트 블롭 */
   --color1: rgb(150, 4, 187);
@@ -533,4 +535,16 @@
 }
 .input_wrap > div {
   margin: 0.625rem 0;
+}
+.grid-cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.grid-cols-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.grid-cols-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
