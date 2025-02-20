@@ -215,7 +215,7 @@ main.main {
 .page_title {
   text-align: center;
   margin: 1.75rem 0 0.5rem;
-  font-size: var(--title-size-l);
+  font-size: 1.825rem;
 }
 .board {
   margin-top: 1rem;
