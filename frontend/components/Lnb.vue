@@ -6,7 +6,11 @@ const lnb_items = [
     path: "/amorestory",
     img_path: "img/icon/story.svg",
   },
-  { name: "NEWS", path: "/news", img_path: "img/icon/news.svg" },
+  {
+    name: "뉴스 & 저널",
+    path: "/news_journal",
+    img_path: "img/icon/news.svg",
+  },
   { name: "화장품", path: "/products", img_path: "img/icon/cosmetics.png" },
   { name: "즐겨찾기", path: "/favorites", img_path: "img/icon/star.svg" },
 ];
@@ -85,6 +89,8 @@ nav#lnb {
   flex-direction: column;
   justify-content: space-between;
   position: fixed;
+  left: 0;
+  top: 0;
   z-index: 1;
   height: 100vh;
   width: var(--lnb-width);
@@ -163,6 +169,9 @@ nav#lnb h1 {
   padding: 0 16px;
   color: white;
   line-height: 38px;
+}
+.lnb_list li a span {
+  word-spacing: -1px;
 }
 .lnb_list li a i {
   margin-left: 2px !important;

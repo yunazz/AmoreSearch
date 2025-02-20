@@ -1,110 +1,67 @@
 <script setup>
+const list = ref([
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    text: "Top western road trips",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    text: "Top western road trips",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    text: "Top western road trips",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    text: "Top western road trips",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    text: "Top western road trips",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    text: "Top western road trips",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    text: "Top western road trips",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "Top western road trips",
+    subtitle: "1,000 miles of wonder",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    text: "Top western road trips",
+    registered_at: "2025-01-01",
+  },
+]);
 const items = ref([
-  { text: "회사뉴스", value: "1" },
-  { text: "자사브랜드", value: "2" },
-  { text: "사내문서", value: "3" },
+  { text: "뉴스", value: "NEWS" },
+  { text: "저널", value: "JOURNAL" },
 ]);
 const list1 = ref([
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
-    registered_at: "2025-01-01",
-  },
-]);
-const list2 = ref([
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-  {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-  },
-]);
-const list3 = ref([
   {
     title: "아모레퍼시픽 2024년 1/4분기 경영실적",
     subtitle:
@@ -154,14 +111,13 @@ const list3 = ref([
     subtitle: `아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
   },
 ]);
-const tab = ref("1");
-const show = ref(false);
+const tab = ref("NEWS");
 </script>
 <template>
-  <div id="AmorePacific" class="content">
+  <div id="NewsJournal" class="content">
     <div class="content_inner">
       <div class="page_header">
-        <h2 class="page_title">아모레스토리</h2>
+        <h2 class="page_title">뉴스 & 저널</h2>
         <v-tabs
           class="tab_narrow"
           v-model="tab"
@@ -177,78 +133,12 @@ const show = ref(false);
         </v-tabs>
       </div>
       <div class="board">
-        <div v-if="tab === '1' || tab === '2'" class="board_content">
-          <div class="board_cards grid-cols-4">
-            <!-- board 타입 1 -->
-            <template v-if="tab === '1'">
-              <v-card v-for="(item, i) in list1" :key="i" class="board_card">
-                <div class="card-img">
-                  <v-img height="180px" :src="item.img_url" cover></v-img>
-                </div>
-                <v-card-title class="my-2"> {{ item.title }} </v-card-title>
-                <v-card-subtitle> {{ item.subtitle }} </v-card-subtitle>
-                <v-card-text> {{ item.text }} </v-card-text>
-
-                <div class="v-card-custom-action pr-1 pb-1">
-                  <span class="v-card-date">{{ item.registered_at }}</span>
-                  <v-btn
-                    color="grey-lighten-2"
-                    icon="mdi-star"
-                    variant="text"
-                  />
-                </div>
-              </v-card>
-            </template>
-            <!-- board 타입 2 -->
-            <template v-if="tab === '2'">
-              <v-card class="board_card" v-for="(item, i) in list2" :key="i">
-                <div class="card-img">
-                  <v-img height="180px" :src="item.img_url" cover></v-img>
-                </div>
-                <v-card-actions>
-                  <div class="flex justify-between w-full">
-                    <v-card-title class="mt-1">
-                      {{ item.brand_name }}
-                    </v-card-title>
-                    <v-btn
-                      :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                      @click="show = !show"
-                      size="small"
-                    />
-                  </div>
-                </v-card-actions>
-                <v-expand-transition>
-                  <div v-show="show">
-                    <v-divider></v-divider>
-                    <v-card-text class="my-4">
-                      <v-chip size="x-small">
-                        {{ item.brand_ctgry }}
-                      </v-chip>
-                      브랜드 간랸한 소개 내용입니다.브랜드 간랸한 소개
-                      내용입니다.브랜드 간랸한 소개 내용입니다.
-                    </v-card-text>
-                  </div>
-                </v-expand-transition>
-              </v-card>
-            </template>
-          </div>
-        </div>
-        <!-- board 타입 3 -->
         <div class="board_list">
-          <template v-if="tab === '3'">
-            <v-list :items="list3" lines="two" item-props>
-              <template v-slot:subtitle="{ subtitle }">
-                <div v-html="subtitle" class="mr-10"></div>
-              </template>
-              <template v-slot:append>
-                <v-btn
-                  color="grey-lighten-2"
-                  icon="mdi-folder"
-                  variant="text"
-                />
-                <v-btn color="grey-lighten-2" icon="mdi-star" variant="text" />
-              </template>
-            </v-list>
+          <template v-if="tab === 'NEWS'">
+            <BoardListCommon :list="list1" />
+          </template>
+          <template v-if="tab === 'JOURNAL'">
+            <BoardListCommon :list="list1" />
           </template>
         </div>
 
