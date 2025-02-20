@@ -5,7 +5,7 @@ const formData = ref({});
 </script>
 <template>
   <div id="AmoreStory" class="page">
-    <div class="contents"></div>
+    <div class="container_inner"></div>
   </div>
 </template>
 

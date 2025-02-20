@@ -129,7 +129,7 @@ function loginFail(msg) {
   line-height: 34px;
   opacity: 0;
   animation: fadeInDown 1.5s forwards;
-  animation-delay: 0.05s;
+  animation-delay: 0.075s;
 }
 .login_left > div p:nth-of-type(2) {
   opacity: 0;

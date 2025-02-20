@@ -113,7 +113,7 @@ nav#lnb h1 {
   color: #868686;
   font-weight: 500;
   height: 36px;
-  margin: 0 16px 6px;
+  margin: 0 16px 8px;
 }
 .lnb_myprofile {
   display: flex;
