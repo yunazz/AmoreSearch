@@ -103,7 +103,7 @@ nav#lnb h1 {
 .lnb_bottom {
   margin-top: 12px;
   padding-top: 24px;
-  border-top: 2px solid #3f3f3f;
+  border-top: 1px solid #3f3f3f;
 }
 .lnb_bottom > div {
   display: flex;
