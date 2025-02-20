@@ -113,7 +113,6 @@ function loginFail(msg) {
     </div>
   </div>
 </template>
-
 <style scoped>
 #LoginPage {
   display: flex;
