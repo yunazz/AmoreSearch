@@ -159,27 +159,15 @@ img {
 }
 
 /* layouts */
-.wrap {
-  /* display: flex; */
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  background-color: var(--background-color);
-  height: 100vh;
-}
 main.main {
-  /* height: 100vh; */
   display: inline-flex;
+  margin-left: 200px;
 }
-.main_wrap {
+.content {
   min-width: 1260px;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 0 40px;
+  padding: 0 20px;
 }
-.main_container {
-  width: 100%;
-}
-.container_inner {
-  padding: 0 30px;
+.content_inner {
+  padding: 0 32px;
 }

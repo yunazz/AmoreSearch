@@ -4,7 +4,7 @@ const member = useMember();
 const formData = ref({});
 </script>
 <template>
-  <div id="AmoreStory" class="page">
+  <div id="AmoreStory" class="content">
     <div class="container_inner"></div>
   </div>
 </template>

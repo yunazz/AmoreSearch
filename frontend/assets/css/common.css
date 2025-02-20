@@ -539,12 +539,15 @@
 .grid-cols-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
 }
 .grid-cols-3 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 1rem;
 }
 .grid-cols-4 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  column-gap: 1rem;
 }

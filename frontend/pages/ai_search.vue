@@ -60,8 +60,8 @@ const items1 = [
 </script>
 
 <template>
-  <div id="AiSearch" class="page">
-    <div class="container_inner">
+  <div id="AiSearch" class="content">
+    <div class="content_inner">
       <h2 class="title--xl fw-700">
         안녕하세요,
         <span class="text-underline ml-1">
@@ -74,8 +74,8 @@ const items1 = [
         <v-icon icon="mdi-magnify" />
         <input type="text" />
       </div>
+      <v-divider class="mt-9" />
     </div>
-    <v-divider class="mt-9" />
     <article class="mt-7">
       <v-sheet class="group_card" style="">
         <v-slide-group v-model="model" class="pa-2" show-arrows>
@@ -91,8 +91,8 @@ const items1 = [
         </v-slide-group>
       </v-sheet>
     </article>
-    <div class="container_inner grid-cols-2">
-      <article class="mt-2 px-3">
+    <div class="content_inner grid-cols-2">
+      <article class="mt-2">
         <v-card class="mx-auto" elevation="0">
           <v-list :items="items" lines="two" item-props>
             <template v-slot:prepend>
@@ -113,7 +113,7 @@ const items1 = [
           </v-list>
         </v-card>
       </article>
-      <article class="mt-2 px-3">
+      <article class="mt-2">
         <v-card class="mx-auto" elevation="0">
           <v-list :items="items1" lines="two" item-props>
             <template v-slot:prepend>
@@ -178,5 +178,8 @@ const items1 = [
 }
 .group_card_item .card_img {
   border-radius: var(--radius-3);
+}
+#AiSearch .grid-cols-2 {
+  column-gap: 2rem;
 }
 </style>

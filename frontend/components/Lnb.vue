@@ -84,6 +84,9 @@ nav#lnb {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: fixed;
+  z-index: 1;
+  height: 100vh;
   width: var(--lnb-width);
   min-width: var(--lnb-width);
   background: var(--lnb-bg-color);

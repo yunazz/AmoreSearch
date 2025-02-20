@@ -39,7 +39,14 @@ nav#lnb
   line-height: 20px;
   border-radius: 10px;
 }
-.lnb_bottom .v-btn--icon.v-btn--density-default {
+nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   margin-top: 2px !important;
   margin-bottom: 2px !important;
+}
+
+#AiSearch article .v-list-item--density-default.v-list-item--two-line {
+  padding-right: 6px !important;
+}
+#AiSearch article .v-list-item__append {
+  margin-left: 8px;
 }
