@@ -13,11 +13,8 @@ const lnb_items = [
 const admin_items = [
   { name: "사원관리", path: "/members", img_path: "img/icon/member.svg" },
 ];
-const member = ref({
-  name: "홍길동",
-  position: "사원",
-  department: "HR",
-});
+
+const member = useMember();
 const route = useRoute();
 
 function active_menu(path) {

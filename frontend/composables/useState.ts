@@ -34,12 +34,16 @@ export function useLoginHandler() {
 function defaultMember(): Ref<MemberOptions> {
 	const member = ref<MemberOptions>({
 		member_id: 0,
-    emp_no: '',
-		position: '',
-		department: '',
-		name: '',
-		role: ''
+    	emp_no: '',
+    	// name: '',
+		// position: '',
+		// department: '',
+		// role: ''
+		role: '일반',
+
+		name: '홍길동',
+		position: '사원',
+		department: 'HR',
 	});
-  console.log('member로드');
 	return member;
 }

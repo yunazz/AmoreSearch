@@ -3,7 +3,6 @@ definePageMeta({
   layout: false,
 });
 
-const router = useRouter();
 const formData = ref({
   identify: "",
   password: "",
@@ -18,7 +17,6 @@ async function login() {
 }
 
 async function loginSuccess() {
-  console.log("헬로우");
   await navigateTo("/ai_search");
 }
 
@@ -91,6 +89,7 @@ function loginFail(msg) {
             v-model="formData.emp_no"
             oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
             maxLength="8"
+            autocomplete="off"
           />
           <v-text-field
             :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"

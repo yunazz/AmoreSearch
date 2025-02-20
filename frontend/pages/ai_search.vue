@@ -1,10 +1,5 @@
 <script setup>
-// const router = useRouter();
-const member = ref({
-  name: "홍길동",
-  position: "사원",
-  department: "HR",
-});
+const member = useMember();
 const formData = ref({});
 </script>
 
@@ -20,13 +15,8 @@ const formData = ref({});
         무엇을 도와드릴까요?
       </h2>
       <div class="input--search mt-3">
-        <v-text-field
-          prepend-inner-icon="mdi-magnify"
-          variant
-          hide-details
-          single-line
-          density="compact"
-        />
+        <v-icon icon="mdi-magnify" />
+        <input type="text" />
       </div>
       <div>
         <div class="card_outlined"></div>
@@ -41,7 +31,6 @@ const formData = ref({});
 }
 
 #AiSearch h2 {
-  /* text-align: center; */
   font-size: 1.75rem;
   line-height: 2.5rem;
   word-spacing: -4px;
@@ -51,9 +40,15 @@ const formData = ref({});
   text-underline-offset: 7px;
 }
 .input--search {
+  display: flex;
+  align-items: center;
   margin-top: 2px;
-  /* max-width: 800px; */
-  /* margin: 0 auto; */
-  /* margin-top: 0.75rem; */
+}
+.input--search input {
+  width: 100%;
+  outline: none;
+}
+.input--search i {
+  font-size: 34px;
 }
 </style>
