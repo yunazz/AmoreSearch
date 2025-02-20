@@ -1,62 +1,4 @@
 <script setup>
-const list = ref([
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    text: "Top western road trips",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    text: "Top western road trips",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    text: "Top western road trips",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    text: "Top western road trips",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "Top western road trips",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "Top western road trips",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "Top western road trips",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "Top western road trips",
-    subtitle: "1,000 miles of wonder",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "Top western road trips",
-    registered_at: "2025-01-01",
-  },
-]);
 const items = ref([
   { text: "뉴스", value: "NEWS" },
   { text: "저널", value: "JOURNAL" },
@@ -135,10 +77,10 @@ const tab = ref("NEWS");
       <div class="board">
         <div class="board_list">
           <template v-if="tab === 'NEWS'">
-            <BoardListCommon :list="list1" />
+            <BoardCommon :list="list1" />
           </template>
           <template v-if="tab === 'JOURNAL'">
-            <BoardListCommon :list="list1" />
+            <BoardCommon :list="list1" />
           </template>
         </div>
 

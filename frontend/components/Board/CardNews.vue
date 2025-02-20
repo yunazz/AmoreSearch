@@ -4,7 +4,7 @@ const props = defineProps(["list", "listType"]);
 </script>
 
 <template>
-  <div>
+  <div class="board_cards grid-cols-4">
     <v-card v-for="(item, i) in list" :key="i" class="board_card">
       <div class="card-img">
         <v-img height="180px" :src="item.img_url" cover></v-img>

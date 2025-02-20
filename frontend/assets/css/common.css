@@ -549,9 +549,7 @@
   -ms-use-select: text;
   user-select: text;
 }
-.input_wrap > div {
-  margin: 0.625rem 0;
-}
+
 .grid-cols-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -566,4 +564,21 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 1rem;
+}
+.hover_underline:hover {
+  text-decoration: underline;
+}
+.text-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 최대 6줄 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-clamp-6 {
+  display: -webkit-box;
+  -webkit-line-clamp: 6; /* 최대 6줄 표시 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

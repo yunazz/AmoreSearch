@@ -4,6 +4,7 @@ const items = ref([
   { text: "자사브랜드", value: "2" },
   { text: "사내문서", value: "3" },
 ]);
+
 const list1 = ref([
   {
     title: "회사뉴스 제목",
@@ -62,6 +63,7 @@ const list1 = ref([
     registered_at: "2025-01-01",
   },
 ]);
+
 const list2 = ref([
   {
     brand_ctgry: "화장품",
@@ -178,78 +180,44 @@ const show = ref(false);
       </div>
       <div class="board">
         <div v-if="tab === '1' || tab === '2'" class="board_content">
-          <div class="board_cards grid-cols-4">
-            <!-- board 타입 1 -->
-            <template v-if="tab === '1'">
-              <v-card v-for="(item, i) in list1" :key="i" class="board_card">
-                <div class="card-img">
-                  <v-img height="180px" :src="item.img_url" cover></v-img>
-                </div>
-                <v-card-title class="my-2"> {{ item.title }} </v-card-title>
-                <v-card-subtitle> {{ item.subtitle }} </v-card-subtitle>
-                <v-card-text> {{ item.text }} </v-card-text>
-
-                <div class="v-card-custom-action pr-1 pb-1">
-                  <span class="v-card-date">{{ item.registered_at }}</span>
+          <!-- 1 회사뉴스 -->
+          <BoardCardNews v-if="tab === '1'" :list="list1" />
+          <!-- 2 자사브랜드 -->
+          <div v-if="tab === '2'" class="board_cards grid-cols-4">
+            <v-card class="board_card" v-for="(item, i) in list2" :key="i">
+              <div class="card-img">
+                <v-img height="180px" :src="item.img_url" cover></v-img>
+              </div>
+              <v-card-actions>
+                <div class="flex justify-between w-full">
+                  <v-card-title class="mt-1">
+                    {{ item.brand_name }}
+                  </v-card-title>
                   <v-btn
-                    color="grey-lighten-2"
-                    icon="mdi-star"
-                    variant="text"
+                    :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+                    @click="show = !show"
+                    size="small"
                   />
                 </div>
-              </v-card>
-            </template>
-            <!-- board 타입 2 -->
-            <template v-if="tab === '2'">
-              <v-card class="board_card" v-for="(item, i) in list2" :key="i">
-                <div class="card-img">
-                  <v-img height="180px" :src="item.img_url" cover></v-img>
+              </v-card-actions>
+              <v-expand-transition>
+                <div v-show="show">
+                  <v-divider></v-divider>
+                  <v-card-text class="my-4">
+                    <v-chip size="x-small">
+                      {{ item.brand_ctgry }}
+                    </v-chip>
+                    브랜드 간랸한 소개 내용입니다.브랜드 간랸한 소개
+                    내용입니다.브랜드 간랸한 소개 내용입니다.
+                  </v-card-text>
                 </div>
-                <v-card-actions>
-                  <div class="flex justify-between w-full">
-                    <v-card-title class="mt-1">
-                      {{ item.brand_name }}
-                    </v-card-title>
-                    <v-btn
-                      :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                      @click="show = !show"
-                      size="small"
-                    />
-                  </div>
-                </v-card-actions>
-                <v-expand-transition>
-                  <div v-show="show">
-                    <v-divider></v-divider>
-                    <v-card-text class="my-4">
-                      <v-chip size="x-small">
-                        {{ item.brand_ctgry }}
-                      </v-chip>
-                      브랜드 간랸한 소개 내용입니다.브랜드 간랸한 소개
-                      내용입니다.브랜드 간랸한 소개 내용입니다.
-                    </v-card-text>
-                  </div>
-                </v-expand-transition>
-              </v-card>
-            </template>
+              </v-expand-transition>
+            </v-card>
           </div>
         </div>
-        <!-- board 타입 3 -->
         <div class="board_list">
-          <template v-if="tab === '3'">
-            <v-list :items="list3" lines="two" item-props>
-              <template v-slot:subtitle="{ subtitle }">
-                <div v-html="subtitle" class="mr-10"></div>
-              </template>
-              <template v-slot:append>
-                <v-btn
-                  color="grey-lighten-2"
-                  icon="mdi-folder"
-                  variant="text"
-                />
-                <v-btn color="grey-lighten-2" icon="mdi-star" variant="text" />
-              </template>
-            </v-list>
-          </template>
+          <!-- 3 사내문서 -->
+          <BoardDocument v-if="tab === '3'" :list="list3" />
         </div>
 
         <div class="board_paging">1,2,3,</div>
