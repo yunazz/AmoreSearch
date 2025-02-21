@@ -77,10 +77,10 @@ const tab = ref("NEWS");
       <div class="board">
         <div class="board_list">
           <template v-if="tab === 'NEWS'">
-            <BoardCommon :list="list1" />
+            <BoardItemLinks :list="list1" />
           </template>
           <template v-if="tab === 'JOURNAL'">
-            <BoardCommon :list="list1" />
+            <BoardItemLinks :list="list1" />
           </template>
         </div>
 

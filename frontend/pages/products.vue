@@ -1,5 +1,5 @@
 <script setup>
-const tab_items = ref([
+const tabItems = ref([
   { text: "자사제품", value: "1" },
   { text: "타사제품", value: "2" },
 ]);
@@ -115,7 +115,7 @@ const list = ref([
           align-tabs="center"
         >
           <v-tab
-            v-for="item in tab_items"
+            v-for="item in tabItems"
             :key="item.value"
             :text="item.text"
             :value="item.value"
@@ -124,7 +124,7 @@ const list = ref([
       </div>
       <div class="board">
         <div class="board_content">
-          <BoardProduct :list="list" />
+          <BoardItemProduct :list="list" />
         </div>
         <div class="board_paging">1,2,3,</div>
       </div>

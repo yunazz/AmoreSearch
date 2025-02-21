@@ -1,7 +1,5 @@
 <script setup>
-import { BoardCommon, BoardDocument } from "#components";
-
-const tab_items = ref([
+const tabItems = ref([
   { text: "뉴스&저널", value: "1" },
   { text: "회사뉴스", value: "2" },
   { text: "화장품", value: "3" },
@@ -285,7 +283,7 @@ function openRnb(item) {
           align-tabs="center"
         >
           <v-tab
-            v-for="item in tab_items"
+            v-for="item in tabItems"
             :key="item.value"
             :text="item.text"
             :value="item.value"
@@ -294,12 +292,12 @@ function openRnb(item) {
       </div>
       <div class="board">
         <div v-if="tab == '1' || tab == '4'" class="board_list">
-          <BoardCommon v-if="tab == '1'" :list="list1" />
-          <BoardDocument v-if="tab == '4'" :list="list4" />
+          <BoardItemLinks v-if="tab == '1'" :list="list1" />
+          <BoardItemDocument v-if="tab == '4'" :list="list4" />
         </div>
         <div v-else class="board_content">
-          <BoardCardNews v-if="tab == '2'" :list="list2" />
-          <BoardProduct v-if="tab == '3'" :list="list3" />
+          <BoardItemCardNews v-if="tab == '2'" :list="list2" />
+          <BoardItemProduct v-if="tab == '3'" :list="list3" />
         </div>
         <div class="board_paging">1,2,3,</div>
       </div>

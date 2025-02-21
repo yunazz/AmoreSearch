@@ -15,7 +15,11 @@ const lnb_items = [
   { name: "즐겨찾기", path: "/favorites", img_path: "img/icon/star.svg" },
 ];
 const admin_items = [
-  { name: "사원관리", path: "/members", img_path: "img/icon/member.svg" },
+  {
+    name: "직원관리",
+    path: "/admin/members",
+    img_path: "img/icon/member.svg",
+  },
 ];
 
 const member = useMember();
@@ -37,7 +41,7 @@ function logout() {}
       <NuxtLink class="lnb_myprofile" to="/mypage">
         <NuxtImg src="img/icon/account.png" width="44" />
         <div>
-          <div class="text-gray-01 fw-500">
+          <div class="text-grey-01 fw-500">
             <span>{{ member.department }}</span>
           </div>
           <p class="fw-800">
@@ -47,7 +51,7 @@ function logout() {}
         </div>
       </NuxtLink>
       <div class="lnb_menu">
-        <small class="text-gray-01">OVERVIEW</small>
+        <small class="text-grey-01">OVERVIEW</small>
         <ul class="lnb_list">
           <li
             v-for="item in lnb_items"
@@ -60,7 +64,7 @@ function logout() {}
             </NuxtLink>
           </li>
         </ul>
-        <small class="text-gray-01">ADMIN</small>
+        <small class="text-grey-01">ADMIN</small>
         <ul class="lnb_list">
           <li
             v-for="item in admin_items"

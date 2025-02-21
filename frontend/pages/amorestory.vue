@@ -1,10 +1,10 @@
 <script setup>
-const items = ref([
+const tab = ref("1");
+const tabItems = ref([
   { text: "회사뉴스", value: "1" },
   { text: "자사브랜드", value: "2" },
   { text: "사내문서", value: "3" },
 ]);
-
 const list1 = ref([
   {
     title: "회사뉴스 제목",
@@ -156,11 +156,11 @@ const list3 = ref([
     subtitle: `아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
   },
 ]);
-const tab = ref("1");
+
 const show = ref(false);
 </script>
 <template>
-  <div id="AmorePacific" class="content">
+  <div id="AmoreStory" class="content">
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">아모레스토리</h2>
@@ -171,7 +171,7 @@ const show = ref(false);
           align-tabs="center"
         >
           <v-tab
-            v-for="item in items"
+            v-for="item in tabItems"
             :key="item.value"
             :text="item.text"
             :value="item.value"
@@ -181,7 +181,7 @@ const show = ref(false);
       <div class="board">
         <div v-if="tab === '1' || tab === '2'" class="board_content">
           <!-- 1 회사뉴스 -->
-          <BoardCardNews v-if="tab === '1'" :list="list1" />
+          <BoardItemCardNews v-if="tab === '1'" :list="list1" />
           <!-- 2 자사브랜드 -->
           <div v-if="tab === '2'" class="board_cards grid-cols-4">
             <v-card class="board_card" v-for="(item, i) in list2" :key="i">
@@ -217,7 +217,7 @@ const show = ref(false);
         </div>
         <div class="board_list">
           <!-- 3 사내문서 -->
-          <BoardDocument v-if="tab === '3'" :list="list3" />
+          <BoardItemDocument v-if="tab === '3'" :list="list3" />
         </div>
 
         <div class="board_paging">1,2,3,</div>

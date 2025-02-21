@@ -134,7 +134,7 @@ a:disabled {
 input::placeholder {
   font-weight: 400;
   font-size: var(--body-size-s);
-  color: var(--color-gray-03) !important;
+  color: var(--color-grey-03) !important;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -192,7 +192,7 @@ main.main {
   font-size: 0.8125rem;
   font-size: 0.875rem;
   padding-left: 10px;
-  color: var(--gray-color-02);
+  color: var(--grey-color-02);
 }
 .board_card .v-card-custom-action {
   display: flex;
@@ -232,7 +232,8 @@ main.main {
   justify-content: flex-start; /* 왼쪽부터 정렬 */
 }
 .board_list {
-  max-width: 900px;
+  min-width: 1200px;
+  max-width: 1400px;
   margin: 1.25rem auto 2.125rem;
 }
 .board_paging {
@@ -338,4 +339,16 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   margin-bottom: 2px;
   font-size: 0.9375rem;
   font-weight: 500;
+}
+.board .v-table > .v-table__wrapper > table > tbody > tr > td,
+.board .v-table > .v-table__wrapper > table > tbody > tr > th,
+.board .v-table > .v-table__wrapper > table > thead > tr > td,
+.board .v-table > .v-table__wrapper > table > thead > tr > th,
+.board .v-table > .v-table__wrapper > table > tfoot > tr > td,
+.board .v-table > .v-table__wrapper > table > tfoot > tr > th {
+  padding: 0 10px;
+}
+.board .v-table > .v-table__wrapper > table > tbody > tr:last-of-type > td,
+.board .v-table > .v-table__wrapper > table > tfoot > tr:last-of-type > td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
