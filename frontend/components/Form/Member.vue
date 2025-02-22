@@ -1,4 +1,7 @@
 <script setup>
+const props = defineProps(["mode", "item"]);
+const emit = defineEmits(["submit", "close"]);
+
 const valid = ref(false);
 const form = ref({
   role: "",
@@ -13,10 +16,6 @@ const form = ref({
   resign_date: "",
   resign_reason: "",
 });
-
-const departments = ["HR", "법무팀", "영업팀"];
-const positions = ["사원", "대리", "부장", "임원"];
-
 // Date picker 관련
 const birth_dateMenu = ref(false);
 const hire_dateMenu = ref(false);
@@ -25,8 +24,6 @@ const birth_datePicker = ref(null);
 const hire_datePicker = ref(null);
 const resign_datePicker = ref(null);
 
-const formRef = ref(null);
-
 const formatDate = (date) => {
   if (!date) return "";
   const [year, month, day] = date.toISOString().split("T")[0].split("-");
@@ -34,16 +31,16 @@ const formatDate = (date) => {
 };
 
 const close = () => {
-  dialog.value = false;
-  formRef.value?.reset();
+  console.log(props.mode);
+  emit("close", props.mode);
 };
 
-const save = () => {
-  if (valid.value) {
-    console.log("Form data:", form.value);
-    close();
-  }
+const submit = () => {
+  console.log(props.mode);
+  emit("submit", props.mode, form);
+  close();
 };
+console.log(props.mode);
 </script>
 
 <template>
@@ -179,7 +176,7 @@ const save = () => {
               hide-details
               variant="outlined"
               v-model="form.department"
-              :items="departments"
+              :items="enums.departments"
               single-line
             />
           </div>
@@ -189,7 +186,7 @@ const save = () => {
               hide-details
               variant="outlined"
               v-model="form.position"
-              :items="positions"
+              :items="enums.positions"
               single-line
             />
           </div>
@@ -246,7 +243,7 @@ const save = () => {
         color="black"
         text
         width="90"
-        @click="save"
+        @click="submit"
         >저장</v-btn
       >
       <v-btn
@@ -255,7 +252,7 @@ const save = () => {
         color="grey-black"
         text
         width="90"
-        @click="closeDialog"
+        @click="close"
         >취소</v-btn
       >
     </v-card-actions>

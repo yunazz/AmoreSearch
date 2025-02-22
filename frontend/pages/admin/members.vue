@@ -1,89 +1,3 @@
-<template>
-  <div id="Members" class="content">
-    <div class="content_inner">
-      <div class="page_header">
-        <h2 class="page_title">직원관리</h2>
-        <v-tabs
-          class="tab_narrow"
-          v-model="tab"
-          bg-color="transparent"
-          align-tabs="center"
-        >
-          <v-tab
-            v-for="item in tabItems"
-            :key="item.value"
-            :text="item.text"
-            :value="item.value"
-          ></v-tab>
-        </v-tabs>
-      </div>
-      <div class="board">
-        <div class="board_util">
-          <v-btn icon="mdi-plus" />
-        </div>
-        <div class="board_list">
-          <template v-if="tab === 'MEMBER'">
-            <v-table>
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 80px">번호</th>
-                  <th class="text-left">권한</th>
-                  <th class="text-left">사번</th>
-                  <th class="text-left">이름</th>
-                  <th class="text-left">소속</th>
-                  <th class="text-left">부서</th>
-                  <th class="text-left">직급</th>
-                  <th class="text-left" style="width: 120px">생년월일</th>
-                  <th class="text-left" style="width: 140px">휴대폰번호</th>
-                  <th class="text-left" style="width: 120px">입사일</th>
-                  <th class="text-left" style="width: 90px">근무상태</th>
-                  <th class="text-left" style="width: 80px">수정</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in list1" :key="item.name">
-                  <td class="text-center">{{ totals - index }}</td>
-                  <td>{{ item.role }}</td>
-                  <td>{{ item.emp_no }}</td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.company_affiliation }}</td>
-                  <td>{{ item.department }}</td>
-                  <td>{{ item.position }}</td>
-                  <td>{{ item.birth_date }}</td>
-                  <td>{{ item.phone }}</td>
-                  <td>{{ item.hire_date }}</td>
-                  <td>{{ item.work_status }}</td>
-                  <td>
-                    <v-btn
-                      :id="`member-${index}`"
-                      icon="mdi-pencil"
-                      @click="openDialog('edit', item)"
-                      variant="text"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </template>
-        </div>
-
-        <div class="board_paging">1,2,3,</div>
-      </div>
-    </div>
-    <v-dialog v-model="dialog.edit" max-width="600" scrollable>
-      <FormMember
-        mode="edit"
-        item="propItem"
-        @close="closeDialog"
-        @submit="submitDialog"
-      />
-    </v-dialog>
-    <v-dialog v-model="dialog.register" max-width="600" scrollable>
-      <FormMember mode="register" @close="closeDialog" @submit="submitDialog" />
-    </v-dialog>
-  </div>
-</template>
-
 <script setup>
 const tab = ref("MEMBER");
 const tabItems = ref([
@@ -236,11 +150,14 @@ function openDialog(dialogName, item) {
 }
 
 function closeDialog(mode) {
+  console.log(mode);
   dialog.value[dialogName] = false;
   propItem.value = null;
 }
 
 async function submitDialog(mode, formData) {
+  console.log(mode);
+  console.log(formData);
   if (mode === "edit") {
     await editMember();
     // 간단 리프레쉬만
@@ -248,12 +165,97 @@ async function submitDialog(mode, formData) {
     await registerMember();
     // 페이지 1로 돌리기기
   }
-  console.log(mode);
   closeDialog(mode);
 }
 
 async function editMember() {}
 async function registerMember() {}
 </script>
+
+<template>
+  <div id="Members" class="content">
+    <div class="content_inner">
+      <div class="page_header">
+        <h2 class="page_title">직원관리</h2>
+        <v-tabs
+          class="tab_narrow"
+          v-model="tab"
+          bg-color="transparent"
+          align-tabs="center"
+        >
+          <v-tab
+            v-for="item in tabItems"
+            :key="item.value"
+            :text="item.text"
+            :value="item.value"
+          ></v-tab>
+        </v-tabs>
+      </div>
+      <div class="board">
+        <div class="board_util">
+          <v-btn icon="mdi-plus" />
+        </div>
+        <div class="board_list">
+          <template v-if="tab === 'MEMBER'">
+            <v-table>
+              <thead>
+                <tr>
+                  <th class="text-center" style="width: 80px">번호</th>
+                  <th class="text-left">권한</th>
+                  <th class="text-left">사번</th>
+                  <th class="text-left">이름</th>
+                  <th class="text-left">소속</th>
+                  <th class="text-left">부서</th>
+                  <th class="text-left">직급</th>
+                  <th class="text-left" style="width: 120px">생년월일</th>
+                  <th class="text-left" style="width: 140px">휴대폰번호</th>
+                  <th class="text-left" style="width: 120px">입사일</th>
+                  <th class="text-left" style="width: 90px">근무상태</th>
+                  <th class="text-left" style="width: 80px">수정</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in list1" :key="item.name">
+                  <td class="text-center">{{ totals - index }}</td>
+                  <td>{{ item.role }}</td>
+                  <td>{{ item.emp_no }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.company_affiliation }}</td>
+                  <td>{{ item.department }}</td>
+                  <td>{{ item.position }}</td>
+                  <td>{{ item.birth_date }}</td>
+                  <td>{{ item.phone }}</td>
+                  <td>{{ item.hire_date }}</td>
+                  <td>{{ item.work_status }}</td>
+                  <td>
+                    <v-btn
+                      :id="`member-${index}`"
+                      icon="mdi-pencil"
+                      @click="openDialog('edit', item)"
+                      variant="text"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </v-table>
+          </template>
+        </div>
+
+        <div class="board_paging">1,2,3,</div>
+      </div>
+    </div>
+    <v-dialog v-model="dialog.edit" max-width="600" scrollable>
+      <FormMember
+        mode="edit"
+        item="propItem"
+        @close="closeDialog"
+        @submit="submitDialog"
+      />
+    </v-dialog>
+    <v-dialog v-model="dialog.register" max-width="600" scrollable>
+      <FormMember mode="register" @close="closeDialog" @submit="submitDialog" />
+    </v-dialog>
+  </div>
+</template>
 
 <style scoped></style>
