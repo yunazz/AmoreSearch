@@ -45,6 +45,7 @@ const items1 = [
       '<span class="text-primary">Trevor Hansen</span> CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.',
   },
 ];
+const model = ref([]);
 </script>
 
 <template>
@@ -65,19 +66,21 @@ const items1 = [
       <v-divider class="mt-9" />
     </div>
     <article class="mt-7">
-      <v-sheet class="group_card" style="">
-        <v-slide-group v-model="model" class="pa-2" show-arrows>
-          <v-slide-group-item v-for="n in 8" :key="n">
-            <div class="group_card_item">
-              <!-- <v-card :class="['ma-4']" height="250" width="340" @click="toggle"> -->
-              <div class="d-flex fill-height align-center justify-center">
-                item
+      <ClientOnly>
+        <v-sheet class="group_card" style="">
+          <v-slide-group v-model="model" class="pa-2" show-arrows>
+            <v-slide-group-item v-for="n in 8" :key="n">
+              <div class="group_card_item">
+                <!-- <v-card :class="['ma-4']" height="250" width="340" @click="toggle"> -->
+                <div class="d-flex fill-height align-center justify-center">
+                  item
+                </div>
+                <!-- </v-card> -->
               </div>
-              <!-- </v-card> -->
-            </div>
-          </v-slide-group-item>
-        </v-slide-group>
-      </v-sheet>
+            </v-slide-group-item>
+          </v-slide-group>
+        </v-sheet>
+      </ClientOnly>
     </article>
     <div class="content_inner grid-cols-2">
       <article class="mt-2">
@@ -137,7 +140,7 @@ const items1 = [
   margin-top: 2px;
 }
 .input--search {
-  border: 3px solid var(--main-color);
+  border: 3px solid var(--color-black);
   border-radius: 60px;
   padding: 4px 10px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;

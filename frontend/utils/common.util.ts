@@ -12,11 +12,22 @@
 // }
 
 export function formatNumber(num: number, digit = 0) {
-	if (num === null || num === undefined || isNaN(num)) {
-		return 0;
-	}
-	const number = Number(num).toLocaleString('ko-KR', { maximumFractionDigits: digit });
-	return number === '-0' ? '0' : number;
+  if (num === null || num === undefined || isNaN(num)) {
+    return 0;
+  }
+  const number = Number(num).toLocaleString("ko-KR", {
+    maximumFractionDigits: digit,
+  });
+  return number === "-0" ? "0" : number;
+}
+
+export function formatDate(dateStr: Date) {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  // 월은 0부터 시작하므로 +1 후, 2자리 숫자로 변환합니다.
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 // export function stringToInt(amt: any) {
@@ -31,7 +42,6 @@ export function formatNumber(num: number, digit = 0) {
 
 // 	return false;
 // };
-
 
 // export const is_empty = (value: any): boolean => {
 // 	// falsy값 chk : false, 0, "", null, undefined, NaN

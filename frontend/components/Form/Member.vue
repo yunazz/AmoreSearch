@@ -1,11 +1,9 @@
 <script setup>
-const props = defineProps({
-  mode: String,
-  item: Object,
-});
+const props = defineProps(["mode", "item"]);
 const emit = defineEmits(["submit", "close"]);
-const defaultForm = {
-  role: "",
+
+const form = ref({
+  role: 1,
   emp_no: "",
   name: "",
   password: "",
@@ -16,26 +14,30 @@ const defaultForm = {
   phone: "",
   resign_date: "",
   resign_reason: "",
+});
+
+const initFormData = () => {
+  if (props.mode === "register") {
+  } else if (props.mode === "edit") {
+    form.value = {
+      ...props.item,
+      password: "",
+      resign_date: "",
+      resign_reason: "",
+    };
+  } else if (props.mode === "info") {
+    form.value = { ...props.item };
+  }
 };
 
-const form = ref(() =>
-  props.mode === "edit" ? { ...defaultForm, ...props.item } : { ...defaultForm }
-);
-console.log(form.value);
 const valid = ref(false);
 // Date picker 관련
-const birth_dateMenu = ref(false);
-const hire_dateMenu = ref(false);
-const resign_dateMenu = ref(false);
-const birth_datePicker = ref(null);
-const hire_datePicker = ref(null);
-const resign_datePicker = ref(null);
-
-const formatDate = (date) => {
-  if (!date) return "";
-  const [year, month, day] = date.toISOString().split("T")[0].split("-");
-  return `${year}-${month}-${day}`;
-};
+const menu_birth = ref(false);
+const menu_hire = ref(false);
+const menu_resign = ref(false);
+const datepicker_birth = ref(null);
+const datepicker_hire = ref(null);
+const datepicker_resign = ref(null);
 
 const close = () => {
   emit("close", props.mode);
@@ -45,24 +47,29 @@ const submit = () => {
   emit("submit", props.mode, form);
   close();
 };
+
+onMounted(() => {
+  initFormData();
+});
 </script>
 
 <template>
   <v-card>
     <v-toolbar align="center" color="black" class="px-7">
-      <v-icon icon="mdi-account" class="mr-3 title--l" />직원 정보수정
+      <v-icon icon="mdi-account" class="mr-3 title--l" />
+      직원 {{ mode === "register" ? "등록" : mode === "edit" && "수정" }}
     </v-toolbar>
     <v-card-text>
-      <v-form v-model="valid" class="px-3 mt-2">
-        <div class="input_cont mb-3">
-          <label>권한</label>
+      <v-form v-model="valid" class="px-3">
+        <div class="input_cont flex align-center">
+          <label class="mr-4">권한</label>
           <v-chip-group
             v-model="form.role"
             selected-class="text-deep-purple-accent-4"
             mandatory
           >
-            <v-chip variant="outlined" value="admin">관리자</v-chip>
-            <v-chip variant="outlined" value="normal">일반</v-chip>
+            <v-chip variant="outlined" :value="2">관리자</v-chip>
+            <v-chip variant="outlined" :value="1">일반</v-chip>
           </v-chip-group>
         </div>
         <div class="grid-cols-2">
@@ -133,7 +140,7 @@ const submit = () => {
                 readonly
               >
                 <v-menu
-                  v-model="birth_dateMenu"
+                  v-model="menu_birth"
                   :close-on-content-click="false"
                   activator="parent"
                   width="200"
@@ -141,7 +148,7 @@ const submit = () => {
                   <v-date-picker
                     hide-header
                     show-adjacent-months
-                    v-model="birth_datePicker"
+                    v-model="datepicker_birth"
                     @update:modelValue="form.birth_date = formatDate($event)"
                   />
                 </v-menu>
@@ -159,14 +166,14 @@ const submit = () => {
                 readonly
               >
                 <v-menu
-                  v-model="hire_dateMenu"
+                  v-model="menu_hire"
                   :close-on-content-click="false"
                   activator="parent"
                 >
                   <v-date-picker
                     hide-header
                     show-adjacent-months
-                    v-model="hire_datePicker"
+                    v-model="datepicker_hire"
                     @update:modelValue="form.hire_date = formatDate($event)"
                   />
                 </v-menu>
@@ -196,7 +203,7 @@ const submit = () => {
             />
           </div>
         </div>
-        <v-divider class="mt-4 mb-6" />
+        <v-divider class="mt-4 mb-4" />
 
         <div class="grid-cols-2">
           <client-only>
@@ -218,14 +225,14 @@ const submit = () => {
                 readonly
               >
                 <v-menu
-                  v-model="resign_dateMenu"
+                  v-model="menu_resign"
                   :close-on-content-click="false"
                   activator="parent"
                 >
                   <v-date-picker
                     hide-header
                     show-adjacent-months
-                    v-model="resign_datePicker"
+                    v-model="datepicker_resign"
                     @update:modelValue="form.resign_date = formatDate($event)"
                   />
                 </v-menu>
@@ -269,7 +276,7 @@ const submit = () => {
 .input_cont label {
   color: var(--color-grey-05);
   display: inline-block;
-  font-size: 0.875rem;
-  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  margin-bottom: 4px;
 }
 </style>

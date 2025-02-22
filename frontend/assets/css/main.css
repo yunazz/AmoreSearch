@@ -370,4 +370,12 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 .v-dialog .v-toolbar__content {
   height: 60px;
   font-size: var(--title-size-m);
+  word-spacing: -2px;
+}
+.input_cont .v-messages__message {
+  text-align: right;
+  line-height: 8px !important;
+}
+.input_cont .v-text-field .v-input__details {
+  padding-inline: 0;
 }

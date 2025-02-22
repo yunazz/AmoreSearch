@@ -277,19 +277,21 @@ function openRnb(item) {
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">즐겨찾기</h2>
-        <v-tabs
-          class="tab_narrow"
-          v-model="tab"
-          bg-color="transparent"
-          align-tabs="center"
-        >
-          <v-tab
-            v-for="item in tabItems"
-            :key="item.value"
-            :text="item.text"
-            :value="item.value"
-          ></v-tab>
-        </v-tabs>
+        <ClientOnly>
+          <v-tabs
+            class="tab_narrow"
+            v-model="tab"
+            bg-color="transparent"
+            align-tabs="center"
+          >
+            <v-tab
+              v-for="item in tabItems"
+              :key="item.value"
+              :text="item.text"
+              :value="item.value"
+            ></v-tab>
+          </v-tabs>
+        </ClientOnly>
       </div>
       <div class="board">
         <div v-if="tab == '1' || tab == '4'" class="board_list">

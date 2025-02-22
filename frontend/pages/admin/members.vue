@@ -7,7 +7,7 @@ const tabItems = ref([
 const list1 = ref([
   {
     member_id: 1,
-    role: "일반",
+    role: 2,
     emp_no: "1032645132",
     name: "홍길동",
     company_affiliation: "아모레퍼시픽",
@@ -20,7 +20,7 @@ const list1 = ref([
   },
   {
     member_id: 2,
-    role: "일반",
+    role: 1,
     emp_no: "1032645133",
     name: "김영희",
     company_affiliation: "아모레퍼시픽그룹",
@@ -33,7 +33,7 @@ const list1 = ref([
   },
   {
     member_id: 3,
-    role: "일반",
+    role: 1,
     emp_no: "1032645134",
     name: "박철수",
     company_affiliation: "설화수",
@@ -46,7 +46,7 @@ const list1 = ref([
   },
   {
     member_id: 4,
-    role: "일반",
+    role: 1,
     emp_no: "1032645135",
     name: "이민호",
     company_affiliation: "에뛰드",
@@ -59,7 +59,7 @@ const list1 = ref([
   },
   {
     member_id: 5,
-    role: "일반",
+    role: 1,
     emp_no: "1032645136",
     name: "정수진",
     company_affiliation: "아모레퍼시픽",
@@ -72,7 +72,7 @@ const list1 = ref([
   },
   {
     member_id: 6,
-    role: "일반",
+    role: 1,
     emp_no: "1032645137",
     name: "최재혁",
     company_affiliation: "아모레퍼시픽그룹",
@@ -85,7 +85,7 @@ const list1 = ref([
   },
   {
     member_id: 7,
-    role: "일반",
+    role: 1,
     emp_no: "1032645138",
     name: "김서연",
     company_affiliation: "이니스프리",
@@ -98,7 +98,7 @@ const list1 = ref([
   },
   {
     member_id: 8,
-    role: "일반",
+    role: 1,
     emp_no: "1032645139",
     name: "오지훈",
     company_affiliation: "아모레퍼시픽",
@@ -111,7 +111,7 @@ const list1 = ref([
   },
   {
     member_id: 9,
-    role: "일반",
+    role: 1,
     emp_no: "1032645140",
     name: "한예린",
     company_affiliation: "에뛰드",
@@ -124,7 +124,7 @@ const list1 = ref([
   },
   {
     member_id: 10,
-    role: "일반",
+    role: 1,
     emp_no: "1032645141",
     name: "유준석",
     company_affiliation: "아모레퍼시픽그룹",
@@ -155,6 +155,7 @@ function closeDialog(mode) {
 }
 
 async function submitDialog(mode, formData) {
+  console.log(formData);
   if (mode === "edit") {
     await editMember();
     // 간단 리프레쉬만
@@ -174,23 +175,25 @@ async function registerMember() {}
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">직원관리</h2>
-        <v-tabs
-          class="tab_narrow"
-          v-model="tab"
-          bg-color="transparent"
-          align-tabs="center"
-        >
-          <v-tab
-            v-for="item in tabItems"
-            :key="item.value"
-            :text="item.text"
-            :value="item.value"
-          ></v-tab>
-        </v-tabs>
+        <ClientOnly>
+          <v-tabs
+            class="tab_narrow"
+            v-model="tab"
+            bg-color="transparent"
+            align-tabs="center"
+          >
+            <v-tab
+              v-for="item in tabItems"
+              :key="item.value"
+              :text="item.text"
+              :value="item.value"
+            ></v-tab>
+          </v-tabs>
+        </ClientOnly>
       </div>
       <div class="board">
         <div class="board_util">
-          <v-btn icon="mdi-plus" />
+          <v-btn icon="mdi-plus" @click="openDialog('register')" />
         </div>
         <div class="board_list">
           <template v-if="tab === 'MEMBER'">
@@ -198,9 +201,8 @@ async function registerMember() {}
               <thead>
                 <tr>
                   <th class="text-center" style="width: 80px">번호</th>
-                  <th class="text-left">권한</th>
-                  <th class="text-left">사번</th>
                   <th class="text-left">이름</th>
+                  <th class="text-left">사번</th>
                   <th class="text-left">소속</th>
                   <th class="text-left">부서</th>
                   <th class="text-left">직급</th>
@@ -214,9 +216,15 @@ async function registerMember() {}
               <tbody>
                 <tr v-for="(item, index) in list1" :key="item.name">
                   <td class="text-center">{{ totals - index }}</td>
-                  <td>{{ item.role }}</td>
+                  <td>
+                    <v-icon
+                      v-if="item.role == 2"
+                      icon="mdi-shield-account"
+                      color="main"
+                    />
+                    {{ item.name }}
+                  </td>
                   <td>{{ item.emp_no }}</td>
-                  <td>{{ item.name }}</td>
                   <td>{{ item.company_affiliation }}</td>
                   <td>{{ item.department }}</td>
                   <td>{{ item.position }}</td>
@@ -228,6 +236,7 @@ async function registerMember() {}
                     <v-btn
                       :id="`member-${index}`"
                       icon="mdi-pencil"
+                      color="main"
                       @click="openDialog('edit', item)"
                       variant="text"
                     />
@@ -241,16 +250,16 @@ async function registerMember() {}
         <div class="board_paging">1,2,3,</div>
       </div>
     </div>
-    <v-dialog v-model="dialog.edit" max-width="600" scrollable>
+    <v-dialog v-model="dialog.register" max-width="600" scrollable persistent>
+      <FormMember mode="register" @close="closeDialog" @submit="submitDialog" />
+    </v-dialog>
+    <v-dialog v-model="dialog.edit" max-width="600" scrollable persistent>
       <FormMember
         mode="edit"
-        item="propItem"
+        :item="propItem"
         @close="closeDialog"
         @submit="submitDialog"
       />
-    </v-dialog>
-    <v-dialog v-model="dialog.register" max-width="600" scrollable>
-      <FormMember mode="register" @close="closeDialog" @submit="submitDialog" />
     </v-dialog>
   </div>
 </template>

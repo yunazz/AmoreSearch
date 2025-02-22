@@ -61,19 +61,21 @@ const tab = ref("NEWS");
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">뉴스 & 저널</h2>
-        <v-tabs
-          class="tab_narrow"
-          v-model="tab"
-          bg-color="transparent"
-          align-tabs="center"
-        >
-          <v-tab
-            v-for="item in items"
-            :key="item.value"
-            :text="item.text"
-            :value="item.value"
-          ></v-tab>
-        </v-tabs>
+        <ClientOnly>
+          <v-tabs
+            class="tab_narrow"
+            v-model="tab"
+            bg-color="transparent"
+            align-tabs="center"
+          >
+            <v-tab
+              v-for="item in items"
+              :key="item.value"
+              :text="item.text"
+              :value="item.value"
+            ></v-tab>
+          </v-tabs>
+        </ClientOnly>
       </div>
       <div class="board">
         <div class="board_list">

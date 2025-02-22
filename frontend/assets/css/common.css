@@ -5,7 +5,7 @@
 
   --lnb-width: 200px;
   --lnb-bg-color: black;
-  --font-size: 16px;
+  --font-size: 15px;
 
   --title-size-xl: 2.125rem;
   --title-size-l: 1.75rem;
@@ -23,12 +23,8 @@
   --sub-color-3: #885fff;
   --sub-color-4: #d3d2f1; */
 
-  --main-color: black;
-  --main-dim-color: #290a83;
-  --sub-color-1: #12043e;
-  --sub-color-2: #5215fc;
-  --sub-color-3: #885fff;
-  --sub-color-4: #d3d2f1;
+  --main-color: #764dd6;
+  --sub-color: #a28dd4;
 
   --color-grey-01: #e5e5e5;
   --color-grey-02: #c0c0c0;
@@ -588,4 +584,7 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.v-theme--light .text-deep-purple-accent-4 {
+  color: var(--main-color) !important;
 }

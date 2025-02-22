@@ -202,7 +202,6 @@ function openRnb(item) {
           </div>
         </div>
       </template>
-      <v-card class="board_card" :key="i"> </v-card>
     </v-navigation-drawer>
   </div>
 </template>
