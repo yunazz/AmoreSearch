@@ -1,9 +1,10 @@
 <script setup>
-const props = defineProps(["mode", "item"]);
+const props = defineProps({
+  mode: String,
+  item: Object,
+});
 const emit = defineEmits(["submit", "close"]);
-
-const valid = ref(false);
-const form = ref({
+const defaultForm = {
   role: "",
   emp_no: "",
   name: "",
@@ -15,7 +16,13 @@ const form = ref({
   phone: "",
   resign_date: "",
   resign_reason: "",
-});
+};
+
+const form = ref(() =>
+  props.mode === "edit" ? { ...defaultForm, ...props.item } : { ...defaultForm }
+);
+console.log(form.value);
+const valid = ref(false);
 // Date picker 관련
 const birth_dateMenu = ref(false);
 const hire_dateMenu = ref(false);
@@ -31,16 +38,13 @@ const formatDate = (date) => {
 };
 
 const close = () => {
-  console.log(props.mode);
   emit("close", props.mode);
 };
 
 const submit = () => {
-  console.log(props.mode);
   emit("submit", props.mode, form);
   close();
 };
-console.log(props.mode);
 </script>
 
 <template>
@@ -98,6 +102,7 @@ console.log(props.mode);
               variant="outlined"
               v-model="form.password"
               type="password"
+              autocomplete="off"
               placeholder="20자 이내로 입력해주세요"
               :rules="[(v) => v.length <= 20 || '20자 이내로 입력해주세요']"
               maxLength="20"

@@ -144,20 +144,17 @@ const dialog = ref({
   register: false,
 });
 
-function openDialog(dialogName, item) {
-  dialog.value[dialogName] = true;
+function openDialog(mode, item) {
+  dialog.value[mode] = true;
   propItem.value = item;
 }
 
 function closeDialog(mode) {
-  console.log(mode);
-  dialog.value[dialogName] = false;
+  dialog.value[mode] = false;
   propItem.value = null;
 }
 
 async function submitDialog(mode, formData) {
-  console.log(mode);
-  console.log(formData);
   if (mode === "edit") {
     await editMember();
     // 간단 리프레쉬만
