@@ -279,7 +279,7 @@ function openRnb(item) {
         <h2 class="page_title">즐겨찾기</h2>
         <ClientOnly>
           <v-tabs
-            class="tab_narrow"
+            class="tab_narrow mb-2"
             v-model="tab"
             bg-color="transparent"
             align-tabs="center"

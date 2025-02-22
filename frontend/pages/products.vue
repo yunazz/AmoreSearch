@@ -111,7 +111,7 @@ const list = ref([
         <h2 class="page_title">화장품</h2>
         <ClientOnly>
           <v-tabs
-            class="tab_narrow"
+            class="tab_narrow mb-2"
             v-model="tab"
             bg-color="transparent"
             align-tabs="center"

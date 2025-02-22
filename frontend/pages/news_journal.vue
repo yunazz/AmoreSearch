@@ -63,7 +63,7 @@ const tab = ref("NEWS");
         <h2 class="page_title">뉴스 & 저널</h2>
         <ClientOnly>
           <v-tabs
-            class="tab_narrow"
+            class="tab_narrow mb-2"
             v-model="tab"
             bg-color="transparent"
             align-tabs="center"

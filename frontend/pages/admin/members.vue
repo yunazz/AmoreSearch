@@ -177,7 +177,7 @@ async function registerMember() {}
         <h2 class="page_title">직원관리</h2>
         <ClientOnly>
           <v-tabs
-            class="tab_narrow"
+            class="tab_narrow mb-2"
             v-model="tab"
             bg-color="transparent"
             align-tabs="center"
@@ -193,7 +193,12 @@ async function registerMember() {}
       </div>
       <div class="board">
         <div class="board_util">
-          <v-btn icon="mdi-plus" @click="openDialog('register')" />
+          <v-btn
+            density="comfortable"
+            icon="mdi-plus"
+            color="main"
+            @click="openDialog('register')"
+          />
         </div>
         <div class="board_list">
           <template v-if="tab === 'MEMBER'">

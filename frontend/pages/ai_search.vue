@@ -95,7 +95,12 @@ const model = ref([]);
               <div v-html="subtitle" class="mr-2" />
             </template>
             <template v-slot:append>
-              <v-btn color="grey-lighten-2" icon="mdi-star" variant="text" />
+              <v-btn
+                class="icon--favorite"
+                color="grey-lighten-2"
+                icon="mdi-star"
+                variant="text"
+              />
             </template>
           </v-list>
         </v-card>
@@ -108,7 +113,12 @@ const model = ref([]);
             </template>
             <template v-slot:append>
               <v-btn color="grey-lighten-2" icon="mdi-folder" variant="text" />
-              <v-btn color="grey-lighten-2" icon="mdi-star" variant="text" />
+              <v-btn
+                class="icon--favorite"
+                color="grey-lighten-2"
+                icon="mdi-star"
+                variant="text"
+              />
             </template>
           </v-list>
         </v-card>

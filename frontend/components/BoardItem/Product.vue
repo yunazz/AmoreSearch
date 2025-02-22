@@ -79,7 +79,7 @@ function openRnb(item) {
               <v-btn
                 icon="mdi-star"
                 variant="text"
-                class="mr-3 mt-2"
+                class="icon--favorite mr-3 mt-2"
                 color="grey-lighten-2"
               />
             </div>

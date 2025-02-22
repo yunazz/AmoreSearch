@@ -218,7 +218,6 @@ main.main {
   font-size: 1.825rem;
 }
 .board {
-  margin-top: 1rem;
 }
 .board_content {
   min-height: 200px;
@@ -234,7 +233,7 @@ main.main {
 .board_list {
   min-width: 1200px;
   max-width: 1400px;
-  margin: 1.25rem auto 2.125rem;
+  margin: 0 auto 2.125rem;
 }
 .board_paging {
   display: flex;
@@ -353,6 +352,11 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
+.board_util {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
 .input_cont div.v-field__input,
 .input_cont input.v-field__input {
   font-size: 0.937rem;
@@ -378,4 +382,18 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 }
 .input_cont .v-text-field .v-input__details {
   padding-inline: 0;
+}
+
+.v-tabs .v-tab__slider {
+  height: 3px;
+}
+.v-theme--light .text-deep-purple-accent-4 {
+  color: var(--main-color) !important;
+}
+
+.v-theme--light .icon--favorite {
+  color: #bdbdbd !important ;
+}
+.v-theme--light .icon--favorite.active {
+  color: var(--main-color) !important;
 }

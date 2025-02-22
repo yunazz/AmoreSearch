@@ -166,7 +166,7 @@ const show = ref(false);
       <div class="page_header">
         <h2 class="page_title">아모레스토리</h2>
         <v-tabs
-          class="tab_narrow"
+          class="tab_narrow mb-2"
           v-model="tab"
           bg-color="transparent"
           align-tabs="center"

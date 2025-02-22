@@ -23,7 +23,7 @@
   --sub-color-3: #885fff;
   --sub-color-4: #d3d2f1; */
 
-  --main-color: #764dd6;
+  --main-color: #784aab;
   --sub-color: #a28dd4;
 
   --color-grey-01: #e5e5e5;
@@ -584,7 +584,4 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.v-theme--light .text-deep-purple-accent-4 {
-  color: var(--main-color) !important;
 }
