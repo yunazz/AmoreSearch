@@ -159,6 +159,7 @@ const list3 = ref([
 
 const show = ref(false);
 </script>
+
 <template>
   <div id="AmoreStory" class="content">
     <div class="content_inner">

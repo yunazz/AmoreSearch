@@ -352,3 +352,22 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 .board .v-table > .v-table__wrapper > table > tfoot > tr:last-of-type > td {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
+
+.input_cont div.v-field__input,
+.input_cont input.v-field__input {
+  font-size: 0.937rem;
+  padding-top: 4px !important;
+  padding-bottom: 4px;
+  min-height: 46px;
+  height: 46px;
+}
+.input_cont .v-textarea .v-field__input {
+  line-height: 1.5;
+  font-size: 0.937rem !important;
+  padding-top: 12px !important;
+  padding-bottom: 16px !important;
+}
+.v-dialog .v-toolbar__content {
+  height: 60px;
+  font-size: var(--title-size-m);
+}

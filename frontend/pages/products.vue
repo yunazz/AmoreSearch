@@ -103,6 +103,7 @@ const list = ref([
   },
 ]);
 </script>
+
 <template>
   <div id="Products" class="content">
     <div class="content_inner">

@@ -55,6 +55,7 @@ const list1 = ref([
 ]);
 const tab = ref("NEWS");
 </script>
+
 <template>
   <div id="NewsJournal" class="content">
     <div class="content_inner">

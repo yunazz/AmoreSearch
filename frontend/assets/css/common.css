@@ -34,7 +34,7 @@
   --color-grey-02: #c0c0c0;
   --color-grey-03: #999999;
   --color-grey-04: #666666;
-  --color-grey-05: #333333;
+  --color-grey-05: #414141;
   --color-red: #e53a5f;
   --color-green: #0cbc64;
   --color-black: #111;
@@ -564,6 +564,13 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 1rem;
+}
+
+.border-top-1 {
+  border-top: 1px solid var(--border-color);
+}
+.border-bottom-1 {
+  border-top: 1px solid var(--border-color);
 }
 .hover_underline:hover {
   text-decoration: underline;

@@ -271,6 +271,7 @@ function openRnb(item) {
   targetItem.value = item;
 }
 </script>
+
 <template>
   <div id="Favorites" class="content">
     <div class="content_inner">

@@ -87,6 +87,7 @@ function logout() {}
     </div>
   </nav>
 </template>
+
 <style scoped>
 nav#lnb {
   display: flex;

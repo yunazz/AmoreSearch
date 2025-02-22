@@ -105,7 +105,13 @@ function loginFail(msg) {
             v-model="formData.password"
             autocomplete="off"
           />
-          <v-btn class="w-full mb-4" color="main" @click="login" size="large">
+          <v-btn
+            class="w-full mb-4"
+            color="main"
+            @click="login"
+            size="large"
+            :ripple="false"
+          >
             로그인
           </v-btn>
         </div>
@@ -113,6 +119,7 @@ function loginFail(msg) {
     </div>
   </div>
 </template>
+
 <style scoped>
 #LoginPage {
   display: flex;

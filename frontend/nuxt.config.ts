@@ -7,6 +7,7 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
+  plugins: [ '~/plugins/vue-the-mask.js'],
   modules: [
     (_options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig', (config) => {
