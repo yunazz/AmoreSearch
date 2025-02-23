@@ -316,7 +316,7 @@ function initResignOptions() {
       <v-btn
         size="large"
         variant="outlined"
-        color="grey-black"
+        color="gray-black"
         text
         width="90"
         @click="close"
@@ -329,7 +329,7 @@ function initResignOptions() {
 .input_cont {
 }
 .input_cont label {
-  color: var(--color-grey-05);
+  color: var(--color-gray-05);
   display: inline-block;
   font-size: 0.8125rem;
   margin-bottom: 4px;

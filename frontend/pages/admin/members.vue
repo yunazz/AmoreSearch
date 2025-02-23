@@ -5,6 +5,32 @@ const tabItems = ref([
   { text: "현직직원", value: "MEMBER" },
   { text: "퇴사직원", value: "NO_MEMBER" },
 ]);
+const filter = ref({
+  currentPage: 1,
+  pagePerGroup: 20,
+});
+
+// const search_query = computed(() => ({
+//   currentPage: filter.value.currentPage,
+//   pagePerGroup: 20,
+// }));
+
+// const { data: listData, refresh: refresh } = await useApi(
+//   "/api/admin/members",
+//   {
+//     query: search_query,
+//   }
+// );
+
+function changePage(currentPage) {
+  console.log(currentPage);
+  if (currentPage === filter.value.currentPage) {
+    return;
+  }
+  filter.value.currentPage = currentPage;
+  scrollToTop();
+}
+
 const list1 = ref([
   {
     member_id: 1,
@@ -214,7 +240,7 @@ async function registerMember() {}
       <div class="board">
         <div class="board_util">
           <div class="board_desc">
-            <span class="body--m text-grey-03">total: {{ list1.length }}</span>
+            <span class="body--m text-gray-03">total: {{ list1.length }}</span>
           </div>
           <small v-if="tab === 'NO_MEMBER'" class="ml-2">
             퇴사직원의 정보는 관리자만 수정 가능합니다.
@@ -283,7 +309,7 @@ async function registerMember() {}
           </v-table>
         </div>
 
-        <div class="board_paging">1,2,3,</div>
+        <Paging :paging="filter" totalRows="198" @changePage="changePage" />
       </div>
     </div>
     <!-- <v-dialog v-model="dialog" max-width="600" scrollable persistent>

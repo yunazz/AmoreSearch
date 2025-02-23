@@ -30,6 +30,9 @@ export function formatDate(dateStr: Date) {
   return `${year}-${month}-${day}`;
 }
 
+export function scrollToTop() {
+  window.scrollTo(0, 0);
+}
 // export function stringToInt(amt: any) {
 // 	if (!amt) return 0;
 // 	return parseFloat(String(amt).replace(/[^0-9.-]/g, ''));

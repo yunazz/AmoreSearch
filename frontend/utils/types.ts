@@ -4,7 +4,7 @@ interface ResponseOutput {
   code: number;
   msg: String;
   result: any;
-  total_rows?: any;
+  totalRows?: any;
 }
 
 interface JwtPayloadOptions {

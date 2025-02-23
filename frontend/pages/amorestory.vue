@@ -5,6 +5,31 @@ const tabItems = ref([
   { text: "자사브랜드", value: "2" },
   { text: "사내문서", value: "3" },
 ]);
+const filter = ref({
+  currentPage: 1,
+  pagePerGroup: 20,
+});
+
+// const search_query = computed(() => ({
+//   currentPage: filter.value.currentPage,
+//   pagePerGroup: 20,
+// }));
+
+// const { data: listData, refresh: refresh } = await useApi(
+//   "/api/admin/members",
+//   {
+//     query: search_query,
+//   }
+// );
+
+function changePage(currentPage) {
+  if (currentPage === filter.value.currentPage) {
+    return;
+  }
+  filter.value.currentPage = currentPage;
+  scrollToTop();
+}
+
 const list1 = ref([
   {
     title: "회사뉴스 제목",
@@ -221,7 +246,7 @@ const show = ref(false);
           <BoardItemDocument v-if="tab === '3'" :list="list3" />
         </div>
 
-        <div class="board_paging">1,2,3,</div>
+        <Paging :paging="filter" totalRows="10" @changePage="changePage" />
       </div>
     </div>
   </div>

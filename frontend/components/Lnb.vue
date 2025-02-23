@@ -41,7 +41,7 @@ function logout() {}
       <NuxtLink class="lnb_myprofile" to="/mypage">
         <NuxtImg src="img/icon/account.png" width="44" />
         <div>
-          <div class="text-grey-01 fw-500">
+          <div class="text-gray-01 fw-500">
             <span>{{ member.department }}</span>
           </div>
           <p class="fw-800">
@@ -51,7 +51,7 @@ function logout() {}
         </div>
       </NuxtLink>
       <div class="lnb_menu">
-        <small class="text-grey-01">OVERVIEW</small>
+        <small class="text-gray-01">OVERVIEW</small>
         <ul class="lnb_list">
           <li
             v-for="item in lnb_items"
@@ -67,7 +67,7 @@ function logout() {}
         <template
           v-if="member.role > 2 || member.department === 'HR팀'"
         ></template>
-        <small class="text-grey-01">ADMIN</small>
+        <small class="text-gray-01">ADMIN</small>
         <ul class="lnb_list">
           <li
             v-for="item in admin_items"

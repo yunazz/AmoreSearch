@@ -134,7 +134,7 @@ a:disabled {
 input::placeholder {
   font-weight: 400;
   font-size: var(--body-size-s);
-  color: var(--color-grey-03) !important;
+  color: var(--color-gray-03) !important;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -210,7 +210,7 @@ main.main {
   font-size: 0.8125rem;
   font-size: 0.875rem;
   padding-left: 10px;
-  color: var(--grey-color-02);
+  color: var(--gray-color-02);
 }
 .board_card .v-card-custom-action {
   display: flex;
@@ -237,7 +237,7 @@ main.main {
 .board_list {
   min-width: 1200px;
   max-width: 1400px;
-  margin: 0 auto 2.125rem;
+  margin: 0 auto 2rem;
 }
 .board_paging {
   display: flex;
@@ -395,7 +395,7 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 }
 
 .v-tabs .v-tab__slider {
-  height: 3px;
+  height: 2px;
 }
 .v-theme--light .text-deep-purple-accent-4 {
   color: var(--main-color) !important;

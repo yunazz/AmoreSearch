@@ -26,11 +26,11 @@
   --main-color: #784aab;
   --sub-color: #a28dd4;
 
-  --color-grey-01: #e5e5e5;
-  --color-grey-02: #c0c0c0;
-  --color-grey-03: #999999;
-  --color-grey-04: #666666;
-  --color-grey-05: #414141;
+  --color-gray-01: #e5e5e5;
+  --color-gray-02: #c0c0c0;
+  --color-gray-03: #999999;
+  --color-gray-04: #666666;
+  --color-gray-05: #414141;
   --color-red: #e53a5f;
   --color-green: #0cbc64;
   --color-black: #111;
@@ -150,20 +150,20 @@
 
 /*  ========================================================= */
 /* common classes */
-.bg-grey-01 {
-  background: var(--color-grey-01);
+.bg-gray-01 {
+  background: var(--color-gray-01);
 }
-.bg-grey-02 {
-  background: var(--color-grey-02);
+.bg-gray-02 {
+  background: var(--color-gray-02);
 }
-.bg-grey-03 {
-  background: var(--color-grey-03);
+.bg-gray-03 {
+  background: var(--color-gray-03);
 }
-.bg-grey-04 {
-  background: var(--color-grey-04);
+.bg-gray-04 {
+  background: var(--color-gray-04);
 }
-.bg-grey-05 {
-  background: var(--color-grey-05);
+.bg-gray-05 {
+  background: var(--color-gray-05);
 }
 .text-black {
   color: #000;
@@ -174,20 +174,20 @@
 .text-green {
   color: var(--color-green);
 }
-.text-grey-01 {
-  color: var(--color-grey-01);
+.text-gray-01 {
+  color: var(--color-gray-01);
 }
-.text-grey-02 {
-  color: var(--color-grey-02);
+.text-gray-02 {
+  color: var(--color-gray-02);
 }
-.text-grey-03 {
-  color: var(--color-grey-03);
+.text-gray-03 {
+  color: var(--color-gray-03);
 }
-.text-grey-04 {
-  color: var(--color-grey-04);
+.text-gray-04 {
+  color: var(--color-gray-04);
 }
-.text-grey-05 {
-  color: var(--color-grey-05);
+.text-gray-05 {
+  color: var(--color-gray-05);
 }
 
 .m-0 {
