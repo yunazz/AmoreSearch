@@ -63,7 +63,7 @@ async function updateMyPassword() {
       <div class="page_header">
         <h2 class="page_title">마이페이지</h2>
         <ClientOnly>
-          <v-tabs
+          <!-- <v-tabs
             class="tab_narrow mb-4"
             v-model="tab"
             bg-color="transparent"
@@ -75,7 +75,7 @@ async function updateMyPassword() {
               :text="item.text"
               :value="item.value"
             ></v-tab>
-          </v-tabs>
+          </v-tabs> -->
         </ClientOnly>
       </div>
 
@@ -250,10 +250,9 @@ article {
   font-size: 0.875rem;
 }
 #myInfo > div {
-  width: 690px;
-  padding: 32px 40px 30px;
+  width: 740px;
+  padding: 10px 40px 30px;
   padding-bottom: 30px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 #myInfo .flex.gap-4 > div {
   padding: 0 12px;
