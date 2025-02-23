@@ -319,13 +319,3 @@ function initResignOptions() {
     </v-card-actions>
   </v-card>
 </template>
-<style scoped>
-.input_cont {
-}
-.input_cont label {
-  color: var(--color-gray-05);
-  display: inline-block;
-  font-size: 0.8125rem;
-  margin-bottom: 4px;
-}
-</style>

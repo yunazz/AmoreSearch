@@ -366,7 +366,12 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   align-items: center;
   gap: 0.25rem;
 }
-
+.input_cont label {
+  color: var(--color-gray-05);
+  display: inline-block;
+  font-size: 0.8125rem;
+  margin-bottom: 4px;
+}
 .input_cont div.v-field__input,
 .input_cont input.v-field__input {
   font-size: 0.937rem;

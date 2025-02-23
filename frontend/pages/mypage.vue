@@ -79,33 +79,35 @@ async function updateMyPassword() {
         </ClientOnly>
       </div>
 
-      <article v-if="tab == 'INFO'" id="myInfo" class="tab_content">
-        <div>
-          <h4 class="px-3">
-            <span>
-              {{ member.name }}
-            </span>
+      <template v-if="tab == 'INFO'">
+        <div id="myInfo" class="tab_content">
+          <v-divider class="mb-2" />
+          <h4>
             <v-icon
               v-if="member.role == 2"
               icon="mdi-shield-account"
               color="main"
-              class="ml-1 mb-2"
+              class="mr-1 mb-2"
             />
+            <span> {{ member.name }} ( {{ member.emp_no }} ) </span>
           </h4>
+
           <v-divider class="mb-2" />
+
           <div class="flex gap-4">
-            <div>
+            <div class="w-half">
               <h5>
-                <v-icon icon="mdi-smart-card-outline" class="mr-2" />직원정보
+                <v-icon
+                  icon="mdi-smart-card-outline"
+                  class="mr-3 text-gray-04"
+                />
+                직원정보
               </h5>
               <p>
                 <span>직급</span>
                 <span>{{ member.position }}</span>
               </p>
-              <p>
-                <span>사원번호</span>
-                <span>{{ member.emp_no }}</span>
-              </p>
+
               <p>
                 <span>소속/부서</span>
                 <span
@@ -117,15 +119,20 @@ async function updateMyPassword() {
                 <span>{{ member.hire_date }}</span>
               </p>
             </div>
-            <div>
+            <div class="w-half">
               <!-- <v-divider class="my-2" /> -->
-              <h5><v-icon icon="mdi-lock-outline" class="mr-2" />개인정보</h5>
+              <h5>
+                <v-icon
+                  icon="mdi-account-key"
+                  class="mr-3 text-gray-04"
+                />개인정보
+              </h5>
               <p>
                 <span>생년월일</span>
                 <span>{{ member.birth_date }}</span>
               </p>
               <div class="input_cont">
-                <label style="min-width: 60px"> 휴대폰번호 </label>
+                <label> 휴대폰번호 </label>
                 <div class="flex gap-2 w-100">
                   <v-text-field
                     hide-details
@@ -142,16 +149,27 @@ async function updateMyPassword() {
                   </v-btn>
                 </div>
               </div>
-              <p class="mt-2">
-                <span>비밀번호</span>
-                <v-btn @click="dialog = true" color="black"
-                  >비밀번호 변경</v-btn
-                >
+            </div>
+          </div>
+
+          <v-divider class="mb-2" />
+          <div class="my-setting">
+            <div>
+              <h5>
+                <v-icon icon="mdi-lock-outline" class="mr-3 text-gray-04" />
+                비밀번호 변경
+              </h5>
+              <p>
+                <span>생년월일</span>
+                <v-btn @click="dialog = true" color="black" width="140px">
+                  비밀번호 변경
+                </v-btn>
               </p>
             </div>
           </div>
+          <v-divider />
         </div>
-      </article>
+      </template>
     </div>
     <v-dialog v-model="dialog" max-width="390">
       <v-card class="board_card">
@@ -189,7 +207,7 @@ async function updateMyPassword() {
           </div>
         </v-card-text>
         <v-card-actions class="pt-4 pb-3 px-6 border-top-1">
-          <div class="flex justify-center">
+          <div class="flex justify-center gap-2">
             <v-btn
               variant="flat"
               color="black"
@@ -199,15 +217,19 @@ async function updateMyPassword() {
             >
               변경
             </v-btn>
+            <v-btn
+              variant="outlined"
+              color="gray-black"
+              text
+              width="80"
+              @click="dialog = false"
+            >
+              취소
+            </v-btn>
           </div>
         </v-card-actions>
         <v-snackbar v-model="snackbar" :timeout="3000" color="main">
           {{ message }}
-          <template v-slot:action="{ attrs }">
-            <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
-              닫기
-            </v-btn>
-          </template>
         </v-snackbar>
       </v-card>
     </v-dialog>
@@ -225,65 +247,57 @@ async function updateMyPassword() {
   margin-left: 200px;
 }
 
-article {
+#myInfo {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 1.5rem 0 2.25rem;
-}
-.tab_content > div {
-  display: flex;
-  flex-direction: column;
+  width: 1000px;
+  margin: 1.5rem auto 2.25rem;
   row-gap: 0.625rem;
-  border-radius: 16px;
 }
-.tab_content .input_cont {
+#myInfo .input_cont {
   display: flex;
   flex-direction: row;
   align-items: center;
   column-gap: 1.5rem;
   font-weight: 500;
 }
-.tab_content .input_cont label {
+#myInfo .input_cont label {
   font-size: 0.875rem;
+  width: 118px;
 }
 #myInfo > div {
-  width: 740px;
+  width: 900px;
+  margin: 0 auto;
   padding: 10px 40px 30px;
-  padding-bottom: 30px;
 }
-#myInfo .flex.gap-4 > div {
-  padding: 0 12px;
-}
-#myInfo .flex.gap-4 > div:first-of-type {
-  width: 47%;
-}
-#myInfo .flex.gap-4 > div:last-of-type {
-  width: 53%;
-}
+
 #myInfo h4 {
+  padding: 0 40px;
   font-size: 1rem !important;
+  width: 900px;
   font-weight: 500;
+  margin: 0 auto;
   color: black;
 }
 #myInfo h5 {
-  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
   font-size: 0.875rem;
   font-weight: 600;
 }
 #myInfo p {
   display: flex;
   align-items: center;
-  height: 40px;
+  height: 36px;
+  padding: 0;
 }
 #Mypage label {
   font-size: 0.8125rem;
   color: var(--color-gray-04);
 }
 #myInfo p span:nth-of-type(1) {
-  width: 67px;
+  width: 96px;
   margin-right: 16px;
   font-size: 0.8125rem;
   color: var(--color-gray-04);
@@ -298,5 +312,14 @@ article {
 }
 #passwordChange .input_cont label {
   width: 120px;
+}
+.my-setting > div {
+  width: 50%;
+  margin-bottom: 0;
+}
+.my-setting > div p span {
+  width: 200px !important;
+  /* display: flex; */
+  /* justify-content: space-between; */
 }
 </style>
