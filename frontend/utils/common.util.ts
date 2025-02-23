@@ -56,3 +56,9 @@ export function scrollToTop() {
 
 // 	return false;
 // };
+
+export function validatePhone(phone: string) {
+  const phoneRegex =
+    /^01(1|[6-9])(-?)(\d{3,4})(-?)(\d{4})$|^010(-?)(\d{3,4})(-?)(\d{4})$/;
+  return phoneRegex.test(phone);
+}

@@ -42,6 +42,11 @@ function defaultMember(): Ref<MemberOptions> {
     // role: ''
     role: 2,
     name: "홍길동",
+    company_affiliation: "",
+    birth_date: "",
+    phone: "",
+    hire_date: "",
+    employment_status: "재직",
     position: "사원",
     department: "HR팀",
   });
