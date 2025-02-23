@@ -2,8 +2,8 @@
 const member = useMember();
 const tab = ref("MEMBER");
 const tabItems = ref([
-  { text: "현직직원", value: "MEMBER" },
-  { text: "퇴사직원", value: "NO_MEMBER" },
+  { text: "재직직원", value: "MEMBER" },
+  { text: "퇴직직원", value: "NO_MEMBER" },
 ]);
 const filter = ref({
   currentPage: 1,
@@ -243,7 +243,7 @@ async function registerMember() {}
             <span class="body--m text-gray-03">total: {{ list1.length }}</span>
           </div>
           <small v-if="tab === 'NO_MEMBER'" class="ml-2">
-            퇴사직원의 정보는 관리자만 수정 가능합니다.
+            퇴직직원의 정보는 관리자만 수정 가능합니다.
           </small>
           <v-btn
             v-if="tab === 'MEMBER'"
