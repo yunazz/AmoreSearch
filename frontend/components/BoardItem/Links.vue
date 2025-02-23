@@ -12,7 +12,7 @@ const props = defineProps(["list", "listType"]);
       <NuxtLink external>
         <v-btn color="grey-lighten-1" icon="mdi-link" variant="text" />
       </NuxtLink>
-      <v-btn class="icon--favorite active" icon="mdi-star" variant="text" />
+      <v-btn class="icon--toggle" icon="mdi-star" variant="text" />
     </template>
   </v-list>
 </template>

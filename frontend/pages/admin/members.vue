@@ -1,4 +1,5 @@
 <script setup>
+const member = useMember();
 const tab = ref("MEMBER");
 const tabItems = ref([
   { text: "현직직원", value: "MEMBER" },
@@ -16,7 +17,9 @@ const list1 = ref([
     birth_date: "1995-01-01",
     phone: "01044701123",
     hire_date: "2010-01-01",
-    work_status: "재직",
+    employment_status: "퇴직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 2,
@@ -29,7 +32,9 @@ const list1 = ref([
     birth_date: "1990-05-12",
     phone: "01051237894",
     hire_date: "2012-06-15",
-    work_status: "재직",
+    employment_status: "퇴직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 3,
@@ -42,7 +47,9 @@ const list1 = ref([
     birth_date: "1987-09-23",
     phone: "01092345678",
     hire_date: "2008-09-01",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 4,
@@ -55,7 +62,9 @@ const list1 = ref([
     birth_date: "1992-11-05",
     phone: "01011055678",
     hire_date: "2015-03-10",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 5,
@@ -68,7 +77,9 @@ const list1 = ref([
     birth_date: "1996-04-18",
     phone: "01098765432",
     hire_date: "2020-07-01",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 6,
@@ -81,7 +92,9 @@ const list1 = ref([
     birth_date: "1985-02-27",
     phone: "01033445566",
     hire_date: "2007-12-20",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 7,
@@ -94,7 +107,9 @@ const list1 = ref([
     birth_date: "1991-07-09",
     phone: "01077889900",
     hire_date: "2013-08-05",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 8,
@@ -107,7 +122,9 @@ const list1 = ref([
     birth_date: "1988-06-14",
     phone: "01022334455",
     hire_date: "2009-11-25",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 9,
@@ -120,7 +137,9 @@ const list1 = ref([
     birth_date: "1997-08-30",
     phone: "01011223344",
     hire_date: "2021-05-17",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
   {
     member_id: 10,
@@ -133,29 +152,30 @@ const list1 = ref([
     birth_date: "1982-12-03",
     phone: "01044556677",
     hire_date: "2005-01-10",
-    work_status: "재직",
+    employment_status: "재직",
+    resign_date: "",
+    resign_reason: "",
   },
 ]);
 
 const totals = list1.value.length;
 const propItem = ref(null);
-const dialog = ref({
-  edit: false,
-  register: false,
-});
+
+const dialog = ref(false);
+const dialogMode = ref(null);
 
 function openDialog(mode, item) {
-  dialog.value[mode] = true;
+  dialogMode.value = mode;
   propItem.value = item;
+  dialog.value = true;
 }
 
 function closeDialog(mode) {
-  dialog.value[mode] = false;
-  propItem.value = null;
+  dialog.value = false;
+  dialogMode.value = null;
 }
 
 async function submitDialog(mode, formData) {
-  console.log(formData);
   if (mode === "edit") {
     await editMember();
     // 간단 리프레쉬만
@@ -193,74 +213,93 @@ async function registerMember() {}
       </div>
       <div class="board">
         <div class="board_util">
+          <div class="board_desc">
+            <span class="body--m text-grey-03">total: {{ list1.length }}</span>
+          </div>
+          <small v-if="tab === 'NO_MEMBER'" class="ml-2">
+            퇴사직원의 정보는 관리자만 수정 가능합니다.
+          </small>
           <v-btn
+            v-if="tab === 'MEMBER'"
             density="comfortable"
             icon="mdi-plus"
-            color="main"
+            color="black"
             @click="openDialog('register')"
           />
         </div>
         <div class="board_list">
-          <template v-if="tab === 'MEMBER'">
-            <v-table>
-              <thead>
-                <tr>
-                  <th class="text-center" style="width: 80px">번호</th>
-                  <th class="text-left">이름</th>
-                  <th class="text-left">사번</th>
-                  <th class="text-left">소속</th>
-                  <th class="text-left">부서</th>
-                  <th class="text-left">직급</th>
-                  <th class="text-left" style="width: 120px">생년월일</th>
-                  <th class="text-left" style="width: 140px">휴대폰번호</th>
-                  <th class="text-left" style="width: 120px">입사일</th>
-                  <th class="text-left" style="width: 90px">근무상태</th>
-                  <th class="text-left" style="width: 80px">수정</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, index) in list1" :key="item.name">
-                  <td class="text-center">{{ totals - index }}</td>
-                  <td>
-                    <v-icon
-                      v-if="item.role == 2"
-                      icon="mdi-shield-account"
-                      color="main"
-                    />
-                    {{ item.name }}
-                  </td>
-                  <td>{{ item.emp_no }}</td>
-                  <td>{{ item.company_affiliation }}</td>
-                  <td>{{ item.department }}</td>
-                  <td>{{ item.position }}</td>
-                  <td>{{ item.birth_date }}</td>
-                  <td>{{ item.phone }}</td>
-                  <td>{{ item.hire_date }}</td>
-                  <td>{{ item.work_status }}</td>
-                  <td>
-                    <v-btn
-                      :id="`member-${index}`"
-                      icon="mdi-pencil"
-                      color="main"
-                      @click="openDialog('edit', item)"
-                      variant="text"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </v-table>
-          </template>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 78px">번호</th>
+                <th>이름</th>
+                <th>사번</th>
+                <th>소속</th>
+                <th>부서</th>
+                <th>직급</th>
+                <th style="width: 120px">생년월일</th>
+                <th style="width: 140px">휴대폰번호</th>
+                <th style="width: 120px">입사일</th>
+                <th style="width: 90px">근무상태</th>
+                <th class="text-center" style="width: 70px">수정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in list1" :key="item.name">
+                <!-- @click="openDialog('info', item)"
+              class="cur-p" -->
+                <td class="text-center">{{ totals - index }}</td>
+                <td>
+                  <v-icon
+                    v-if="item.role == 2"
+                    icon="mdi-shield-account"
+                    color="main"
+                  />
+                  {{ item.name }}
+                </td>
+                <td>{{ item.emp_no }}</td>
+                <td>{{ item.company_affiliation }}</td>
+                <td>{{ item.department }}</td>
+                <td>{{ item.position }}</td>
+                <td>{{ item.birth_date }}</td>
+                <td>{{ item.phone }}</td>
+                <td>{{ item.hire_date }}</td>
+                <td>{{ item.employment_status }}</td>
+                <td class="text-center">
+                  <v-btn
+                    :id="`member-${index}`"
+                    icon="mdi-account-edit"
+                    color="grey-lighten-2"
+                    class="icon--toggle"
+                    :class="
+                      tab === 'MEMBER' || member.role >= 2 ? 'active' : ''
+                    "
+                    @click.stop="openDialog('edit', item)"
+                    variant="text"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
         </div>
 
         <div class="board_paging">1,2,3,</div>
       </div>
     </div>
-    <v-dialog v-model="dialog.register" max-width="600" scrollable persistent>
+    <!-- <v-dialog v-model="dialog" max-width="600" scrollable persistent>
       <FormMember mode="register" @close="closeDialog" @submit="submitDialog" />
     </v-dialog>
-    <v-dialog v-model="dialog.edit" max-width="600" scrollable persistent>
+    <v-dialog v-model="dialog" max-width="600" scrollable persistent>
       <FormMember
         mode="edit"
+        :item="propItem"
+        @close="closeDialog"
+        @submit="submitDialog"
+      />
+    </v-dialog> -->
+    <v-dialog v-model="dialog" max-width="600" scrollable>
+      <FormMember
+        :mode="dialogMode"
         :item="propItem"
         @close="closeDialog"
         @submit="submitDialog"

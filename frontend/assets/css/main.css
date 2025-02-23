@@ -176,7 +176,25 @@ main.main {
 .content_inner {
   padding: 0 40px;
 }
+.page_title {
+  text-align: center;
+  margin: 1.75rem 0 0.5rem;
+  font-size: 1.825rem;
+}
 
+.board {
+}
+.board_cards {
+  margin: 1.25rem auto 2.125rem;
+  display: grid;
+  max-width: 1200px;
+  gap: 1rem;
+  row-gap: 1.5rem;
+  justify-content: flex-start; /* 왼쪽부터 정렬 */
+}
+.board_card {
+  position: relative;
+}
 .board_card.v-card .v-card-title {
   font-size: 0.9375rem;
   line-height: 1;
@@ -212,24 +230,10 @@ main.main {
   max-width: 40px;
 }
 
-.page_title {
-  text-align: center;
-  margin: 1.75rem 0 0.5rem;
-  font-size: 1.825rem;
-}
-.board {
-}
 .board_content {
   min-height: 200px;
 }
-.board_cards {
-  margin: 1.25rem auto 2.125rem;
-  display: grid;
-  max-width: 1200px;
-  gap: 1rem;
-  row-gap: 1.5rem;
-  justify-content: flex-start; /* 왼쪽부터 정렬 */
-}
+
 .board_list {
   min-width: 1200px;
   max-width: 1400px;
@@ -353,10 +357,16 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 }
 
 .board_util {
+  height: 30px;
+}
+.board_util,
+.board_desc {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.25rem;
 }
+
 .input_cont div.v-field__input,
 .input_cont input.v-field__input {
   font-size: 0.937rem;
@@ -391,9 +401,13 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   color: var(--main-color) !important;
 }
 
-.v-theme--light .icon--favorite {
+.v-theme--light .icon--toggle {
   color: #bdbdbd !important ;
 }
-.v-theme--light .icon--favorite.active {
+.v-theme--light .icon--toggle.active {
   color: var(--main-color) !important;
+}
+.chip-selected {
+  background-color: var(--color-black) !important;
+  border: 0;
 }

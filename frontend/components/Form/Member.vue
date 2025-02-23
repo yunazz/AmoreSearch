@@ -1,34 +1,37 @@
 <script setup>
-const props = defineProps(["mode", "item"]);
-const emit = defineEmits(["submit", "close"]);
-
-const form = ref({
-  role: 1,
-  emp_no: "",
-  name: "",
-  password: "",
-  department: "",
-  position: "",
-  birth_date: "",
-  hire_date: "",
-  phone: "",
-  resign_date: "",
-  resign_reason: "",
-});
-
-const initFormData = () => {
-  if (props.mode === "register") {
-  } else if (props.mode === "edit") {
-    form.value = {
-      ...props.item,
-      password: "",
+const member = useMember();
+const props = defineProps({
+  mode: { type: String },
+  item: {
+    type: Object,
+    default: {
+      role: 1,
+      emp_no: "",
+      name: "",
+      company_affiliation: "",
+      department: "",
+      position: "사원",
+      birth_date: "",
+      phone: "",
+      hire_date: "",
+      employment_status: "재직",
       resign_date: "",
       resign_reason: "",
-    };
-  } else if (props.mode === "info") {
-    form.value = { ...props.item };
-  }
-};
+    },
+  },
+});
+const emit = defineEmits(["submit", "close"]);
+const modeText = computed(() => {
+  if (props.mode === "register") return "등록";
+  if (props.mode === "edit") return "수정";
+  if (props.mode === "info") return "조회";
+});
+const isDisabled = computed(
+  () =>
+    props.mode === "info" ||
+    (props.item?.employment_status === "퇴직" && member.role !== 3)
+);
+const form = ref({ ...props.item, password: "" });
 
 const valid = ref(false);
 // Date picker 관련
@@ -47,29 +50,36 @@ const submit = () => {
   emit("submit", props.mode, form);
   close();
 };
-
-onMounted(() => {
-  initFormData();
-});
+function initResignOptions() {
+  if (form.value.employment_status !== "퇴직") {
+    form.value.resign_date = "";
+    form.value.resign_reason = "";
+    datepicker_resign = null;
+  }
+}
 </script>
 
 <template>
   <v-card>
     <v-toolbar align="center" color="black" class="px-7">
       <v-icon icon="mdi-account" class="mr-3 title--l" />
-      직원 {{ mode === "register" ? "등록" : mode === "edit" && "수정" }}
+      직원 {{ modeText }}
     </v-toolbar>
     <v-card-text>
-      <v-form v-model="valid" class="px-3">
-        <div class="input_cont flex align-center">
+      <v-form v-model="valid" class="px-3 pt-2">
+        <div class="input_cont flex align-center" v-if="member.role >= 2">
           <label class="mr-4">권한</label>
           <v-chip-group
             v-model="form.role"
-            selected-class="text-deep-purple-accent-4"
             mandatory
+            selected-class="chip-selected"
           >
-            <v-chip variant="outlined" :value="2">관리자</v-chip>
-            <v-chip variant="outlined" :value="1">일반</v-chip>
+            <v-chip color="grey-lighten-2" :value="2" :disabled="isDisabled"
+              >관리자</v-chip
+            >
+            <v-chip color="grey-lighten-2" :value="1" :disabled="isDisabled"
+              >일반</v-chip
+            >
           </v-chip-group>
         </div>
         <div class="grid-cols-2">
@@ -86,6 +96,7 @@ onMounted(() => {
               ]"
               oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
               maxLength="10"
+              :disabled="isDisabled"
             />
           </div>
           <div class="input_cont">
@@ -97,6 +108,7 @@ onMounted(() => {
               placeholder="20자 이내로 입력해주세요"
               :rules="[(v) => v.length <= 20 || '20자 이내로 입력해주세요']"
               maxLength="20"
+              :disabled="isDisabled"
             />
           </div>
         </div>
@@ -113,6 +125,7 @@ onMounted(() => {
               placeholder="20자 이내로 입력해주세요"
               :rules="[(v) => v.length <= 20 || '20자 이내로 입력해주세요']"
               maxLength="20"
+              :disabled="isDisabled"
             />
           </div>
           <div class="input_cont">
@@ -123,6 +136,7 @@ onMounted(() => {
               variant="outlined"
               v-model="form.phone"
               v-mask="'###-####-####'"
+              :disabled="isDisabled"
             />
           </div>
         </div>
@@ -137,6 +151,7 @@ onMounted(() => {
                 v-model="form.birth_date"
                 v-mask="'####-##-##'"
                 prepend-inner-icon="mdi-calendar"
+                :disabled="isDisabled"
                 readonly
               >
                 <v-menu
@@ -144,6 +159,7 @@ onMounted(() => {
                   :close-on-content-click="false"
                   activator="parent"
                   width="200"
+                  :disabled="isDisabled"
                 >
                   <v-date-picker
                     hide-header
@@ -163,12 +179,14 @@ onMounted(() => {
                 v-model="form.hire_date"
                 v-mask="'####-##-##'"
                 prepend-inner-icon="mdi-calendar"
+                :disabled="isDisabled"
                 readonly
               >
                 <v-menu
                   v-model="menu_hire"
                   :close-on-content-click="false"
                   activator="parent"
+                  :disabled="isDisabled"
                 >
                   <v-date-picker
                     hide-header
@@ -183,6 +201,17 @@ onMounted(() => {
         </div>
         <div class="grid-cols-2">
           <div class="input_cont mb-3">
+            <label>소속</label>
+            <v-select
+              hide-details
+              variant="outlined"
+              v-model="form.company_affiliation"
+              :items="enums.company_affiliation"
+              single-line
+              :disabled="isDisabled"
+            />
+          </div>
+          <div class="input_cont mb-3">
             <label>근무부서</label>
             <v-select
               hide-details
@@ -190,8 +219,11 @@ onMounted(() => {
               v-model="form.department"
               :items="enums.departments"
               single-line
+              :disabled="isDisabled"
             />
           </div>
+        </div>
+        <div class="grid-cols-2">
           <div class="input_cont mb-3">
             <label>직급</label>
             <v-select
@@ -200,63 +232,92 @@ onMounted(() => {
               v-model="form.position"
               :items="enums.positions"
               single-line
+              :disabled="isDisabled"
+            />
+          </div>
+          <div class="input_cont mb-3">
+            <label>근무상태</label>
+            <v-select
+              hide-details
+              variant="outlined"
+              v-model="form.employment_status"
+              :items="
+                mode === 'register'
+                  ? enums.employment_status
+                  : enums.all_employment_status
+              "
+              single-line
+              :disabled="isDisabled"
+              @change="initResignOptions"
             />
           </div>
         </div>
-        <v-divider class="mt-4 mb-4" />
-
-        <div class="grid-cols-2">
-          <client-only>
-            <div class="input_cont mb-3">
-              <label>퇴사일</label>
-              <v-text-field
-                hide-details
-                density="compact"
-                variant="outlined"
-                v-model="form.resign_date"
-                v-mask="'####-##-##'"
-                :rules="[
-                  (v) =>
-                    !v ||
-                    /^\d{4}-\d{2}-\d{2}$/.test(v) ||
-                    'YYYY-MM-DD 형식으로 입력해주세요',
-                ]"
-                prepend-inner-icon="mdi-calendar"
-                readonly
-              >
-                <v-menu
-                  v-model="menu_resign"
-                  :close-on-content-click="false"
-                  activator="parent"
+        <template v-if="form?.employment_status === '퇴직'">
+          <v-divider class="mt-4 mb-4" />
+          <div class="grid-cols-2">
+            <client-only>
+              <div class="input_cont mb-3">
+                <label>퇴사일</label>
+                <v-text-field
+                  hide-details
+                  density="compact"
+                  variant="outlined"
+                  v-model="form.resign_date"
+                  v-mask="'####-##-##'"
+                  :rules="[
+                    (v) =>
+                      !v ||
+                      /^\d{4}-\d{2}-\d{2}$/.test(v) ||
+                      'YYYY-MM-DD 형식으로 입력해주세요',
+                  ]"
+                  prepend-inner-icon="mdi-calendar"
+                  :disabled="isDisabled && (mode == 'info' || member.role < 2)"
+                  readonly
                 >
-                  <v-date-picker
-                    hide-header
-                    show-adjacent-months
-                    v-model="datepicker_resign"
-                    @update:modelValue="form.resign_date = formatDate($event)"
-                  />
-                </v-menu>
-              </v-text-field>
-            </div>
-          </client-only>
-        </div>
+                  <v-menu
+                    v-model="menu_resign"
+                    :close-on-content-click="false"
+                    activator="parent"
+                    :disabled="
+                      isDisabled && (mode == 'info' || member.role < 2)
+                    "
+                  >
+                    <v-date-picker
+                      hide-header
+                      show-adjacent-months
+                      v-model="datepicker_resign"
+                      @update:modelValue="form.resign_date = formatDate($event)"
+                    />
+                  </v-menu>
+                </v-text-field>
+              </div>
+            </client-only>
+          </div>
 
-        <div class="input_cont">
-          <label>퇴사사유</label>
-          <v-textarea row-height="25" rows="5" variant="outlined" auto-grow />
-        </div>
+          <div class="input_cont">
+            <label>퇴사사유</label>
+            <v-textarea
+              row-height="25"
+              rows="5"
+              variant="outlined"
+              auto-grow
+              :disabled="isDisabled && (mode == 'info' || member.role < 2)"
+            />
+          </div>
+        </template>
       </v-form>
     </v-card-text>
 
     <v-card-actions class="pt-4 pb-3 border-top-1">
       <v-btn
+        v-if="mode !== 'info'"
         size="large"
         variant="flat"
         color="black"
         text
         width="90"
         @click="submit"
-        >저장</v-btn
+        >{{ modeText }}</v-btn
       >
       <v-btn
         size="large"
@@ -265,8 +326,9 @@ onMounted(() => {
         text
         width="90"
         @click="close"
-        >취소</v-btn
       >
+        {{ mode === "info" ? "닫기" : "취소" }}
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>

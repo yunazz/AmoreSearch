@@ -43,7 +43,7 @@ function defaultMember(): Ref<MemberOptions> {
     role: 2,
     name: "홍길동",
     position: "사원",
-    department: "HR",
+    department: "HR팀",
   });
   return member;
 }

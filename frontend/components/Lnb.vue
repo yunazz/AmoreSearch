@@ -64,6 +64,9 @@ function logout() {}
             </NuxtLink>
           </li>
         </ul>
+        <template
+          v-if="member.role > 2 || member.department === 'HR팀'"
+        ></template>
         <small class="text-grey-01">ADMIN</small>
         <ul class="lnb_list">
           <li

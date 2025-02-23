@@ -14,6 +14,11 @@ function openRnb(item) {
 <template>
   <div class="board_cards product_card grid-cols-4">
     <v-card class="board_card" v-for="(item, i) in list" :key="i">
+      <v-btn
+        icon="mdi-star"
+        variant="text"
+        class="icon--toggle position-absolute"
+      />
       <div class="card-img">
         <v-img height="250" :src="item.img_url" cover></v-img>
       </div>
@@ -79,8 +84,7 @@ function openRnb(item) {
               <v-btn
                 icon="mdi-star"
                 variant="text"
-                class="icon--favorite mr-3 mt-2"
-                color="grey-lighten-2"
+                class="icon--toggle mr-3 mt-2"
               />
             </div>
 
@@ -205,3 +209,11 @@ function openRnb(item) {
     </v-navigation-drawer>
   </div>
 </template>
+<style scoped>
+.position-absolute {
+  position: absolute;
+  z-index: 1;
+  right: 4px;
+  top: 4px;
+}
+</style>

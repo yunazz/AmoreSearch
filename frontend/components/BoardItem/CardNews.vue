@@ -15,12 +15,7 @@ const props = defineProps(["list", "listType"]);
 
       <div class="v-card-custom-action pr-1 pb-1">
         <span class="v-card-date">{{ item.registered_at }}</span>
-        <v-btn
-          class="icon--favorite"
-          color="grey-lighten-2"
-          icon="mdi-star"
-          variant="text"
-        />
+        <v-btn class="icon--toggle" icon="mdi-star" variant="text" />
       </div>
     </v-card>
   </div>
