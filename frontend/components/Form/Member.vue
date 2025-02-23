@@ -59,11 +59,11 @@ function initResignOptions() {
 <template>
   <v-card>
     <v-toolbar align="center" color="black" class="px-7">
-      <v-icon icon="mdi-account" class="mr-3 title--l" />
+      <!-- <v-icon icon="mdi-account" class="mr-3 title--l" /> -->
       직원 {{ modeText }}
     </v-toolbar>
     <v-card-text>
-      <v-form v-model="valid" class="px-3 pt-2">
+      <v-form v-model="valid" class="pt-2">
         <div class="input_cont flex align-center" v-if="member.role >= 2">
           <label class="mr-4">권한</label>
           <v-chip-group
@@ -303,25 +303,19 @@ function initResignOptions() {
       </v-form>
     </v-card-text>
 
-    <v-card-actions class="pt-4 pb-3 border-top-1">
+    <v-card-actions class="pt-4 pb-3 px-6 border-top-1">
+      <v-btn variant="flat" color="black" text width="80" @click="submit">
+        {{ modeText }}
+      </v-btn>
       <v-btn
-        size="large"
-        variant="flat"
-        color="black"
-        text
-        width="90"
-        @click="submit"
-        >{{ modeText }}</v-btn
-      >
-      <v-btn
-        size="large"
         variant="outlined"
         color="gray-black"
         text
-        width="90"
+        width="80"
         @click="close"
-        >취소</v-btn
       >
+        취소
+      </v-btn>
     </v-card-actions>
   </v-card>
 </template>

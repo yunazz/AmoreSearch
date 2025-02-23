@@ -1,10 +1,12 @@
 <script setup>
 const member = useMember();
+const dialog = ref(false);
+
 // tab
-const tab = ref("PASSWORD");
+const tab = ref("INFO");
 const tabItems = ref([
   { text: "회원 정보", value: "INFO" },
-  { text: "비밀번호 변경", value: "PASSWORD" },
+  // { text: "비밀번호 변경", value: "PASSWORD" },
 ]);
 
 // form
@@ -16,7 +18,6 @@ const passwordForm = ref({
   new_password: "",
   new_password_check: "",
 });
-
 // snackbar
 const snackbar = ref(false);
 const message = ref("");
@@ -29,12 +30,11 @@ const notify = (msg) => {
 const validatePassword = () => {
   const { password, new_password, new_password_check } = passwordForm.value;
   if (password.length > 0) return notify("현재 비밀번호를 입력해 주세요.");
-  if (new_password.length > 0)
-    return notify("새로운 비밀번호를 입력해 주세요.");
+  if (new_password.length > 0) return notify("비밀번호를 입력해 주세요.");
   if (new_password_check.length > 0)
-    return notify("새로운 비밀번호 확인을 입력해 주세요.");
+    return notify("비밀번호 확인을 입력해 주세요.");
   if (new_password_check.length !== new_password_check)
-    return notify("새로운 비밀번호 확인을 입력해 주세요.");
+    return notify("비밀번호 확인을 입력해 주세요.");
 
   if (false) {
     return notify("잘못 입력되었습니다.현재 비밀번호를 확인해해 주세요.");
@@ -135,65 +135,82 @@ async function updateMyPassword() {
                   />
                   <v-btn
                     v-if="tab === 'INFO'"
-                    color="main"
+                    color="black"
                     @click="updateMyInfo"
                   >
                     수정
                   </v-btn>
                 </div>
               </div>
+              <p class="mt-2">
+                <span>비밀번호</span>
+                <v-btn @click="dialog = true" color="black"
+                  >비밀번호 변경</v-btn
+                >
+              </p>
             </div>
           </div>
         </div>
       </article>
-
-      <article v-if="tab == 'PASSWORD'" id="passwordChange" class="tab_content">
-        <div>
-          <div class="input_cont">
-            <label> 현재 비밀번호 </label>
-            <v-text-field
-              hide-details
-              variant="outlined"
-              v-model="passwordForm.password"
-            />
-          </div>
-          <div class="input_cont">
-            <label> 새로운 비밀번호 </label>
-            <v-text-field
-              hide-details
-              variant="outlined"
-              v-model="passwordForm.new_password"
-            />
-          </div>
-          <div class="input_cont mb-6">
-            <label> 새로운 비밀번호 확인 </label>
-            <v-text-field
-              hide-details
-              variant="outlined"
-              v-model="passwordForm.new_password_check"
-            />
-          </div>
-        </div>
-      </article>
-      <div class="flex justify-center"></div>
-      <div class="flex justify-center">
-        <v-btn
-          v-if="tab === 'PASSWORD'"
-          width="136"
-          color="main"
-          @click="updateMyPassword"
-          >비밀번호 수정</v-btn
-        >
-      </div>
-      <v-snackbar v-model="snackbar" :timeout="3000" color="main">
-        {{ message }}
-        <template v-slot:action="{ attrs }">
-          <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
-            닫기
-          </v-btn>
-        </template>
-      </v-snackbar>
     </div>
+    <v-dialog v-model="dialog" max-width="390">
+      <v-card class="board_card">
+        <v-toolbar align="center" color="black" class="px-7">
+          비밀번호 변경
+        </v-toolbar>
+        <v-card-text class="mt-2">
+          <div id="passwordChange" class="tab_content">
+            <div>
+              <div class="input_cont">
+                <label> 현재 비밀번호 </label>
+                <v-text-field
+                  hide-details
+                  variant="outlined"
+                  v-model="passwordForm.password"
+                />
+              </div>
+              <div class="input_cont">
+                <label> 비밀번호 </label>
+                <v-text-field
+                  hide-details
+                  variant="outlined"
+                  v-model="passwordForm.new_password"
+                />
+              </div>
+              <div class="input_cont">
+                <label> 비밀번호 확인 </label>
+                <v-text-field
+                  hide-details
+                  variant="outlined"
+                  v-model="passwordForm.new_password_check"
+                />
+              </div>
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions class="pt-4 pb-3 px-6 border-top-1">
+          <div class="flex justify-center">
+            <v-btn
+              variant="flat"
+              color="black"
+              text
+              width="80"
+              @click="updateMyPassword"
+            >
+              변경
+            </v-btn>
+          </div>
+        </v-card-actions>
+        <v-snackbar v-model="snackbar" :timeout="3000" color="main">
+          {{ message }}
+          <template v-slot:action="{ attrs }">
+            <v-btn color="red" text v-bind="attrs" @click="snackbar = false">
+              닫기
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -220,9 +237,7 @@ article {
   display: flex;
   flex-direction: column;
   row-gap: 0.625rem;
-
   border-radius: 16px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 .tab_content .input_cont {
   display: flex;
@@ -238,6 +253,7 @@ article {
   width: 690px;
   padding: 32px 40px 30px;
   padding-bottom: 30px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 #myInfo .flex.gap-4 > div {
   padding: 0 12px;
@@ -261,7 +277,7 @@ article {
 #myInfo p {
   display: flex;
   align-items: center;
-  height: 34px;
+  height: 40px;
 }
 #Mypage label {
   font-size: 0.8125rem;
@@ -278,9 +294,8 @@ article {
   color: black;
 }
 
-#passwordChange > div {
-  padding: 32px 40px 10px;
-  width: 420px;
+#passwordChange {
+  width: 100%;
 }
 #passwordChange .input_cont label {
   width: 120px;

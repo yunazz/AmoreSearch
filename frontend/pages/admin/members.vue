@@ -323,7 +323,7 @@ async function registerMember() {}
         @submit="submitDialog"
       />
     </v-dialog> -->
-    <v-dialog v-model="dialog" max-width="600" scrollable>
+    <v-dialog v-model="dialog" max-width="560" scrollable>
       <FormMember
         :mode="dialogMode"
         :item="propItem"
