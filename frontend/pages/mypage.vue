@@ -87,7 +87,7 @@ async function updateMyPassword() {
               v-if="member.role == 2"
               icon="mdi-shield-account"
               color="main"
-              class="mr-1 mb-2"
+              class="mr-2 mb-2"
             />
             <span> {{ member.name }} ( {{ member.emp_no }} ) </span>
           </h4>
@@ -268,11 +268,11 @@ async function updateMyPassword() {
 #myInfo > div {
   width: 900px;
   margin: 0 auto;
-  padding: 10px 40px 30px;
+  padding: 10px 30px 30px;
 }
 
 #myInfo h4 {
-  padding: 0 40px;
+  padding: 0 30px;
   font-size: 1rem !important;
   width: 900px;
   font-weight: 500;
