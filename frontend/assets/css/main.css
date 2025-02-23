@@ -413,21 +413,9 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   background-color: var(--color-black) !important;
   border: 0;
 }
-#Mypage article span,
-#Mypage .input_cont div.v-field__input,
-#Mypage .input_cont input.v-field__input,
-#Mypage .input_cont input.v-field__input::placeholder {
-  font-size: 0.875rem;
-}
 #Mypage .input_cont input.v-field__input {
-  height: 40px;
-  min-height: 40px;
-}
-#Mypage article span,
-#Mypage .v-field--disabled {
-  opacity: 0.6;
-}
-
-.v-snackbar__wrapper {
-  margin-left: 200px;
+  height: 36px;
+  min-height: 36px;
+  padding-left: 10px;
+  padding-right: 10px;
 }

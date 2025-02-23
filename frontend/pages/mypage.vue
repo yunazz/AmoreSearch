@@ -1,10 +1,10 @@
 <script setup>
 const member = useMember();
 // tab
-const tab = ref("INFO");
+const tab = ref("PASSWORD");
 const tabItems = ref([
-  { text: "회원정보 수정", value: "INFO" },
-  { text: "비밀번호 수정", value: "PASSWORD" },
+  { text: "회원 정보", value: "INFO" },
+  { text: "비밀번호 변경", value: "PASSWORD" },
 ]);
 
 // form
@@ -79,110 +79,81 @@ async function updateMyPassword() {
         </ClientOnly>
       </div>
 
-      <article class="tab_content" v-if="tab == 'INFO'">
+      <article v-if="tab == 'INFO'" id="myInfo" class="tab_content">
         <div>
-          <div class="input_cont">
-            <label>사원번호</label>
-            <v-text-field
-              hide-details
-              density="compact"
-              variant="underlined"
-              v-model="member.emp_no"
-              maxLength="10"
-              disabled
-              readonly
+          <h4 class="px-3">
+            <span>
+              {{ member.name }}
+            </span>
+            <v-icon
+              v-if="member.role == 2"
+              icon="mdi-shield-account"
+              color="main"
+              class="ml-1 mb-2"
             />
-          </div>
-          <div class="input_cont">
-            <label>이름</label>
-            <v-text-field
-              hide-details
-              density="compact"
-              variant="underlined"
-              v-model="member.name"
-              maxLength="20"
-              disabled
-              readonly
-            />
-          </div>
-
-          <div class="input_cont">
-            <label class="text-main">
-              휴대폰번호 <b class="text-main ml-1">*</b>
-            </label>
-            <v-text-field
-              hide-details
-              variant="underlined"
-              v-model="form.phone"
-              v-mask="'###-####-####'"
-            />
-          </div>
-          <div class="input_cont mb-3">
-            <label>생년월일</label>
-            <v-text-field
-              hide-details
-              density="compact"
-              variant="underlined"
-              v-model="member.birth_date"
-              maxLength="10"
-              disabled
-              v-mask="'####-##-##'"
-              readonly
-            />
-          </div>
-          <div class="input_cont mb-3">
-            <label>입사일</label>
-            <v-text-field
-              hide-details
-              density="compact"
-              variant="underlined"
-              v-model="member.hire_date"
-              maxLength="10"
-              disabled
-              v-mask="'####-##-##'"
-              readonly
-            />
-          </div>
-          <div class="input_cont mb-3">
-            <label>소속</label>
-            <v-text-field
-              hide-details
-              variant="underlined"
-              v-model="member.company_affiliation"
-              single-line
-              disabled
-            />
-          </div>
-          <div class="input_cont mb-3">
-            <label>근무부서</label>
-            <v-text-field
-              hide-details
-              variant="underlined"
-              v-model="member.department"
-              single-line
-              disabled
-            />
-          </div>
-          <div class="input_cont mb-3">
-            <label>직급</label>
-            <v-text-field
-              hide-details
-              variant="underlined"
-              v-model="member.position"
-              single-line
-              disabled
-            />
+          </h4>
+          <v-divider class="mb-2" />
+          <div class="flex gap-4">
+            <div>
+              <h5>
+                <v-icon icon="mdi-smart-card-outline" class="mr-2" />직원정보
+              </h5>
+              <p>
+                <span>직급</span>
+                <span>{{ member.position }}</span>
+              </p>
+              <p>
+                <span>사원번호</span>
+                <span>{{ member.emp_no }}</span>
+              </p>
+              <p>
+                <span>소속/부서</span>
+                <span
+                  >{{ member.company_affiliation }} / {{ member.department }}
+                </span>
+              </p>
+              <p>
+                <span>입사일</span>
+                <span>{{ member.hire_date }}</span>
+              </p>
+            </div>
+            <div>
+              <!-- <v-divider class="my-2" /> -->
+              <h5><v-icon icon="mdi-lock-outline" class="mr-2" />개인정보</h5>
+              <p>
+                <span>생년월일</span>
+                <span>{{ member.birth_date }}</span>
+              </p>
+              <div class="input_cont">
+                <label style="min-width: 60px"> 휴대폰번호 </label>
+                <div class="flex gap-2 w-100">
+                  <v-text-field
+                    hide-details
+                    variant="outlined"
+                    v-model="form.phone"
+                    v-mask="'###-####-####'"
+                  />
+                  <v-btn
+                    v-if="tab === 'INFO'"
+                    color="main"
+                    @click="updateMyInfo"
+                  >
+                    수정
+                  </v-btn>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </article>
 
-      <article class="tab_content" v-if="tab == 'PASSWORD'">
+      <article v-if="tab == 'PASSWORD'" id="passwordChange" class="tab_content">
         <div>
           <div class="input_cont">
             <label> 현재 비밀번호 </label>
             <v-text-field
               hide-details
-              variant="underlined"
+              variant="outlined"
               v-model="passwordForm.password"
             />
           </div>
@@ -190,7 +161,7 @@ async function updateMyPassword() {
             <label> 새로운 비밀번호 </label>
             <v-text-field
               hide-details
-              variant="underlined"
+              variant="outlined"
               v-model="passwordForm.new_password"
             />
           </div>
@@ -198,21 +169,13 @@ async function updateMyPassword() {
             <label> 새로운 비밀번호 확인 </label>
             <v-text-field
               hide-details
-              variant="underlined"
+              variant="outlined"
               v-model="passwordForm.new_password_check"
             />
           </div>
         </div>
       </article>
-      <div class="flex justify-center">
-        <v-btn
-          v-if="tab === 'INFO'"
-          width="90"
-          color="main"
-          @click="updateMyInfo"
-          >수정</v-btn
-        >
-      </div>
+      <div class="flex justify-center"></div>
       <div class="flex justify-center">
         <v-btn
           v-if="tab === 'PASSWORD'"
@@ -235,6 +198,16 @@ async function updateMyPassword() {
 </template>
 
 <style scoped>
+#Mypage span,
+#Mypage .input_cont div.v-field__input,
+#Mypage .input_cont input.v-field__input,
+#Mypage .input_cont input.v-field__input::placeholder {
+}
+
+.v-snackbar__wrapper {
+  margin-left: 200px;
+}
+
 article {
   display: flex;
   flex-direction: column;
@@ -243,17 +216,15 @@ article {
   width: 100%;
   margin: 1.5rem 0 2.25rem;
 }
-article > div {
-  /* border: 1px solid var(--border-color); */
-  padding: 32px 40px 16px;
+.tab_content > div {
   display: flex;
   flex-direction: column;
   row-gap: 0.625rem;
-  width: 430px;
+
   border-radius: 16px;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
-.input_cont {
+.tab_content .input_cont {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -263,11 +234,55 @@ article > div {
 .tab_content .input_cont label {
   font-size: 0.875rem;
 }
-
-.tab_content:nth-child(1) .input_cont label {
-  width: 90px;
+#myInfo > div {
+  width: 690px;
+  padding: 32px 40px 30px;
+  padding-bottom: 30px;
 }
-.tab_content:nth-child(2) .input_cont label {
-  width: 130px;
+#myInfo .flex.gap-4 > div {
+  padding: 0 12px;
+}
+#myInfo .flex.gap-4 > div:first-of-type {
+  width: 47%;
+}
+#myInfo .flex.gap-4 > div:last-of-type {
+  width: 53%;
+}
+#myInfo h4 {
+  font-size: 1rem !important;
+  font-weight: 500;
+  color: black;
+}
+#myInfo h5 {
+  margin-bottom: 7px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+#myInfo p {
+  display: flex;
+  align-items: center;
+  height: 34px;
+}
+#Mypage label {
+  font-size: 0.8125rem;
+  color: var(--color-gray-04);
+}
+#myInfo p span:nth-of-type(1) {
+  width: 67px;
+  margin-right: 16px;
+  font-size: 0.8125rem;
+  color: var(--color-gray-04);
+}
+#myInfo p span:nth-of-type(2) {
+  font-size: 0.875rem;
+  color: black;
+}
+
+#passwordChange > div {
+  padding: 32px 40px 10px;
+  width: 420px;
+}
+#passwordChange .input_cont label {
+  width: 120px;
 }
 </style>

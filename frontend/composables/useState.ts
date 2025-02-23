@@ -35,17 +35,17 @@ export function useLoginHandler() {
 function defaultMember(): Ref<MemberOptions> {
   const member = ref<MemberOptions>({
     member_id: 0,
-    emp_no: "",
+    emp_no: "2045910583",
     // name: '',
     // position: '',
     // department: '',
     // role: ''
     role: 2,
     name: "홍길동",
-    company_affiliation: "",
-    birth_date: "",
-    phone: "",
-    hire_date: "",
+    company_affiliation: "아모레퍼시픽",
+    birth_date: "1995-01-01",
+    phone: "010-4470-1111",
+    hire_date: "2020-01-01",
     employment_status: "재직",
     position: "사원",
     department: "HR팀",
