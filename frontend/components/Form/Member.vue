@@ -24,12 +24,9 @@ const emit = defineEmits(["submit", "close"]);
 const modeText = computed(() => {
   if (props.mode === "register") return "등록";
   if (props.mode === "edit") return "수정";
-  if (props.mode === "info") return "조회";
 });
 const isDisabled = computed(
-  () =>
-    props.mode === "info" ||
-    (props.item?.employment_status === "퇴직" && member.role !== 3)
+  () => props.item?.employment_status === "퇴직" && member.role !== 3
 );
 const form = ref({ ...props.item, password: "" });
 
@@ -115,7 +112,7 @@ function initResignOptions() {
 
         <div class="grid-cols-2">
           <div class="input_cont">
-            <label>비밀번호</label>
+            <label>{{ mode === "edit" ? "초기화 " : "" }}비밀번호</label>
             <v-text-field
               density="compact"
               variant="outlined"
@@ -271,16 +268,14 @@ function initResignOptions() {
                       'YYYY-MM-DD 형식으로 입력해주세요',
                   ]"
                   prepend-inner-icon="mdi-calendar"
-                  :disabled="isDisabled && (mode == 'info' || member.role < 2)"
+                  :disabled="isDisabled && member.role < 2"
                   readonly
                 >
                   <v-menu
                     v-model="menu_resign"
                     :close-on-content-click="false"
                     activator="parent"
-                    :disabled="
-                      isDisabled && (mode == 'info' || member.role < 2)
-                    "
+                    :disabled="isDisabled && member.role < 2"
                   >
                     <v-date-picker
                       hide-header
@@ -301,7 +296,7 @@ function initResignOptions() {
               rows="5"
               variant="outlined"
               auto-grow
-              :disabled="isDisabled && (mode == 'info' || member.role < 2)"
+              :disabled="isDisabled && member.role < 2"
             />
           </div>
         </template>
@@ -310,7 +305,6 @@ function initResignOptions() {
 
     <v-card-actions class="pt-4 pb-3 border-top-1">
       <v-btn
-        v-if="mode !== 'info'"
         size="large"
         variant="flat"
         color="black"
@@ -326,9 +320,8 @@ function initResignOptions() {
         text
         width="90"
         @click="close"
+        >취소</v-btn
       >
-        {{ mode === "info" ? "닫기" : "취소" }}
-      </v-btn>
     </v-card-actions>
   </v-card>
 </template>
