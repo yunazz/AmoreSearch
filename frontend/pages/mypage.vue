@@ -95,9 +95,11 @@ async function updateMyPassword() {
             </h3>
             <v-divider class="mb-2" thickness="2" />
             <div class="info_summary px-1">
+              <p><span>권한</span>{{ enums.roles[member.role] }}</p>
               <p><span>사원번호</span>{{ member.emp_no }}</p>
               <p><span>입사일</span>{{ member.hire_date }}</p>
             </div>
+            <v-divider class="mt-2" thickness="2" />
           </div>
 
           <section class="info_detail">
@@ -259,6 +261,8 @@ async function updateMyPassword() {
 }
 #myInfo .info_summary p {
   display: flex;
+  justify-content: space-between;
+  padding: 0 12px;
   height: 28px;
 }
 #myInfo .info_summary p span:nth-of-type(1) {
