@@ -62,3 +62,13 @@ export function validatePhone(phone: string) {
     /^01(1|[6-9])(-?)(\d{3,4})(-?)(\d{4})$|^010(-?)(\d{3,4})(-?)(\d{4})$/;
   return phoneRegex.test(phone);
 }
+
+export function activate_confirm(
+  model: { title: string; text: string; active: boolean },
+  title: "",
+  text: string
+) {
+  model.active = true;
+  model.title = title;
+  model.text = text;
+}

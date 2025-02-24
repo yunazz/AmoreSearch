@@ -424,3 +424,7 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.v-card-item .v-card-title {
+  font-size: 1rem;
+}
