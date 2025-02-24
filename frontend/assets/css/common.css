@@ -9,10 +9,10 @@
 
   --title-size-xl: 2.125rem;
   --title-size-l: 1.75rem;
-  --title-size-m: 1.125rem;
+  --title-size-m: 1.25rem;
   --title-size-s: 0.9375rem;
 
-  --body-size-l: 1rem;
+  --body-size-l: 1.125rem;
   --body-size-m: 0.875rem;
   --body-size-s: 0.75rem;
 
@@ -29,7 +29,7 @@
   --color-gray-01: #e5e5e5;
   --color-gray-02: #c0c0c0;
   --color-gray-03: #999999;
-  --color-gray-04: #707070;
+  --color-gray-04: #777777;
   --color-gray-05: #414141;
   --color-red: #e53a5f;
   --color-green: #0cbc64;

@@ -59,7 +59,6 @@ function initResignOptions() {
 <template>
   <v-card>
     <v-toolbar align="center" color="black" class="px-7">
-      <!-- <v-icon icon="mdi-account" class="mr-3 title--l" /> -->
       직원 {{ modeText }}
     </v-toolbar>
     <v-card-text>

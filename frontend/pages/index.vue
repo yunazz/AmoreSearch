@@ -68,9 +68,7 @@ function loginFail(msg) {
             >화장품 산업에서 중요한 혁신을 이끌어가도록 돕겠습니다.</span
           >
         </p>
-        <p class="title--m fw-600 mt-12">
-          로그인하고 효율적인 업무 시작하세요!
-        </p>
+        <p class="body--l fw-600 mt-12">로그인하고 효율적인 업무 시작하세요!</p>
       </div>
     </div>
     <div class="login_right">
