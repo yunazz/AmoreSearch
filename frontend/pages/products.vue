@@ -28,7 +28,7 @@ function changePage(currentPage) {
   filter.value.currentPage = currentPage;
   scrollToTop();
 }
-
+const selectedBrand = ref([]);
 const list = ref([
   {
     brand_name: "에스트라",
@@ -150,6 +150,40 @@ const list = ref([
           </v-tabs>
         </ClientOnly>
       </div>
+      <div class="mt-5 mb-2">
+        <ClientOnly>
+          <v-sheet class="mx-auto">
+            <v-slide-group
+              multiple
+              show-arrows
+              v-model="selectedBrand"
+              selected-class="active"
+            >
+              <v-slide-group-item
+                v-for="(brand, i) in ourBrands"
+                :key="i"
+                v-slot="{ toggle, selectedClass }"
+              >
+                <v-card variant="flat" height="72" width="72">
+                  <button
+                    :class="[selectedClass]"
+                    class="list_avatar"
+                    @click="toggle"
+                  >
+                    <v-img width="64" :src="brand.url" />
+                    <small class="text-white fw-500">{{ brand.name }}</small>
+                  </button>
+                  <div
+                    class="d-flex fill-height align-center justify-center"
+                  ></div>
+                </v-card>
+              </v-slide-group-item>
+            </v-slide-group>
+          </v-sheet>
+          <div class="flex gap-2"></div>
+        </ClientOnly>
+      </div>
+
       <div class="board">
         <div class="board_content">
           <ClientOnly>

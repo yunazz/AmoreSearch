@@ -51,20 +51,73 @@ const model = ref([]);
 <template>
   <div id="AiSearch" class="content">
     <div class="content_inner">
-      <div class="content_center">
-        <h2 class="title--xl fw-700">
-          안녕하세요,
-          <span class="text-underline ml-1">
-            {{ member.name }} {{ member.position }}님
-          </span>
-          <br />
-          질문을 입력해 주세요!
-        </h2>
-        <div class="input--search mt-5">
-          <v-icon icon="mdi-magnify" />
-          <input type="text" />
-        </div>
+      <h2 class="title--xl fw-700">
+        안녕하세요,
+        <span class="text-underline ml-1">
+          {{ member.name }} {{ member.position }}님
+        </span>
+        <br />
+        무엇을 도와드릴까요?
+      </h2>
+      <div class="input--search mt-5">
+        <v-icon icon="mdi-magnify" />
+        <input type="text" />
       </div>
+      <v-divider class="mt-9" />
+    </div>
+    <article class="mt-7">
+      <ClientOnly>
+        <v-sheet class="group_card" style="">
+          <v-slide-group v-model="model" class="pa-2" show-arrows>
+            <v-slide-group-item v-for="n in 8" :key="n">
+              <div class="group_card_item">
+                <!-- <v-card :class="['ma-4']" height="250" width="340" @click="toggle"> -->
+                <div class="d-flex fill-height align-center justify-center">
+                  item
+                </div>
+                <!-- </v-card> -->
+              </div>
+            </v-slide-group-item>
+          </v-slide-group>
+        </v-sheet>
+      </ClientOnly>
+    </article>
+    <div class="content_inner grid-cols-2">
+      <article class="mt-2">
+        <v-card class="mx-auto" elevation="0">
+          <v-list :items="items" lines="two" item-props>
+            <template v-slot:prepend>
+              <v-avatar color="grey-lighten-1">
+                <NuxtImg src="img/icon/story.svg" width="30" />
+              </v-avatar>
+            </template>
+            <template v-slot:subtitle="{ subtitle }">
+              <div v-html="subtitle" class="mr-2" />
+            </template>
+            <template v-slot:append>
+              <v-btn
+                class="icon--toggle"
+                color="grey-lighten-2"
+                icon="mdi-star"
+                variant="text"
+              />
+            </template>
+          </v-list>
+        </v-card>
+      </article>
+      <article class="mt-2">
+        <v-card class="mx-auto" elevation="0">
+          <v-list :items="items1" lines="two" item-props>
+            <template v-slot:subtitle="{ subtitle }">
+              <div v-html="subtitle" class="mr-2" />
+            </template>
+            <template v-slot:append>
+              <v-btn color="grey-lighten-2" icon="mdi-folder" variant="text" />
+              <v-btn class="icon--toggle" icon="mdi-star" variant="text" />
+            </template>
+          </v-list>
+        </v-card>
+      </article>
     </div>
   </div>
 </template>
@@ -81,11 +134,6 @@ const model = ref([]);
 }
 #AiSearch .grid-cols-2 {
   column-gap: 2rem;
-}
-.content_center {
-  width: 900px;
-  margin: 0 auto;
-  margin-top: 100px;
 }
 .text-underline {
   font-weight: 800;

@@ -36,7 +36,9 @@ function logout() {}
   <nav id="lnb">
     <div class="lnb_top">
       <h1 class="buri">
-        <NuxtImg class="logo" src="img/logo_w.svg"></NuxtImg>
+        <NuxtLink to="/dashboard">
+          <NuxtImg class="logo" src="img/logo_w.svg" />
+        </NuxtLink>
       </h1>
       <NuxtLink class="lnb_myprofile" to="/mypage">
         <NuxtImg src="img/icon/account.png" width="44" />
@@ -110,7 +112,7 @@ nav#lnb {
 }
 nav#lnb h1 {
   font-size: 24px;
-  padding: 36px 20px 0 20px;
+  padding: 32px 20px 0 20px;
 }
 .lnb_top h1 img {
   width: 152px;
