@@ -99,7 +99,6 @@ const tab = ref("NEWS");
                 :key="tab.value"
                 :text="tab.text"
                 :value="tab.value"
-                @click="initBoardType"
                 :ripple="false"
               />
             </v-tabs>

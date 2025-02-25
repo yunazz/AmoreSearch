@@ -377,9 +377,16 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   font-size: 0.8125rem;
   margin-bottom: 4px;
 }
+.v-list-item--density-default.v-list-item--one-line {
+  font-size: 0.875rem;
+  min-height: 48px;
+}
+.v-list-item--one-line .v-list-item-title {
+  font-size: 0.875rem;
+}
 .input_cont div.v-field__input,
 .input_cont input.v-field__input {
-  font-size: 0.937rem;
+  font-size: 0.875rem;
   padding-top: 4px !important;
   padding-bottom: 4px;
   min-height: 46px;
@@ -387,7 +394,7 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 }
 .input_cont .v-textarea .v-field__input {
   line-height: 1.5;
-  font-size: 0.937rem !important;
+  font-size: 0.875rem !important;
   padding-top: 12px !important;
   padding-bottom: 16px !important;
 }
