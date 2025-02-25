@@ -115,7 +115,9 @@ async function updateMyInfo() {
                 <v-btn
                   @click="dialogPwdChange = true"
                   color="primary"
-                  width="140px"
+                  width="160"
+                  rounded
+                  variant="outlined"
                 >
                   <v-icon icon="mdi-lock-outline " class="mr-2" />
                   비밀번호 변경

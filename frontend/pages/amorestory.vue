@@ -3,7 +3,7 @@ const show = ref(false);
 const tab = ref("NEWS");
 const tabs = [
   { text: "회사뉴스", value: "NEWS" },
-  { text: "자사브랜드", value: "BRAND" },
+  { text: "브랜드", value: "BRAND" },
   { text: "사내문서", value: "DOCUMENT" },
 ];
 
@@ -242,7 +242,7 @@ function initBoardType() {
         <div v-if="tab === 'NEWS' || tab === 'BRAND'" class="board_content">
           <!-- 1 회사뉴스 -->
           <BoardItemCardNews v-if="tab === 'NEWS'" :list="list1" />
-          <!-- 2 자사브랜드 -->
+          <!-- 2 브랜드 -->
           <div v-if="tab === 'BRAND'" class="board_cards grid-cols-4">
             <v-card class="board_card" v-for="(item, i) in list2" :key="i">
               <div class="card-img">
