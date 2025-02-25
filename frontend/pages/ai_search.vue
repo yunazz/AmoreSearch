@@ -94,7 +94,7 @@ const items1 = [
   word-spacing: -4px;
   font-weight: 800;
   margin: 0 auto;
-  animation: fadeInDown2 1s;
+  animation: fadeInDown2 0.8s;
 }
 #AiSearch .grid-cols-2 {
   column-gap: 2rem;
