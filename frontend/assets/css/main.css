@@ -104,7 +104,6 @@ listing {
   font-family: "Noto Sans KR", "Malgun Gothic", dotum, "Helvetica Neue",
     Helvetica, Arial, sans-serif;
 }
-
 ul,
 ol {
   list-style: none;
@@ -284,13 +283,13 @@ nav#lnb .v-date-picker-month__day {
 nav#lnb .v-date-picker-month__day .v-btn.v-date-picker-month__day-btn {
   height: 20px !important;
   letter-spacing: 0px;
-  background: black;
+  background: var(--color-black);
   color: white;
 }
 nav#lnb
   .v-btn.v-btn--icon.v-theme--light.text-black.v-date-picker-month__day-btn {
   border: none;
-  color: black !important;
+  color: var(--color-black) !important;
   background-color: rgba(255, 255, 255, 0.816) !important;
   border-radius: 6px !important;
   width: 20px;
@@ -472,4 +471,8 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 .v-slide-group__next i,
 .v-slide-group__prev i {
   font-size: 2.5rem;
+}
+body .bg-black {
+  background-color: var(--color-black) !important;
+  background: var(--color-black) !important;
 }

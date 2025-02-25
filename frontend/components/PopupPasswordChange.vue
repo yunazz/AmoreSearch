@@ -95,7 +95,7 @@ async function updateMyPassword() {
           </v-btn>
         </div>
       </v-card-actions>
-      <v-snackbar v-model="snackbar" :timeout="3000" color="main">
+      <v-snackbar v-model="snackbar" :timeout="3000" color="primary">
         {{ message }}
       </v-snackbar>
     </v-card>

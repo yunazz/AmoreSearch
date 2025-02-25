@@ -59,7 +59,8 @@ function loginFail(msg) {
       <div>
         <h2 class="fw-700 dotum">환영합니다!</h2>
         <p class="title--l dotum fw-700">
-          <span class="buri mr-1">AmoreSearch</span>와 함께하는 더 나은 내일
+          <span>AmoreSearch</span>
+          와 함께하는 더 나은 내일
         </p>
         <p class="mt-3 mb-4 dotum">
           <span class="dotum">우리 회사의 업무를 지원하고,</span>
@@ -74,7 +75,7 @@ function loginFail(msg) {
     <div class="login_right">
       <form class="login_form" onsubmit="return false;">
         <h1 class="text-center fw-600 mb-2">
-          <NuxtImg class="logo" src="img/logo.svg"></NuxtImg>
+          <NuxtImg class="logo" src="img/logo.svg" />
         </h1>
         <div class="input_wrap">
           <v-text-field
@@ -105,7 +106,7 @@ function loginFail(msg) {
           />
           <v-btn
             class="w-full mb-4"
-            color="main"
+            color="primary"
             @click="login"
             size="large"
             :ripple="false"
@@ -171,7 +172,7 @@ function loginFail(msg) {
 .login_right h1 {
   margin-bottom: 0.5rem;
 }
-.login_right h1 .logo {
+.login_right .logo {
   width: 200px;
 }
 .login_form {

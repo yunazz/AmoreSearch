@@ -36,7 +36,7 @@ async function updateMyInfo() {
             <v-icon
               v-if="member.role == 2"
               icon="mdi-shield-account"
-              color="main"
+              color="primary"
               class="mr-2 mb-2"
             />
             <span> {{ member.name }} </span>
@@ -52,7 +52,7 @@ async function updateMyInfo() {
 
         <section class="info_detail">
           <h4><v-icon icon="mdi-smart-card-outline" class="mr-3" />회원정보</h4>
-          <v-divider class="mt-2 mb-2" thickness="2" opacity="1" />
+          <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
 
           <article>
             <h5><small class="mr-2">▶</small>직원정보</h5>
@@ -107,13 +107,13 @@ async function updateMyInfo() {
             </div>
           </article>
           <article class="my-setting">
-            <v-divider thickness="2" opacity="1" />
+            <v-divider thickness="2" opacity=".8" />
             <div>
               <p>비밀번호 변경</p>
               <p>
                 <v-btn
                   @click="dialogPwdChange = true"
-                  color="main"
+                  color="primary"
                   width="140px"
                 >
                   <v-icon icon="mdi-lock-outline " class="mr-3" />
@@ -122,7 +122,7 @@ async function updateMyInfo() {
               </p>
             </div>
           </article>
-          <v-divider thickness="2" opacity="1" />
+          <v-divider thickness="2" opacity=".8" />
         </section>
       </div>
     </div>
@@ -159,7 +159,7 @@ async function updateMyInfo() {
   font-size: var(--body-size-l) !important;
   font-weight: 600;
   margin: 0 auto;
-  color: black;
+  color: var(--color-black);
 }
 #myInfo .info_summary {
   display: flex;
@@ -236,7 +236,7 @@ article.my-setting p {
 }
 #myInfo p span:nth-of-type(2) {
   font-size: 0.875rem;
-  color: black;
+  color: var(--color-black);
 }
 
 #passwordChange {

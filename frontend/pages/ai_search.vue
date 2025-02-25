@@ -45,24 +45,25 @@ const items1 = [
       '<span class="text-primary">Trevor Hansen</span> CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.',
   },
 ];
-const model = ref([]);
 </script>
 
 <template>
   <div id="AiSearch" class="content">
     <div class="content_inner">
       <div class="content_center">
-        <h2 class="title--xl fw-700">
+        <h2 class="title--xl fw-700 gradient-text">
           안녕하세요,
-          <span class="text-underline ml-1">
-            {{ member.name }} {{ member.position }}님
-          </span>
+          <span class="ml-1"> {{ member.name }} {{ member.position }}님 </span>
           <br />
-          질문을 입력해 주세요!
+          무엇을 도와드릴까요?
         </h2>
-        <div class="input--search mt-5">
-          <v-icon icon="mdi-magnify" />
-          <input type="text" />
+        <div class="mt-5">
+          <SearchInput
+            :texts="[
+              '최근에 출시한 우리회사 제품들을 소개해줘',
+              '선크림에 주요한 성분들에 대해서 알려줘',
+            ]"
+          />
         </div>
       </div>
     </div>
@@ -74,10 +75,11 @@ const model = ref([]);
   margin-bottom: 2.5rem;
 }
 #AiSearch h2 {
-  font-size: 30px;
+  display: inline-block;
+  font-size: 32px;
   line-height: 43px;
   word-spacing: -4px;
-  margin-top: 32px;
+  font-weight: 800;
 }
 #AiSearch .grid-cols-2 {
   column-gap: 2rem;
@@ -85,30 +87,11 @@ const model = ref([]);
 .content_center {
   width: 900px;
   margin: 0 auto;
-  margin-top: 100px;
+  margin-top: 160px;
 }
-.text-underline {
-  font-weight: 800;
-  text-underline-offset: 6px;
+.title_bold {
 }
-.input--search {
-  display: flex;
-  align-items: center;
-  margin-top: 2px;
-}
-.input--search {
-  border: 3px solid var(--color-black);
-  border-radius: 60px;
-  padding: 4px 10px;
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-}
-.input--search input {
-  width: 100%;
-  outline: none;
-}
-.input--search i {
-  font-size: 34px;
-}
+
 .group_card {
   margin: 0 auto;
   width: calc(100vw - 280px);

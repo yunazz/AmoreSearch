@@ -14,9 +14,15 @@ export default defineNuxtPlugin((app) => {
         light: {
           dark: false,
           colors: {
+            primary: "#784aab",
             main: "#784AAB",
             sub: "#A28DD4",
-
+            black: "#10021a",
+            borderColor: "#10021a",
+            "on-background": "#10021a",
+            "on-surface": "#10021a",
+            "on-surface-bright": "#10021a",
+            "on-surface-light": "#10021a",
             // main: '#954DD1',
             // sub_1: '#12043e',
             // sub_2: '#12043e',

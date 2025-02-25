@@ -279,7 +279,7 @@ async function registerMember() {}
                   <v-icon
                     v-if="item.role == 2"
                     icon="mdi-shield-account"
-                    color="main"
+                    color="primary"
                   />
                   {{ item.name }}
                 </td>

@@ -125,7 +125,7 @@ nav#lnb h1 {
 .lnb_bottom > div {
   display: flex;
   justify-content: flex-end;
-  background: black;
+  background: var(--lnb-bg-color);
 }
 .lnb_bottom .btn--logout {
   font-size: 13px;
@@ -140,7 +140,6 @@ nav#lnb h1 {
   column-gap: 0.5rem;
   margin-top: 0.5rem;
   margin: 0.75rem 12px 1rem;
-  /* padding: 8px 12px; */
   text-decoration: none;
   color: white;
 }
@@ -188,7 +187,7 @@ nav#lnb h1 {
 }
 .lnb_list li.active {
   /* background: #f5f5f5; */
-  background: #454545;
+  background: #3e3745;
   border-radius: 20px;
 }
 .lnb_list li.active a {
