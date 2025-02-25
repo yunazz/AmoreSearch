@@ -120,7 +120,7 @@ onUnmounted(() => {
   left: 10px;
   transform: translateY(-50%);
   font-size: 1rem;
-  color: rgb(202, 202, 202);
+  color: var(--color-gray-02);
   white-space: nowrap;
   pointer-events: none;
   z-index: 0;

@@ -4,7 +4,7 @@
   --border-color: rgba(0, 0, 0, 0.12);
 
   --lnb-width: 200px;
-  --lnb-bg-color: #11021d;
+  --lnb-bg-color: #0e0118;
   --font-size: 15px;
 
   --title-size-xl: 2.125rem;
@@ -21,27 +21,27 @@
   --sub-color-1: #12043e;
   --sub-color-2: #5215fc;
   --sub-color-3: #885fff;
-  --sub-color-4: #d3d2f1; */
-
-  --main-color: #784aab;
-  --sub-color: #a28dd4;
-
-  --color-gray-01: #e2dbe6;
-  --color-gray-02: #c4bbca;
-  --color-gray-03: #9b91a0;
-  --color-gray-04: #776e80;
-  --color-gray-05: #443f4b;
-  --color-red: #e53a5f;
-  --color-green: #0cbc64;
-  --color-black: #10021a;
-
+  --sub-color-4: #d3d2f1;
   --color-gray-01: #e5e5e5;
   --color-gray-02: #c0c0c0;
   --color-gray-03: #999999;
   --color-gray-04: #777777;
   --color-gray-05: #414141;
   --color-red: #e53a5f;
+  --color-green: #0cbc64; 
+  */
+
+  --main-color: #784aab;
+  --sub-color: #a28dd4;
+
+  --color-gray-01: #e0d6e6;
+  --color-gray-02: #c1b7c9;
+  --color-gray-03: #9b91a0;
+  --color-gray-04: #776e80;
+  --color-gray-05: #443f4b;
+  --color-red: #e53a65;
   --color-green: #0cbc64;
+  --color-black: #10021a;
 
   --radius-1: 0.25rem;
   --radius-2: 0.5rem;
@@ -77,7 +77,6 @@
     transform: rotate(360deg);
   }
 }
-
 @keyframes moveVertical {
   0% {
     transform: translateY(-50%);
@@ -89,7 +88,6 @@
     transform: translateY(-50%);
   }
 }
-
 @keyframes moveHorizontal {
   0% {
     transform: translateX(-50%) translateY(-10%);
@@ -101,7 +99,6 @@
     transform: translateX(-50%) translateY(-10%);
   }
 }
-
 @keyframes fadeInDown {
   0% {
     opacity: 0;
@@ -160,20 +157,11 @@
 /*  ========================================================= */
 /* common classes */
 
-.gradient-text {
-  background: rgb(18, 4, 34);
-  background: linear-gradient(
-    90deg,
-    rgba(18, 4, 34, 1) 0%,
-    rgba(15, 3, 29, 1) 0%,
-    rgba(120, 74, 171, 1) 63%,
-    rgba(81, 153, 171, 1) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: bold;
-  font-size: 2rem;
+::selection {
+  background: var(--main-color);
+  color: #ffffff;
 }
+
 .bg-gray-01 {
   background: var(--color-gray-01);
 }
@@ -611,4 +599,21 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.no-select {
+  user-select: none;
+}
+.gradient-text {
+  background: rgb(18, 4, 34);
+  background: linear-gradient(
+    90deg,
+    rgba(18, 4, 34, 1) 0%,
+    rgba(15, 3, 29, 1) 0%,
+    rgba(120, 74, 171, 1) 63%,
+    rgba(81, 153, 171, 1) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  font-size: 2rem;
 }
