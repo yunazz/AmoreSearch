@@ -174,7 +174,7 @@ const list = ref([
                     class="list_avatar"
                     @click="toggle"
                   >
-                    <v-img width="64" :src="brand.url" />
+                    <v-img width="64" :src="brand.img_path" />
                     <small class="text-white fw-500">{{ brand.name }}</small>
                   </button>
                   <div

@@ -600,6 +600,11 @@ body .text-grey-lighten-2 {
   grid-template-columns: 1fr 1fr 1fr 1fr;
   column-gap: 1rem;
 }
+.grid-cols-5 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  column-gap: 1rem;
+}
 
 .border-top-1 {
   border-top: 1px solid var(--border-color);

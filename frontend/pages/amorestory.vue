@@ -1,6 +1,6 @@
 <script setup>
-const show = ref(false);
-const tab = ref("NEWS");
+const show = ref(true);
+const tab = ref("BRAND");
 const tabs = [
   { text: "회사뉴스", value: "NEWS" },
   { text: "브랜드", value: "BRAND" },
@@ -42,28 +42,6 @@ const list1 = ref([
   {
     title: "회사뉴스 제목",
     subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    registered_at: "2025-01-01",
-  },
-  {
-    title: "회사뉴스 제목",
-    subtitle: "subtitle을 넣을 수 있음",
-    text: "회사뉴스 내용입니다.",
     img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
     registered_at: "2025-01-01",
   },
@@ -71,71 +49,226 @@ const list1 = ref([
     title: "회사뉴스 제목",
     subtitle: "subtitle을 넣을 수 있음",
     img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
     registered_at: "2025-01-01",
   },
   {
     title: "회사뉴스 제목",
     subtitle: "subtitle을 넣을 수 있음",
     img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
     registered_at: "2025-01-01",
   },
   {
     title: "회사뉴스 제목",
     subtitle: "subtitle을 넣을 수 있음",
     img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
     registered_at: "2025-01-01",
   },
   {
     title: "회사뉴스 제목",
     subtitle: "subtitle을 넣을 수 있음",
     img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
-    text: "회사뉴스 내용입니다.",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "회사뉴스 제목",
+    subtitle: "subtitle을 넣을 수 있음",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "회사뉴스 제목",
+    subtitle: "subtitle을 넣을 수 있음",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    registered_at: "2025-01-01",
+  },
+  {
+    title: "회사뉴스 제목",
+    subtitle: "subtitle을 넣을 수 있음",
+    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
     registered_at: "2025-01-01",
   },
 ]);
+
 const list2 = ref([
   {
-    brand_ctgry: "화장품",
     brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/설화수.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "라네즈",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/라네즈.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "이니스프리",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/이니스프리.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "에이피뷰티",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/에이피뷰티.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "헤라",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/헤라.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "프리메라",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/프리메라.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "아이오페",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/아이오페.png",
   },
   {
-    brand_ctgry: "화장품",
-    brand_name: "설화수",
-    img_url: "https://cdn.vuetifyjs.com/images/cards/sunshine.jpg",
+    brand_name: "마몽드",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/마몽드.png",
+  },
+  {
+    brand_name: "한율",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/한율.png",
+  },
+  {
+    brand_name: "에스트라",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/에스트라.png",
+  },
+  {
+    brand_name: "에스쁘아",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/에스쁘아.png",
+  },
+  {
+    brand_name: "에뛰드",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/에뛰드.png",
+  },
+  {
+    brand_name: "려",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/려.png",
+  },
+  {
+    brand_name: "미쟝센",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/미쟝센.png",
+  },
+  {
+    brand_name: "라보에이치",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/라보에이치.png",
+  },
+  {
+    brand_name: "아윤채",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/아윤채.jpg",
+  },
+  {
+    brand_name: "아모스프로페셔널",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/아모스프로페셔널.png",
+  },
+  {
+    brand_name: "롱테이크",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/롱테이크.png",
+  },
+  {
+    brand_name: "일리윤",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/일리윤.png",
+  },
+  {
+    brand_name: "해피바스",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/해피바스.png",
+  },
+  {
+    brand_name: "스킨유",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/스킨유.png",
+  },
+  {
+    brand_name: "메디안",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/메디안.png",
+  },
+  {
+    brand_name: "젠티스트",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/젠티스트.png",
+  },
+  {
+    brand_name: "구딸",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/구딸.png",
+  },
+  {
+    brand_name: "바이탈뷰티",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/바이탈뷰티.png",
+  },
+  {
+    brand_name: "메이크온",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/메이크온.png",
+  },
+  {
+    brand_name: "오딧세이",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/오딧세이.png",
+  },
+  {
+    brand_name: "비레디",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/비레디.png",
+  },
+  {
+    brand_name: "홀리추얼",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/홀리추얼.jpg",
+  },
+  {
+    brand_name: "오설록",
+    brand_ctgry: "",
+    brand_intro: "intro 내용입니다.",
+    img_path: "/img/logo/오설록.png",
   },
 ]);
 const list3 = ref([
@@ -243,35 +376,28 @@ function initBoardType() {
           <!-- 1 회사뉴스 -->
           <BoardItemCardNews v-if="tab === 'NEWS'" :list="list1" />
           <!-- 2 브랜드 -->
-          <div v-if="tab === 'BRAND'" class="board_cards grid-cols-4">
-            <v-card class="board_card" v-for="(item, i) in list2" :key="i">
-              <div class="card-img">
-                <v-img height="180px" :src="item.img_url" cover></v-img>
+          <div v-if="tab === 'BRAND'" class="card--brand grid-cols-5">
+            <v-card v-for="(item, i) in list2" :key="i">
+              <NuxtImg
+                :src="item.img_path"
+                class="align-end"
+                height="82"
+                cover
+              />
+              <div class="brand_info">
+                <v-chip
+                  size="small"
+                  color="sub"
+                  variant="flat"
+                  class="mr-1"
+                  density="comfortable"
+                >
+                  화장품
+                </v-chip>
+                <p class="text-white">
+                  {{ item.brand_name }}
+                </p>
               </div>
-              <v-card-actions>
-                <div class="flex justify-between w-full">
-                  <v-card-title class="mt-1">
-                    {{ item.brand_name }}
-                  </v-card-title>
-                  <v-btn
-                    :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-                    @click="show = !show"
-                    size="small"
-                  />
-                </div>
-              </v-card-actions>
-              <v-expand-transition>
-                <div v-show="show">
-                  <v-divider></v-divider>
-                  <v-card-text class="my-4">
-                    <v-chip size="x-small">
-                      {{ item.brand_ctgry }}
-                    </v-chip>
-                    브랜드 간랸한 소개 내용입니다.브랜드 간랸한 소개
-                    내용입니다.브랜드 간랸한 소개 내용입니다.
-                  </v-card-text>
-                </div>
-              </v-expand-transition>
             </v-card>
           </div>
         </div>
@@ -280,10 +406,20 @@ function initBoardType() {
           <BoardItemDocument v-if="tab === 'DOCUMENT'" :list="list3" />
         </div>
 
-        <Paging :paging="filter" totalRows="10" @changePage="changePage" />
+        <Paging
+          v-if="tab === 'NEWS' || tab === 'DOCUMENT'"
+          :paging="filter"
+          totalRows="10"
+          @changePage="changePage"
+        />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.card--brand {
+  margin: 1rem auto 2.125rem;
+  row-gap: 1.25rem;
+}
+</style>

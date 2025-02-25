@@ -11,7 +11,6 @@ const props = defineProps(["list", "listType"]);
       </div>
       <v-card-title class="my-2"> {{ item.title }} </v-card-title>
       <v-card-subtitle> {{ item.subtitle }} </v-card-subtitle>
-      <v-card-text> {{ item.text }} </v-card-text>
 
       <div class="v-card-custom-action pr-1 pb-1">
         <span class="v-card-date">{{ item.registered_at }}</span>
