@@ -110,6 +110,19 @@
   }
 }
 
+/* VUETIFY 용 */
+
+body .bg-black {
+  background-color: var(--color-black) !important;
+  background: var(--color-black) !important;
+}
+body .text-grey-lighten-1 {
+  color: #bcb6be !important;
+}
+body .text-grey-lighten-2 {
+  color: #e0dce3 !important;
+}
+
 .fade-in-down {
   animation: fadeInDown 1.5s;
 }
@@ -156,11 +169,6 @@
 
 /*  ========================================================= */
 /* common classes */
-
-::selection {
-  background: var(--main-color);
-  color: #ffffff;
-}
 
 .bg-gray-01 {
   background: var(--color-gray-01);
