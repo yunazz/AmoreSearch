@@ -76,7 +76,7 @@ const items1 = [
               :key="tag"
               :text="tag"
               :value="tag"
-              style="font-size: 15px; padding: 20px 22px"
+              style="font-size: 15px; font-weight: 500; padding: 20px 22px"
             />
           </v-chip-group>
         </div>
