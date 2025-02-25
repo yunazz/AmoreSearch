@@ -117,7 +117,7 @@ async function updateMyInfo() {
                   color="primary"
                   width="140px"
                 >
-                  <v-icon icon="mdi-lock-outline " class="mr-3" />
+                  <v-icon icon="mdi-lock-outline " class="mr-2" />
                   비밀번호 변경
                 </v-btn>
               </p>
