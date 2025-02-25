@@ -1,5 +1,7 @@
 <script setup>
 const member = useMember();
+const tag = ref("검색태그 1");
+const tags = ref(["검색태그 1", "검색태그 2", "검색태그 3", "검색태그 4"]);
 const items = [
   { type: "subheader", title: "아모레 뉴스" },
   {
@@ -51,13 +53,14 @@ const items1 = [
   <div id="AiSearch" class="content">
     <div class="content_inner">
       <div class="content_center">
-        <h2 class="title--xl fw-700 gradient-text">
+        <h2 class="fw-700 gradient-text mb-6">
           안녕하세요,
           <span class="ml-1"> {{ member.name }} {{ member.position }}님 </span>
           <br />
           무엇을 도와드릴까요?
         </h2>
-        <div class="mt-5">
+
+        <div>
           <SearchInput
             :texts="[
               '최근에 출시한 우리회사 제품들을 소개해줘',
@@ -65,31 +68,45 @@ const items1 = [
             ]"
           />
         </div>
+        <div class="flex justify-center mt-6">
+          <v-chip-group v-model="tag" selected-class="text-primary" mandatory>
+            <v-chip
+              filter
+              v-for="tag in tags"
+              :key="tag"
+              :text="tag"
+              :value="tag"
+              style="font-size: 15px; padding: 20px 22px"
+            />
+          </v-chip-group>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-#AiSearch {
-  margin-bottom: 2.5rem;
-}
 #AiSearch h2 {
   display: inline-block;
-  font-size: 32px;
-  line-height: 43px;
+  font-size: 38px;
+  text-align: center;
+  line-height: 48px;
   word-spacing: -4px;
   font-weight: 800;
+  margin: 0 auto;
+  animation: fadeInDown2 1s;
 }
 #AiSearch .grid-cols-2 {
   column-gap: 2rem;
 }
 .content_center {
-  width: 900px;
-  margin: 0 auto;
-  margin-top: 160px;
-}
-.title_bold {
+  width: 100%;
+  min-width: 1000px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px 130px;
 }
 
 .group_card {

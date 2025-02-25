@@ -7,7 +7,7 @@ const lnb_items = [
     img_path: "img/icon/story.svg",
   },
   {
-    name: "뉴스 & 저널",
+    name: "뉴스 / 저널",
     path: "/news_journal",
     img_path: "img/icon/news.svg",
   },

@@ -1,11 +1,11 @@
 <script setup>
-const tabItems = ref([
-  { text: "뉴스&저널", value: "1" },
+const tab = ref("1");
+const tabs = ref([
+  { text: "뉴스/저널", value: "1" },
   { text: "회사뉴스", value: "2" },
   { text: "화장품", value: "3" },
   { text: "사내문서", value: "4" },
 ]);
-const tab = ref("1");
 const targetItem = ref(null);
 const dialog = ref(false);
 const filter = ref({
@@ -300,21 +300,26 @@ function openRnb(item) {
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">즐겨찾기</h2>
-        <ClientOnly>
-          <v-tabs
-            class="tab_narrow mb-2"
-            v-model="tab"
-            bg-color="transparent"
-            align-tabs="center"
-          >
-            <v-tab
-              v-for="item in tabItems"
-              :key="item.value"
-              :text="item.text"
-              :value="item.value"
-            ></v-tab>
-          </v-tabs>
-        </ClientOnly>
+        <div class="board_tab depth-1">
+          <ClientOnly>
+            <v-tabs
+              v-model="tab"
+              bg-color="transparent"
+              align-tabs="center"
+              density="comfortable"
+              selected-class="text-primary"
+            >
+              <v-tab
+                v-for="tab in tabs"
+                :key="tab.value"
+                :text="tab.text"
+                :value="tab.value"
+                @click="initBoardType"
+                :ripple="false"
+              />
+            </v-tabs>
+          </ClientOnly>
+        </div>
       </div>
       <div class="board">
         <div v-if="tab == '1' || tab == '4'" class="board_list">

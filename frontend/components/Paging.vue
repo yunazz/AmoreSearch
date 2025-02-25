@@ -135,7 +135,8 @@ const changePage = (page, board_type) => {
   justify-content: center;
   align-items: center;
   column-gap: 0.5rem;
-  margin-bottom: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
 }
 .paging_num {
   display: flex;

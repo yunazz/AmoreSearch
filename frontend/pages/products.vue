@@ -1,9 +1,9 @@
 <script setup>
-const tabItems = ref([
+const tab = ref("1");
+const tabs = ref([
   { text: "자사제품", value: "1" },
   { text: "타사제품", value: "2" },
 ]);
-const tab = ref("1");
 const filter = ref({
   currentPage: 1,
   pagePerGroup: 20,
@@ -134,23 +134,28 @@ const list = ref([
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">화장품</h2>
-        <ClientOnly>
-          <v-tabs
-            class="tab_narrow mb-2"
-            v-model="tab"
-            bg-color="transparent"
-            align-tabs="center"
-          >
-            <v-tab
-              v-for="item in tabItems"
-              :key="item.value"
-              :text="item.text"
-              :value="item.value"
-            ></v-tab>
-          </v-tabs>
-        </ClientOnly>
+        <div class="board_tab depth-1">
+          <ClientOnly>
+            <v-tabs
+              v-model="tab"
+              bg-color="transparent"
+              align-tabs="center"
+              density="comfortable"
+              selected-class="text-primary"
+            >
+              <v-tab
+                v-for="tab in tabs"
+                :key="tab.value"
+                :text="tab.text"
+                :value="tab.value"
+                @click="initBoardType"
+                :ripple="false"
+              />
+            </v-tabs>
+          </ClientOnly>
+        </div>
       </div>
-      <div class="mt-5 mb-2">
+      <div v-if="tab === '1'" class="mt-4 mb-2">
         <ClientOnly>
           <v-sheet class="mx-auto">
             <v-slide-group

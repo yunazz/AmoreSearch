@@ -15,7 +15,6 @@
   --body-size-l: 1.125rem;
   --body-size-m: 0.875rem;
   --body-size-s: 0.75rem;
-
   /* --main-color: #410ed3;
   --main-dim-color: #290a83;
   --sub-color-1: #12043e;
@@ -35,7 +34,7 @@
   --sub-color: #a28dd4;
 
   --color-gray-01: #e0d6e6;
-  --color-gray-02: #c1b7c9;
+  --color-gray-02: #c1b9c7;
   --color-gray-03: #9b91a0;
   --color-gray-04: #776e80;
   --color-gray-05: #443f4b;
@@ -109,20 +108,35 @@
     transform: translateY(0);
   }
 }
-
-/* VUETIFY 용 */
-
+@keyframes fadeInDown2 {
+  0% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Vuetify 용 */
 body .bg-black {
   background-color: var(--color-black) !important;
   background: var(--color-black) !important;
 }
 body .text-grey-lighten-1 {
-  color: #bcb6be !important;
+  color: #bbb4bd !important;
 }
 body .text-grey-lighten-2 {
   color: #e0dce3 !important;
 }
+.v-theme--light .icon--toggle {
+  color: #bbb4bd !important;
+}
+.v-theme--light .icon--toggle.active {
+  color: var(--main-color) !important;
+}
 
+/* Common */
 .fade-in-down {
   animation: fadeInDown 1.5s;
 }
@@ -209,7 +223,9 @@ body .text-grey-lighten-2 {
 .text-gray-05 {
   color: var(--color-gray-05);
 }
-
+.m-auto {
+  margin: 0 auto;
+}
 .m-0 {
   margin: 0;
 }

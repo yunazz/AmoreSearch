@@ -1,7 +1,7 @@
 <script setup>
 const member = useMember();
 const tab = ref("MEMBER");
-const tabItems = ref([
+const tabs = ref([
   { text: "재직직원", value: "MEMBER" },
   { text: "퇴직직원", value: "NO_MEMBER" },
 ]);
@@ -23,7 +23,6 @@ const filter = ref({
 // );
 
 function changePage(currentPage) {
-  console.log(currentPage);
   if (currentPage === filter.value.currentPage) {
     return;
   }
@@ -221,21 +220,26 @@ async function registerMember() {}
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">직원관리</h2>
-        <ClientOnly>
-          <v-tabs
-            class="tab_narrow mb-2"
-            v-model="tab"
-            bg-color="transparent"
-            align-tabs="center"
-          >
-            <v-tab
-              v-for="item in tabItems"
-              :key="item.value"
-              :text="item.text"
-              :value="item.value"
-            ></v-tab>
-          </v-tabs>
-        </ClientOnly>
+        <div class="board_tab depth-1">
+          <ClientOnly>
+            <v-tabs
+              v-model="tab"
+              bg-color="transparent"
+              align-tabs="center"
+              density="comfortable"
+              selected-class="text-primary"
+            >
+              <v-tab
+                v-for="tab in tabs"
+                :key="tab.value"
+                :text="tab.text"
+                :value="tab.value"
+                @click="initBoardType"
+                :ripple="false"
+              />
+            </v-tabs>
+          </ClientOnly>
+        </div>
       </div>
       <div class="board">
         <div class="board_util">

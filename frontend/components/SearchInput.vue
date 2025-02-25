@@ -1,5 +1,8 @@
 <script setup>
-const props = defineProps({ texts: { required: true } });
+const props = defineProps({
+  texts: { required: true },
+  maxWidth: { type: Number, default: 900 },
+});
 
 const texts = props.texts;
 const displayText = ref(""); // 타이핑 효과를 위한 span 텍스트
@@ -59,7 +62,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="input--search">
+  <div class="input--search m-auto" :style="`max-width: ${maxWidth}px`">
     <div class="input-wrapper">
       <input
         v-model="inputValue"

@@ -1,19 +1,24 @@
 <script setup>
-const tab = ref("1");
-const tabItems = ref([
-  { text: "회사뉴스", value: "1" },
-  { text: "자사브랜드", value: "2" },
-  { text: "사내문서", value: "3" },
-]);
+const show = ref(false);
+const tab = ref("NEWS");
+const tabs = [
+  { text: "회사뉴스", value: "NEWS" },
+  { text: "자사브랜드", value: "BRAND" },
+  { text: "사내문서", value: "DOCUMENT" },
+];
+
 const filter = ref({
   currentPage: 1,
   pagePerGroup: 20,
 });
 
-// const search_query = computed(() => ({
-//   currentPage: filter.value.currentPage,
-//   pagePerGroup: 20,
-// }));
+const boardCtgry = ref("전체");
+
+const search_query = computed(() => ({
+  board_type: boardCtgry.value,
+  current_page: filter.value.currentPage,
+  page_per_group: 20,
+}));
 
 // const { data: listData, refresh: refresh } = await useApi(
 //   "/api/admin/members",
@@ -29,7 +34,10 @@ function changePage(currentPage) {
   filter.value.currentPage = currentPage;
   scrollToTop();
 }
-
+function changeBoard(board) {
+  console.log(board);
+  boardCtgry.value = board;
+}
 const list1 = ref([
   {
     title: "회사뉴스 제목",
@@ -88,7 +96,6 @@ const list1 = ref([
     registered_at: "2025-01-01",
   },
 ]);
-
 const list2 = ref([
   {
     brand_ctgry: "화장품",
@@ -182,7 +189,9 @@ const list3 = ref([
   },
 ]);
 
-const show = ref(false);
+function initBoardType() {
+  boardCtgry.value = "전체";
+}
 </script>
 
 <template>
@@ -190,26 +199,51 @@ const show = ref(false);
     <div class="content_inner">
       <div class="page_header">
         <h2 class="page_title">아모레스토리</h2>
-        <v-tabs
-          class="tab_narrow mb-2"
-          v-model="tab"
-          bg-color="transparent"
-          align-tabs="center"
-        >
-          <v-tab
-            v-for="item in tabItems"
-            :key="item.value"
-            :text="item.text"
-            :value="item.value"
-          ></v-tab>
-        </v-tabs>
+        <div class="board_tab depth-1">
+          <ClientOnly>
+            <v-tabs
+              v-model="tab"
+              bg-color="transparent"
+              align-tabs="center"
+              density="comfortable"
+              selected-class="text-primary"
+            >
+              <v-tab
+                v-for="tab in tabs"
+                :key="tab.value"
+                :text="tab.text"
+                :value="tab.value"
+                @click="initBoardType"
+                :ripple="false"
+              />
+            </v-tabs>
+          </ClientOnly>
+        </div>
+        <div class="board_tab depth-2">
+          <ClientOnly>
+            <v-btn-toggle v-model="boardCtgry" mandatory rounded="0">
+              <v-btn
+                v-for="(board, index) in boardCategory[tab]"
+                :key="index"
+                :value="board"
+                :ripple="false"
+                height="40"
+                min-width="72"
+                selected-class="text-primary"
+                @click="changeBoard(board)"
+              >
+                {{ board }}
+              </v-btn>
+            </v-btn-toggle>
+          </ClientOnly>
+        </div>
       </div>
       <div class="board">
-        <div v-if="tab === '1' || tab === '2'" class="board_content">
+        <div v-if="tab === 'NEWS' || tab === 'BRAND'" class="board_content">
           <!-- 1 회사뉴스 -->
-          <BoardItemCardNews v-if="tab === '1'" :list="list1" />
+          <BoardItemCardNews v-if="tab === 'NEWS'" :list="list1" />
           <!-- 2 자사브랜드 -->
-          <div v-if="tab === '2'" class="board_cards grid-cols-4">
+          <div v-if="tab === 'BRAND'" class="board_cards grid-cols-4">
             <v-card class="board_card" v-for="(item, i) in list2" :key="i">
               <div class="card-img">
                 <v-img height="180px" :src="item.img_url" cover></v-img>
@@ -241,9 +275,9 @@ const show = ref(false);
             </v-card>
           </div>
         </div>
-        <div class="board_list">
+        <div class="board_list" v-else>
           <!-- 3 사내문서 -->
-          <BoardItemDocument v-if="tab === '3'" :list="list3" />
+          <BoardItemDocument v-if="tab === 'DOCUMENT'" :list="list3" />
         </div>
 
         <Paging :paging="filter" totalRows="10" @changePage="changePage" />

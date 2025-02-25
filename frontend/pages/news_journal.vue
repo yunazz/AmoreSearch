@@ -1,5 +1,5 @@
 <script setup>
-const items = ref([
+const tabs = ref([
   { text: "뉴스", value: "NEWS" },
   { text: "저널", value: "JOURNAL" },
 ]);
@@ -84,22 +84,27 @@ const tab = ref("NEWS");
   <div id="NewsJournal" class="content">
     <div class="content_inner">
       <div class="page_header">
-        <h2 class="page_title">뉴스 & 저널</h2>
-        <ClientOnly>
-          <v-tabs
-            class="tab_narrow mb-2"
-            v-model="tab"
-            bg-color="transparent"
-            align-tabs="center"
-          >
-            <v-tab
-              v-for="item in items"
-              :key="item.value"
-              :text="item.text"
-              :value="item.value"
-            ></v-tab>
-          </v-tabs>
-        </ClientOnly>
+        <h2 class="page_title">뉴스 / 저널</h2>
+        <div class="board_tab depth-1">
+          <ClientOnly>
+            <v-tabs
+              v-model="tab"
+              bg-color="transparent"
+              align-tabs="center"
+              density="comfortable"
+              selected-class="text-primary"
+            >
+              <v-tab
+                v-for="tab in tabs"
+                :key="tab.value"
+                :text="tab.text"
+                :value="tab.value"
+                @click="initBoardType"
+                :ripple="false"
+              />
+            </v-tabs>
+          </ClientOnly>
+        </div>
       </div>
       <div class="board">
         <div class="board_list">
