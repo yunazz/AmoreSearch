@@ -107,9 +107,10 @@ async function updateMyInfo() {
             </div>
           </article>
           <article class="my-setting">
+            <h5></h5>
             <v-divider thickness="2" opacity=".8" />
             <div>
-              <p>비밀번호 변경</p>
+              <p><small class="mr-2">▶</small> 비밀번호 변경</p>
               <p>
                 <v-btn
                   @click="dialogPwdChange = true"
@@ -122,7 +123,6 @@ async function updateMyInfo() {
               </p>
             </div>
           </article>
-          <v-divider thickness="2" opacity=".8" />
         </section>
       </div>
     </div>
@@ -219,7 +219,6 @@ article.my-setting > div {
   justify-content: space-between;
   align-items: center;
   height: 76px;
-  padding: 0 20px;
 }
 article.my-setting p {
   font-weight: 500;
