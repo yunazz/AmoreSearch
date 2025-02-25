@@ -17,11 +17,12 @@ export function useLoginHandler() {
         str_login_token = "";
       }
 
-      // const { result, code }: any = await $fetch('/api/member/me', {
-      // 	headers: { Authorization: `Bearer ${str_login_token}` }
-      // });
-      // if (code === 0) member.value = result;
-      // refreshCookie('login_token');
+      const response: any = await $fetch("http://localhost:8000/api/auth/me", {
+        headers: { Authorization: `Bearer ${str_login_token}` },
+      });
+      if (response.detail === "성공") member.value = response.result;
+      refreshCookie("login_token");
+      console.log(member.value);
     },
 
     logout() {
@@ -36,10 +37,6 @@ function defaultMember(): Ref<MemberOptions> {
   const member = ref<MemberOptions>({
     member_id: 0,
     emp_no: "2045910583",
-    // name: '',
-    // position: '',
-    // department: '',
-    // role: ''
     role: 2,
     name: "홍길동",
     company_affiliation: "아모레퍼시픽",

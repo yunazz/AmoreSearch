@@ -2,7 +2,7 @@ type RoleTypes = 3 | 2 | 1 | 0; // '시스템관리자' | '관리자' | '일반'
 
 interface ResponseOutput {
   code: number;
-  msg: String;
+  detail: String;
   result: any;
   totalRows?: any;
 }

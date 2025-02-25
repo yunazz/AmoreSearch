@@ -3,24 +3,45 @@ definePageMeta({
   layout: false,
 });
 
-const formData = ref({
-  identify: "",
-  password: "",
+const form = ref({
+  emp_no: "2045910583",
+  password: "testpassword",
 });
 const visible = ref(false);
+
 async function login() {
-  // 유효성 체크
-  // post
-  const response = { code: 0, result: true, msg: "" };
-  const { result } = response;
-  result ? loginSuccess() : loginFail();
+  if (form.value.emp_no.length === 0) {
+    console.log("사원번호를 입력해 주세요.");
+    return;
+  }
+  if (form.value.password.length === 0) {
+    console.log("비밀번호를 입력해 주세요.");
+    return;
+  }
+
+  try {
+    const response = await $fetch("http://localhost:8000/api/auth/login", {
+      method: "POST",
+      body: new URLSearchParams({
+        username: form.value.emp_no,
+        password: form.value.password,
+      }),
+    });
+    const { access_token, detail } = response;
+
+    access_token ? loginSuccess(access_token) : loginFail(detail);
+  } catch (error) {
+    if (error.statusCode === 401) console.log(error.data.detail);
+  }
 }
 
-async function loginSuccess() {
+async function loginSuccess(access_token) {
+  await useLoginHandler().refresh(access_token);
   await navigateTo("/ai_search");
 }
 
-function loginFail(msg) {
+function loginFail(res) {
+  // console.log(res);
   // toast msg
 }
 </script>
@@ -78,41 +99,43 @@ function loginFail(msg) {
           <NuxtImg class="logo" src="img/logo.svg" />
         </h1>
         <div class="input_wrap">
-          <v-text-field
-            density="compact"
-            label="사원번호"
-            placeholder="사원번호"
-            variant="outlined"
-            hide-details
-            single-line
-            v-model="formData.emp_no"
-            oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
-            maxLength="8"
-            autocomplete="off"
-          />
-          <v-text-field
-            :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-            :type="visible ? 'text' : 'password'"
-            prepend-inner-icon="mdi-lock-outline"
-            placeholder="비밀번호"
-            label="비밀번호"
-            density="compact"
-            variant="outlined"
-            hide-details
-            single-line
-            @click:append-inner="visible = !visible"
-            v-model="formData.password"
-            autocomplete="off"
-          />
-          <v-btn
-            class="w-full mb-4"
-            color="primary"
-            @click="login"
-            size="large"
-            :ripple="false"
-          >
-            로그인
-          </v-btn>
+          <ClientOnly>
+            <v-text-field
+              density="compact"
+              label="사원번호"
+              placeholder="사원번호"
+              variant="outlined"
+              hide-details
+              single-line
+              v-model="form.emp_no"
+              oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
+              maxLength="8"
+              autocomplete="off"
+            />
+            <v-text-field
+              :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
+              :type="visible ? 'text' : 'password'"
+              prepend-inner-icon="mdi-lock-outline"
+              placeholder="비밀번호"
+              label="비밀번호"
+              density="compact"
+              variant="outlined"
+              hide-details
+              single-line
+              @click:append-inner="visible = !visible"
+              v-model="form.password"
+              autocomplete="off"
+            />
+            <v-btn
+              class="w-full mb-4"
+              color="primary"
+              @click="login"
+              size="large"
+              :ripple="false"
+            >
+              로그인
+            </v-btn>
+          </ClientOnly>
         </div>
       </form>
     </div>
