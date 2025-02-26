@@ -4,6 +4,7 @@ const tab = ref("BRAND");
 const tabs = [
   { text: "회사뉴스", value: "NEWS" },
   { text: "브랜드", value: "BRAND" },
+  { text: "IR자료", value: "IR" },
   { text: "사내문서", value: "DOCUMENT" },
 ];
 
@@ -402,12 +403,12 @@ function initBoardType() {
           </div>
         </div>
         <div class="board_list" v-else>
-          <!-- 3 사내문서 -->
-          <BoardItemDocument v-if="tab === 'DOCUMENT'" :list="list3" />
+          <!-- 3 IR -->
+          <BoardItemDocument v-if="tab === 'IR'" :list="list3" />
         </div>
 
         <Paging
-          v-if="tab === 'NEWS' || tab === 'DOCUMENT'"
+          v-if="tab === 'NEWS' || tab === 'IR'"
           :paging="filter"
           totalRows="10"
           @changePage="changePage"

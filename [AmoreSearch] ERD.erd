@@ -4,9 +4,9 @@
   "settings": {
     "width": 2000,
     "height": 2000,
-    "scrollTop": -163.1074,
-    "scrollLeft": -800,
-    "zoomLevel": 0.97,
+    "scrollTop": -760.3976,
+    "scrollLeft": -457.0243,
+    "zoomLevel": 0.67,
     "show": 447,
     "database": 1,
     "databaseName": "amoresearch",
@@ -42,8 +42,7 @@
       "u2NpBdJDrJSLqhUnyAexd",
       "gf9uxTW5d909Jktjt4S0i",
       "lEK4fpzUtIPnTIh1pElUZ",
-      "_24SRLF07tDVKYGQfU7bA",
-      "uKgjbuOp1oomnBf-UwF7e"
+      "_24SRLF07tDVKYGQfU7bA"
     ],
     "relationshipIds": [
       "Ry5MEML0XX4zP6CdxJRCa",
@@ -53,8 +52,7 @@
       "wEkV8bUX1EXMf639QF5-s",
       "5yBLS1KZH6ZgfSIEOxBVe",
       "-JP56Yf3ODnURmHq1OudO",
-      "RLjIE4C7y1D0ZC_hFZwmH",
-      "6Sh682qns8dU5orLbWOsp"
+      "RLjIE4C7y1D0ZC_hFZwmH"
     ],
     "indexIds": [],
     "memoIds": []
@@ -366,15 +364,15 @@
           "_G41h3cHtdUiPUoBo74YY"
         ],
         "ui": {
-          "x": 1462.9334,
-          "y": 913.663,
+          "x": 1426.9334,
+          "y": 1022.663,
           "zIndex": 212,
           "widthName": 60,
           "widthComment": 77,
           "color": "#3F51B5"
         },
         "meta": {
-          "updateAt": 1739762256800,
+          "updateAt": 1740530856307,
           "createAt": 1739244042183
         }
       },
@@ -3882,20 +3880,20 @@
       "pd1HU-G7Dp8Ji7jyIIvPB": {
         "id": "pd1HU-G7Dp8Ji7jyIIvPB",
         "tableId": "okixE7U4eKj5X0YaZliBK",
-        "name": "img_id",
+        "name": "img_url",
         "comment": "이미지 고유 ID",
-        "dataType": "INT",
+        "dataType": "VARCHAR(100)",
         "default": "",
         "options": 8,
         "ui": {
           "keys": 0,
           "widthName": 60,
           "widthComment": 80,
-          "widthDataType": 60,
+          "widthDataType": 81,
           "widthDefault": 60
         },
         "meta": {
-          "updateAt": 1739423827957,
+          "updateAt": 1740530850325,
           "createAt": 1739423827957
         }
       },
@@ -5088,7 +5086,7 @@
         "default": "",
         "options": 8,
         "ui": {
-          "keys": 2,
+          "keys": 0,
           "widthName": 60,
           "widthComment": 80,
           "widthDataType": 60,
@@ -5367,8 +5365,8 @@
           "columnIds": [
             "Vrj7P_4fcve-IquXLQT7B"
           ],
-          "x": 1462.9334,
-          "y": 1061.663,
+          "x": 1426.9334,
+          "y": 1170.663,
           "direction": 1
         },
         "end": {
@@ -7372,8 +7370,8 @@
       -1,
       {
         "options(notNull)": 1739423827956,
-        "name": 1739423827956,
-        "dataType": 1739423827956,
+        "name": 1740530843897,
+        "dataType": 1740530850324,
         "default": 1739423827956,
         "comment": 1739423827956
       }
@@ -8088,7 +8086,7 @@
     "uKgjbuOp1oomnBf-UwF7e": [
       "tableEntities",
       1739756726338,
-      -1,
+      1740530841202,
       {
         "name": 1739756731896,
         "comment": 1739756735594
@@ -8189,7 +8187,7 @@
     "6Sh682qns8dU5orLbWOsp": [
       "relationshipEntities",
       1739756777470,
-      -1,
+      1740530841202,
       {}
     ],
     "5AFaYfd-s_RgYVoUAlZh1": [
