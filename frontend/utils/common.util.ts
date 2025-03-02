@@ -1,15 +1,16 @@
-// import { defu } from 'defu';
+import { defu } from "defu";
 
-// export function $http(url: string, options?: any) {
-// 	const config = useRuntimeConfig();
-// 	const login_token = useCookie('login_token');
-// 	const settings = defu(options, {
-// 		baseURL: config.public.baseURL,
-// 		headers: { Authorization: `Bearer ${login_token.value ?? ''}` }
-// 	});
+export function $http(url: string, options?: any) {
+  const config = useRuntimeConfig();
+  const login_token = useCookie("login_token");
 
-// 	return $fetch<{ code: number; detail: string; result: any }>(url, settings);
-// }
+  const settings = defu(options, {
+    baseURL: config.public.SERVER_HOST + "/api",
+    headers: { Authorization: `Bearer ${login_token.value ?? ""}` },
+  });
+
+  return $fetch<{ code: number; msg: string; result: any }>(url, settings);
+}
 
 export function formatNumber(num: number, digit = 0) {
   if (num === null || num === undefined || isNaN(num)) {
@@ -33,6 +34,7 @@ export function formatDate(dateStr: Date) {
 export function scrollToTop() {
   window.scrollTo(0, 0);
 }
+
 // export function stringToInt(amt: any) {
 // 	if (!amt) return 0;
 // 	return parseFloat(String(amt).replace(/[^0-9.-]/g, ''));

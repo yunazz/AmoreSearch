@@ -129,7 +129,6 @@ async function updateMyInfo() {
       </div>
     </div>
     <!-- DIALOG -->
-
     <PopupPasswordChange
       v-model="dialogPwdChange"
       @close="dialogPwdChange = false"

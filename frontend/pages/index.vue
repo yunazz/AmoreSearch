@@ -1,4 +1,5 @@
 <script setup>
+const { $api } = useNuxtApp();
 definePageMeta({
   layout: false,
 });
@@ -21,19 +22,18 @@ async function login() {
   }
 
   try {
-    const response = await $fetch("http://localhost:8000/api/auth/login", {
+    const response = await $http("/auth/login", {
       method: "POST",
       body: new URLSearchParams({
         username: form.value.emp_no,
         password: form.value.password,
       }),
     });
-    const { access_token, detail } = response;
+    const { access_token } = response;
 
-    access_token ? loginSuccess(access_token) : loginFail(detail);
+    await loginSuccess(access_token);
   } catch (error) {
-    loginFail(error.data.detail);
-    if (error.statusCode === 401) console.log(error.data.detail);
+    if (error.statusCode === 401) loginFail();
   }
 }
 
@@ -42,9 +42,9 @@ async function loginSuccess(access_token) {
   await navigateTo("/dashboard");
 }
 
-function loginFail(detail) {
+function loginFail() {
   snackbar.value.active = true;
-  snackbar.value.message = detail;
+  snackbar.value.message = "아이디 또는 비밀번호를 입력해주세요.";
 }
 </script>
 

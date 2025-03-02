@@ -5,13 +5,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (import.meta.server) {
     if (to.path !== "/") {
       if (!login_token.value) return navigateTo("/");
-      const { result }: any = await $fetch(
-        "http://localhost:8000/api/auth/me",
-        {
-          headers: { Authorization: `Bearer ${login_token.value}` },
-        }
-      );
-      if (result) {
+
+      const { code, detail, result }: any = await $http(`/auth/me`);
+      if (code === 0) {
         member.value = result;
       } else {
         return navigateTo("/");

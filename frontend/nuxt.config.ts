@@ -1,21 +1,25 @@
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 
 export default defineNuxtConfig({
-  compatibilityDate: '2024-11-01',
+  compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
-  css: ['~/assets/css/font.css','~/assets/css/common.css','~/assets/css/main.css'],
+  css: [
+    "~/assets/css/font.css",
+    "~/assets/css/common.css",
+    "~/assets/css/main.css",
+  ],
   build: {
-    transpile: ['vuetify'],
+    transpile: ["vuetify"],
   },
-  plugins: [ '~/plugins/vue-the-mask.js'],
+  plugins: ["~/plugins/vue-the-mask.js"],
   modules: [
     (_options, nuxt) => {
-      nuxt.hooks.hook('vite:extendConfig', (config) => {
+      nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
-        config.plugins.push(vuetify({ autoImport: true }))
-      })
+        config.plugins.push(vuetify({ autoImport: true }));
+      });
     },
-    '@nuxt/image'
+    "@nuxt/image",
   ],
   vite: {
     vue: {
@@ -24,4 +28,9 @@ export default defineNuxtConfig({
       },
     },
   },
-})
+  runtimeConfig: {
+    public: {
+      SERVER_HOST: process.env.SERVER_HOST,
+    },
+  },
+});

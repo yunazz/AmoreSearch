@@ -11,18 +11,17 @@ export function useLoginHandler() {
     async refresh(str_login_token?: string) {
       if (str_login_token) {
         login_token.value = str_login_token;
-      } else if (login_token.value) {
-        str_login_token = login_token.value;
-      } else {
-        str_login_token = "";
       }
+      // else if (login_token.value) { str_login_token = login_token.value } else { str_login_token = "" }
 
-      const response: any = await $fetch("http://localhost:8000/api/auth/me", {
-        headers: { Authorization: `Bearer ${str_login_token}` },
-      });
-      if (response.detail === "성공") member.value = response.result;
       refreshCookie("login_token");
-      console.log(member.value);
+
+      const response: any = await $http("/auth/me", {
+        headers: { Authorization: `Bearer ${login_token.value}` },
+      });
+      if (response.detail === "성공") {
+        member.value = response.result;
+      }
     },
 
     logout() {

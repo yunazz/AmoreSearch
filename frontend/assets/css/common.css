@@ -118,6 +118,9 @@
     transform: translateY(0);
   }
 }
+.no-event {
+  pointer-events: none;
+}
 /* Vuetify 용 */
 body .bg-black {
   background-color: var(--color-black) !important;
