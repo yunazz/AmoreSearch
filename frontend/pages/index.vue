@@ -3,6 +3,7 @@ definePageMeta({
   layout: false,
 });
 
+const snackbar = ref({ active: false, message: "" });
 const form = ref({
   emp_no: "2045910583",
   password: "testpassword",
@@ -31,18 +32,19 @@ async function login() {
 
     access_token ? loginSuccess(access_token) : loginFail(detail);
   } catch (error) {
+    loginFail(error.data.detail);
     if (error.statusCode === 401) console.log(error.data.detail);
   }
 }
 
 async function loginSuccess(access_token) {
   await useLoginHandler().refresh(access_token);
-  await navigateTo("/ai_search");
+  await navigateTo("/dashboard");
 }
 
-function loginFail(res) {
-  // console.log(res);
-  // toast msg
+function loginFail(detail) {
+  snackbar.value.active = true;
+  snackbar.value.message = detail;
 }
 </script>
 
@@ -139,6 +141,9 @@ function loginFail(res) {
         </div>
       </form>
     </div>
+    <v-snackbar v-model="snackbar.active" :timeout="3000" color="primary">
+      {{ snackbar.message }}
+    </v-snackbar>
   </div>
 </template>
 

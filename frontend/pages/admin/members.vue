@@ -1,4 +1,8 @@
 <script setup>
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const member = useMember();
 const tab = ref("MEMBER");
 const tabs = ref([
@@ -315,25 +319,13 @@ async function registerMember() {}
         <Paging :paging="filter" totalRows="198" @changePage="changePage" />
       </div>
     </div>
-    <!-- <v-dialog v-model="dialog" max-width="600" scrollable persistent>
-      <FormMember mode="register" @close="closeDialog" @submit="submitDialog" />
-    </v-dialog>
-    <v-dialog v-model="dialog" max-width="600" scrollable persistent>
-      <FormMember
-        mode="edit"
-        :item="propItem"
-        @close="closeDialog"
-        @submit="submitDialog"
-      />
-    </v-dialog> -->
-    <v-dialog v-model="dialog" max-width="560" scrollable>
-      <FormMember
-        :mode="dialogMode"
-        :item="propItem"
-        @close="closeDialog"
-        @submit="submitDialog"
-      />
-    </v-dialog>
+    <PopupMember
+      v-model="dialog"
+      :mode="dialogMode"
+      :item="propItem"
+      @close="closeDialog"
+      @submit="submitDialog"
+    />
   </div>
 </template>
 
