@@ -26,10 +26,11 @@ async function updateMyInfo() {
     },
   });
 
-  snackbar.value.active = true;
   if (code == 1) return (snackbar.value.message = msg);
-
   snackbar.value.message = "수정되었습니다.";
+  snackbar.value.active = true;
+
+  await useLoginHandler().refresh(result);
 }
 </script>
 
