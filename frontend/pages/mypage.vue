@@ -6,21 +6,30 @@ const dialogConfirm = ref({
   title: "",
   text: "",
 });
+const snackbar = ref({ active: false, message: "" });
 
-// form
 const form = ref({
   phone: member.value.phone,
 });
-const passwordForm = ref({
-  password: "",
-  new_password: "",
-  new_password_check: "",
-});
 
 async function updateMyInfo() {
+  dialogConfirm.value.active = false;
+
   if (!validatePhone(form.value.phone))
     return notify("휴대폰번호를 확인해 주세요.");
-  dialogConfirm.value.active = false;
+
+  const { code, msg, result } = await $http("/member/me", {
+    method: "PUT",
+    body: {
+      member_id: member.value.member_id,
+      phone: form.value.phone.replaceAll("-", ""),
+    },
+  });
+
+  snackbar.value.active = true;
+  if (code == 1) return (snackbar.value.message = msg);
+
+  snackbar.value.message = "수정되었습니다.";
 }
 </script>
 
@@ -128,6 +137,10 @@ async function updateMyInfo() {
         </section>
       </div>
     </div>
+
+    <v-snackbar v-model="snackbar.active" :timeout="3000" color="primary">
+      {{ snackbar.message }}
+    </v-snackbar>
     <!-- DIALOG -->
     <PopupPasswordChange
       v-model="dialogPwdChange"

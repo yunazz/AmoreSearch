@@ -11,9 +11,7 @@ interface JwtPayloadOptions {
   member_id: number;
   emp_no: string;
   company_affiliation: string;
-  birth_date: string;
   phone: string;
-  hire_date: string;
   employment_status: string;
   position: string;
   department: string;

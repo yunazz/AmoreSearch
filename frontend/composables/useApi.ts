@@ -5,6 +5,7 @@ export function useApi<T>(
   url: string | (() => string),
   options: UseFetchOptions<T> = {
     headers: { Authorization: `Bearer ${login_token.value ?? ""}` },
+    server: false,
     onRequest({ request, options }) {
       console.log("체크");
       // options.headers.set("Authorization", `Bearer ${login_token.value ?? ""}`);

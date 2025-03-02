@@ -1,6 +1,6 @@
 <script setup>
 const lnb_items = [
-  { name: "AI서치", path: "/ai_search", img_path: "img/icon/search.svg" },
+  { name: "AI서치", path: "/ai-search", img_path: "img/icon/search.svg" },
   {
     name: "아모레스토리",
     path: "/amorestory",
@@ -8,7 +8,7 @@ const lnb_items = [
   },
   {
     name: "뉴스 / 저널",
-    path: "/news_journal",
+    path: "/news-journal",
     img_path: "img/icon/news.svg",
   },
   { name: "화장품", path: "/products", img_path: "img/icon/cosmetics.png" },
