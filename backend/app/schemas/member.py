@@ -3,7 +3,6 @@ from typing import Optional
 from datetime import date, datetime
 
 class MyPageUpdate(BaseModel):
-    member_id: int
     phone: str 
 
 class MyPageResponse(BaseModel):
@@ -22,10 +21,8 @@ class MyPageResponse(BaseModel):
         from_attributes = True
     
 class MyPasswordUpdate(BaseModel):
-    member_id: int
     password: str
     new_password: str
-    password_chk: str
 
 class MemberBase(BaseModel):
     name: str

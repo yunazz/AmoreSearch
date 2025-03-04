@@ -9,7 +9,6 @@ from models.member import Member
 from db.session import get_session
 
 router = APIRouter()
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 @router.post("/login")
@@ -35,7 +34,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends
 
 
 @router.get("/me")
-def read_members_me(token: str= Depends(oauth2_scheme)):
+def read_member_me(token: str= Depends(oauth2_scheme)):
     try:
         payload = decode_access_token(token)
         return {"result": payload, "code" : 0, "detail": '성공'}

@@ -1,7 +1,20 @@
 <script setup>
-const props = defineProps({});
-const emit = defineEmits(["submit", "close"]);
+const props = defineProps({ is_active: Boolean });
+const emit = defineEmits(["update:modelValue", "close", "notify"]);
 
+const closeDialog = (value) => {
+  emit("close");
+  initForm();
+};
+const initForm = () => {
+  form.value.password = "";
+  form.value.new_password = "";
+  form.value.new_password_check = "";
+};
+
+function updateDialog() {
+  emit("update:modelValue", value);
+}
 const form = ref({
   password: "",
   new_password: "",
@@ -9,47 +22,45 @@ const form = ref({
 });
 const snackbar = ref({ active: false, message: "" });
 
-const notify = (msg) => {
-  snackbar.value.message = msg;
-  snackbar.value.active = true;
-  return false;
-};
-
 const validatePassword = () => {
   snackbar.value.active = false;
   const { password, new_password, new_password_check } = form.value;
 
-  if (password.length === 0) return notify("현재 비밀번호를 입력해 주세요.");
-  if (new_password.length === 0) return notify("비밀번호를 입력해 주세요.");
+  if (password.length === 0)
+    return emit("notify", "현재 비밀번호를 입력해 주세요.");
+  if (new_password.length === 0)
+    return emit("notify", "비밀번호를 입력해 주세요.");
   if (new_password_check.length === 0)
-    return notify("비밀번호 확인을 입력해 주세요.");
+    return emit("notify", "비밀번호 확인을 입력해 주세요.");
   if (new_password !== new_password_check)
-    return notify("비밀번호가 일치하지 않습니다.");
+    return emit("notify", "비밀번호가 일치하지 않습니다.");
 
   return true;
 };
 
 async function updateMyPassword() {
   if (!validatePassword()) return;
-  const { code, msg } = await $http("/auth/member/password", {
+  const { code, msg } = await $http("/member/password", {
     method: "PUT",
     body: {
-      password: form.password,
-      new_password: form.new_password,
-      new_password_check: form.new_password_check,
+      password: form.value.password,
+      new_password: form.value.new_password,
     },
   });
-
-  // if (false) {
-  //   return notify("현재 비밀번호가 틀렸습니다.비밀번호를 확인해 주세요.");
-  // }
-  // notify(msg);
-  // if (code == 0) emit("submit");
+  emit("notify", msg);
+  if (code == 0) {
+    closeDialog();
+  }
 }
 </script>
 
 <template>
-  <v-dialog v-model="$attrs" max-width="390">
+  <v-dialog
+    :model-value="is_active"
+    @update:model-value="updateDialog"
+    max-width="390"
+    persistent
+  >
     <v-card class="board_card">
       <v-toolbar align="center" color="black" class="px-7">
         비밀번호 변경
@@ -104,7 +115,7 @@ async function updateMyPassword() {
             color="gray-black"
             text
             width="80"
-            @click="emit('close')"
+            @click="closeDialog"
           >
             취소
           </v-btn>

@@ -6,7 +6,12 @@ const dialogConfirm = ref({
   title: "",
   text: "",
 });
+
 const snackbar = ref({ active: false, message: "" });
+const notify = (msg) => {
+  snackbar.value.message = msg;
+  snackbar.value.active = true;
+};
 
 const form = ref({
   phone: member.value.phone,
@@ -145,6 +150,7 @@ async function updateMyInfo() {
     <!-- DIALOG -->
     <PopupPasswordChange
       v-model="dialogPwdChange"
+      @notify="notify"
       @close="dialogPwdChange = false"
     />
 
