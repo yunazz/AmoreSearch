@@ -14,27 +14,26 @@ const visible = ref(false);
 
 async function login() {
   if (form.value.emp_no.length === 0) {
-    console.log("사원번호를 입력해 주세요.");
+    notify("사원번호를 입력해 주세요.");
     return;
   }
   if (form.value.password.length === 0) {
-    console.log("비밀번호를 입력해 주세요.");
+    notify("비밀번호를 입력해 주세요.");
     return;
   }
 
   try {
-    const response = await $http("/auth/login", {
+    const { code, msg, result } = await $http("/auth/login", {
       method: "POST",
       body: new URLSearchParams({
         username: form.value.emp_no,
         password: form.value.password,
       }),
     });
-    const { access_token } = response;
 
-    await loginSuccess(access_token);
+    code === 0 ? await loginSuccess(result.access_token) : notify(msg);
   } catch (error) {
-    if (error.statusCode === 401) loginFail();
+    console.log(error);
   }
 }
 
@@ -43,9 +42,9 @@ async function loginSuccess(access_token) {
   await navigateTo("/dashboard");
 }
 
-function loginFail() {
+function notify(detail) {
   snackbar.value.active = true;
-  snackbar.value.message = "아이디 또는 비밀번호를 입력해주세요.";
+  snackbar.value.message = detail;
 }
 </script>
 

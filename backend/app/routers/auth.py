@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi.security import  OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from core.security import hash_password, verify_password, create_access_token, decode_access_token
 from schemas.member import MyPageResponse
+from schemas.response import BaseResponse
 from models.member import Member 
 from db.session import get_session
 
@@ -16,22 +17,18 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session = Depends
     member = db.query(Member).filter(Member.emp_no == form_data.username).first()
     if not member:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=200,
             detail="아이디 또는 비밀번호를 확인해 주세요."
         )
 
     if not verify_password(form_data.password, member.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="아이디 또는 비밀번호를 확인해 주세요."
-        )
+        return BaseResponse(code=1, msg="아이디 또는 비밀번호를 확인해 주세요.")
 
     me_data = MyPageResponse.model_validate(member, from_attributes=True)
 
     access_token = create_access_token(data=me_data.model_dump())
 
-    return {"access_token": access_token, "token_type": "bearer"}
-
+    return BaseResponse(code=0, msg="로그인되었습니다.",result={"access_token": access_token, "token_type": "bearer"})
 
 @router.get("/me")
 def read_member_me(token: str= Depends(oauth2_scheme)):
