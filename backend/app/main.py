@@ -19,4 +19,4 @@ def read_root():
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(member.router, prefix="/api/member", tags=["member"])
-app.include_router(amorepacific.router, prefix="/api/favorites", tags=["favorites"])
+app.include_router(amorepacific.router, prefix="/api/amorepacific", tags=["amorepacific"])

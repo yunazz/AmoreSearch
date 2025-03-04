@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Date, DateTime, TIMESTAMP
+from sqlalchemy.sql import func
 from sqlalchemy.orm import declarative_base, mapped_column
 from sqlalchemy import UniqueConstraint
 from datetime import date, datetime
@@ -27,3 +28,18 @@ class Member(Base):
     __table_args__ = (
         UniqueConstraint('emp_no', name='emp_no'),
     )
+    
+class Brand(Base):
+    __tablename__ = "brand"
+
+    brand_id = mapped_column(Integer, primary_key=True, autoincrement=True, comment="브랜드 고유 ID")
+    brand_ctgry = mapped_column(String(20), nullable=False)
+    brand_kor = mapped_column(String(50), nullable=False, comment="브랜드명(한글)")
+    brand_eng = mapped_column(String(50), nullable=False, comment="브랜드명(영어)")
+    brand_description = mapped_column(String(100), nullable=True, comment="한줄 설명")
+    image_url = mapped_column(String(100), nullable=True)
+    ceo = mapped_column(String(20), nullable=True, comment="대표이사")
+    company_id = mapped_column(Integer, nullable=True, comment="1.아모레퍼시픽그룹, 2.아모레퍼시픽")
+    brand_site_url = mapped_column(String(100), nullable=True)
+    founded_year = mapped_column(Integer, nullable=True, comment="설립연도")  # SQLAlchemy에는 Year 타입이 없어 Integer로 대체
+    created_at = mapped_column(TIMESTAMP, server_default=func.current_timestamp(), nullable=False, comment="등록일시")

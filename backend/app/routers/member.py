@@ -1,15 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import Optional
 from sqlalchemy.orm import Session
-from schemas.response import BaseResponse
-from models.member import Member 
-from fastapi.security import  OAuth2PasswordBearer
-from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate, MemberBase, MemberCreate, MemberUpdate, MembersResponse
 from db.session import get_session 
+from schemas.response import BaseResponse
+from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate, MemberBase, MemberCreate, MemberUpdate, MembersResponse
 from core.security import create_access_token, hash_password, decode_access_token, verify_password
+from model import Member 
+from fastapi.security import  OAuth2PasswordBearer
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 # ✅ 내 정보 수정
 @router.put("/me")

@@ -1,12 +1,25 @@
 export const enums = {
   roles: { 0: "", 1: "일반사용자", 2: "관리자", 3: "시스템관리자" },
+  brand_ctgry: {
+    BEAUTY_CARE: "화장품",
+    PERFUME: "향수",
+    MEDICAL_BEAUTY: "메디컬뷰티",
+    BEAUTY_DEVICE: "디바이스",
+    INNER_BEAUTY: "이너뷰티",
+    HAIR: "헤어",
+    BODY: "바디",
+    ORAL_CARE: "덴탈",
+    TEA_CULTURE: "티컬처",
+  },
+};
+
+const select_items = {
   departments: ["HR팀", "법무팀", "영업팀"],
   company_affiliation: ["아모레퍼시픽그룹", "아모레퍼시픽", "설화수"],
   positions: ["사원", "대리", "팀장", "과장", "차장", "부장", "임원"],
   employment_status: ["재직", "휴직", "정직"],
   all_employment_status: ["재직", "휴직", "정직", "퇴직"],
 };
-
 export const ourBrands = [
   { name: "설화수", img_path: "/img/logo/sulwhasoo.png" },
   { name: "라네즈", img_path: "/img/logo/laneige.png" },
@@ -43,17 +56,22 @@ export const ourBrands = [
 export const boardCategory = {
   NEWS: ["전체", "기업", "브랜드", "연구개발", "사회공헌", "지속가능경영"],
   BRAND: [
-    "전체",
-    "화장품",
-    "향수",
-    "메디컬뷰티",
-    "뷰티",
-    "디바이스",
-    "이너뷰티",
-    "헤어케어",
-    "바디케어",
-    "덴탈케어",
-    "티컬처",
+    { name: "전체", value: "" },
+    { name: "화장품", value: "BEAUTY_CARE" },
+    { name: "향수", value: "PERFUME" },
+    { name: "메디컬뷰티", value: "MEDICAL_BEAUTY" },
+    { name: "디바이스", value: "  BEAUTY_DEVICE" },
+    { name: "이너뷰티", value: "INNER_BEAUTY" },
+    { name: "헤어", value: "HAIR" },
+    { name: "바디", value: "BODY" },
+    { name: "덴탈", value: "ORAL_CARE" },
+    { name: "티컬처", value: "TEA_CULTURE" },
   ],
-  IR: ["전체", "실적발표", "사업보고서", "영업보고서", "기타 IR자료"],
+  IR: [
+    { name: "전체", value: "" },
+    { name: "실적발표", value: "" },
+    { name: "사업보고서", value: "" },
+    { name: "영업보고서", value: "" },
+    { name: "기타IR", value: "" },
+  ],
 };

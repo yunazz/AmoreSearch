@@ -39,6 +39,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       SERVER_HOST: process.env.SERVER_HOST,
+      CDN_HOST: process.env.CDN_HOST,
     },
   },
 });

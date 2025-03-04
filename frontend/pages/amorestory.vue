@@ -1,4 +1,5 @@
 <script setup>
+const config = useRuntimeConfig().public;
 const show = ref(true);
 const tab = ref("BRAND");
 const tabs = [
@@ -7,26 +8,18 @@ const tabs = [
   { text: "IR자료", value: "IR" },
   { text: "사내문서", value: "DOCUMENT" },
 ];
+const filter_tag = ref({ name: "전체", value: "" });
 
 const filter = ref({
   currentPage: 1,
   pagePerGroup: 20,
 });
 
-const boardCtgry = ref("전체");
-
-const search_query = computed(() => ({
-  board_type: boardCtgry.value,
+const brand_query = computed(() => ({
+  brand_ctgry: filter_tag.value.value,
   current_page: filter.value.currentPage,
   page_per_group: 20,
 }));
-
-// const { data: listData, refresh: refresh } = await useApi(
-//   "/api/admin/members",
-//   {
-//     query: search_query,
-//   }
-// );
 
 function changePage(currentPage) {
   if (currentPage === filter.value.currentPage) {
@@ -36,8 +29,7 @@ function changePage(currentPage) {
   scrollToTop();
 }
 function changeBoard(board) {
-  console.log(board);
-  boardCtgry.value = board;
+  filter_tag.value = board;
 }
 const list1 = ref([
   {
@@ -89,189 +81,10 @@ const list1 = ref([
     registered_at: "2025-01-01",
   },
 ]);
-const board = useApi("/amorepacific/brands");
-const list2 = ref([
-  {
-    brand_name: "설화수",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/설화수.png",
-  },
-  {
-    brand_name: "라네즈",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/라네즈.png",
-  },
-  {
-    brand_name: "이니스프리",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/이니스프리.png",
-  },
-  {
-    brand_name: "에이피뷰티",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/에이피뷰티.png",
-  },
-  {
-    brand_name: "헤라",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/헤라.png",
-  },
-  {
-    brand_name: "프리메라",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/프리메라.png",
-  },
-  {
-    brand_name: "아이오페",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/아이오페.png",
-  },
-  {
-    brand_name: "마몽드",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/마몽드.png",
-  },
-  {
-    brand_name: "한율",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/한율.png",
-  },
-  {
-    brand_name: "에스트라",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/에스트라.png",
-  },
-  {
-    brand_name: "에스쁘아",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/에스쁘아.png",
-  },
-  {
-    brand_name: "에뛰드",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/에뛰드.png",
-  },
-  {
-    brand_name: "려",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/려.png",
-  },
-  {
-    brand_name: "미쟝센",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/미쟝센.png",
-  },
-  {
-    brand_name: "라보에이치",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/라보에이치.png",
-  },
-  {
-    brand_name: "아윤채",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/아윤채.jpg",
-  },
-  {
-    brand_name: "아모스프로페셔널",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/아모스프로페셔널.png",
-  },
-  {
-    brand_name: "롱테이크",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/롱테이크.png",
-  },
-  {
-    brand_name: "일리윤",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/일리윤.png",
-  },
-  {
-    brand_name: "해피바스",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/해피바스.png",
-  },
-  {
-    brand_name: "스킨유",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/스킨유.png",
-  },
-  {
-    brand_name: "메디안",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/메디안.png",
-  },
-  {
-    brand_name: "젠티스트",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/젠티스트.png",
-  },
-  {
-    brand_name: "구딸",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/구딸.png",
-  },
-  {
-    brand_name: "바이탈뷰티",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/바이탈뷰티.png",
-  },
-  {
-    brand_name: "메이크온",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/메이크온.png",
-  },
-  {
-    brand_name: "오딧세이",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/오딧세이.png",
-  },
-  {
-    brand_name: "비레디",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/비레디.png",
-  },
-  {
-    brand_name: "홀리추얼",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/홀리추얼.jpg",
-  },
-  {
-    brand_name: "오설록",
-    brand_ctgry: "",
-    brand_intro: "intro 내용입니다.",
-    img_path: "/img/logo/오설록.png",
-  },
-]);
+const { data: brands } = useApi("/amorepacific/brands", {
+  key: "amorestory-board",
+  query: brand_query.value,
+});
 const list3 = ref([
   {
     title: "아모레퍼시픽 2024년 1/4분기 경영실적",
@@ -324,7 +137,7 @@ const list3 = ref([
 ]);
 
 function initBoardType() {
-  boardCtgry.value = "전체";
+  filter_tag.value = "전체";
 }
 </script>
 
@@ -355,18 +168,18 @@ function initBoardType() {
         </div>
         <div class="board_tab depth-2">
           <ClientOnly>
-            <v-btn-toggle v-model="boardCtgry" mandatory rounded="0">
+            <v-btn-toggle v-model="filter_tag" mandatory rounded="0">
               <v-btn
                 v-for="(board, index) in boardCategory[tab]"
                 :key="index"
-                :value="board"
+                :value="board.value"
                 :ripple="false"
                 height="40"
                 min-width="72"
                 selected-class="text-primary"
                 @click="changeBoard(board)"
               >
-                {{ board }}
+                {{ board.name }}
               </v-btn>
             </v-btn-toggle>
           </ClientOnly>
@@ -378,9 +191,9 @@ function initBoardType() {
           <BoardItemCardNews v-if="tab === 'NEWS'" :list="list1" />
           <!-- 2 브랜드 -->
           <div v-if="tab === 'BRAND'" class="card--brand grid-cols-5">
-            <v-card v-for="(item, i) in list2" :key="i">
+            <v-card v-for="(item, i) in brands.result" :key="i">
               <NuxtImg
-                :src="item.img_path"
+                :src="(config.CDN_HOST, item.image_url)"
                 class="align-end"
                 height="82"
                 cover
@@ -393,10 +206,10 @@ function initBoardType() {
                   class="mr-1"
                   density="comfortable"
                 >
-                  화장품
+                  {{ enums.brand_ctgry[item.brand_ctgry] }}
                 </v-chip>
                 <p class="text-white">
-                  {{ item.brand_name }}
+                  {{ item.brand_kor }}
                 </p>
               </div>
             </v-card>

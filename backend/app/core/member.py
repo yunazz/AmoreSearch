@@ -1,7 +1,7 @@
 # from fastapi import Depends, HTTPException
 # from sqlalchemy.orm import Session
 # from db.session import get_session
-# from models.member import Member
+# from model import Member
 # from schemas.member import MyPageUpdate, MyPasswordUpdate, MemberCreate, MemberUpdate, MembersResponse
 
 # def update_me(data: MyPageUpdate, db: Session = Depends(get_session)):

@@ -204,7 +204,7 @@ function initResignOptions() {
                 hide-details
                 variant="outlined"
                 v-model="form.company_affiliation"
-                :items="enums.company_affiliation"
+                :items="select_items.company_affiliation"
                 single-line
                 :disabled="isDisabled"
               />
@@ -215,7 +215,7 @@ function initResignOptions() {
                 hide-details
                 variant="outlined"
                 v-model="form.department"
-                :items="enums.departments"
+                :items="select_items.departments"
                 single-line
                 :disabled="isDisabled"
               />
@@ -228,7 +228,7 @@ function initResignOptions() {
                 hide-details
                 variant="outlined"
                 v-model="form.position"
-                :items="enums.positions"
+                :items="select_items.positions"
                 single-line
                 :disabled="isDisabled"
               />
@@ -241,8 +241,8 @@ function initResignOptions() {
                 v-model="form.employment_status"
                 :items="
                   mode === 'register'
-                    ? enums.employment_status
-                    : enums.all_employment_status
+                    ? select_items.employment_status
+                    : select_items.all_employment_status
                 "
                 single-line
                 :disabled="isDisabled"
