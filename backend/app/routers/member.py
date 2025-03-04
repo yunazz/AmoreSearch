@@ -30,12 +30,12 @@ def update_me(body: MyPageUpdate, db: Session = Depends(get_session)):
     return BaseResponse(msg="성공", code=0, result=access_token)
 
 # ✅ 내 비밀번호 수정
-# @router.put("/password", response_model=MyPageUpdate)
-# def update_my_password(member_id: int, member_update: MyPasswordUpdate, db: Session = Depends(get_session)):
-#     db_member = update_my_password(db=db, member_id=member_id, member_update=member_update)
-#     if db_member is None:
-#         raise HTTPException(status_code=404, detail="회원이 존재하지 않거나 수정 실패")
-#     return db_member
+@router.put("/password", response_model=MyPageUpdate)
+def update_my_password(member_id: int, member_update: MyPasswordUpdate, db: Session = Depends(get_session)):
+    db_member = update_my_password(db=db, member_id=member_id, member_update=member_update)
+    if db_member is None:
+        raise HTTPException(status_code=404, detail="회원이 존재하지 않거나 수정 실패")
+    return db_member
 
 # # ✅ 회원 생성
 # @router.post("/", response_model=MembersResponse)

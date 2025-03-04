@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from schemas.response import BaseResponse
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth,member,favorites
+from routers import auth,member, amorepacific
 
 app = FastAPI()
 
@@ -27,4 +27,4 @@ def read_root():
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(member.router, prefix="/api/member", tags=["member"])
-app.include_router(favorites.router, prefix="/api/favorites", tags=["favorites"])
+app.include_router(amorepacific.router, prefix="/api/favorites", tags=["favorites"])

@@ -89,7 +89,7 @@ const list1 = ref([
     registered_at: "2025-01-01",
   },
 ]);
-
+const board = useApi("/amorepacific/brands");
 const list2 = ref([
   {
     brand_name: "설화수",

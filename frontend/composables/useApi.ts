@@ -12,7 +12,6 @@ export function useApi<T>(
     },
     onResponseError({ request, response, options }) {
       console.log("onResponseError");
-      navigateTo("/");
     },
   }
 ) {

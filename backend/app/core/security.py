@@ -26,10 +26,6 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password, password):
     return pwd_context.verify(plain_password, password)
 
-
-def authenticate_member(emp_no: str, password: str):
-    pass
-
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.now().astimezone() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
