@@ -322,12 +322,12 @@ function openRnb(item) {
       </div>
       <div class="board">
         <div v-if="tab == '1' || tab == '4'" class="board_list">
-          <BoardItemLinks v-if="tab == '1'" :list="list1" />
-          <BoardItemDocument v-if="tab == '4'" :list="list4" />
+          <!-- <BoardItemLinks v-if="tab == '1'" :list="list1" /> -->
+          <!-- <BoardItemDocument v-if="tab == '4'" :list="list4" /> -->
         </div>
         <div v-else class="board_content">
-          <BoardItemCardNews v-if="tab == '2'" :list="list2" />
-          <BoardItemProduct v-if="tab == '3'" :list="list3" />
+          <!-- <BoardItemCardNews v-if="tab == '2'" :list="list2" /> -->
+          <ListProduct v-if="tab == '3'" :list="list3" />
         </div>
 
         <Paging :paging="filter" totalRows="10" @changePage="changePage" />

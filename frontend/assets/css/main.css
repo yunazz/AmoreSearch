@@ -531,3 +531,9 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   color: var(--main-color) !important;
   font-weight: 500;
 }
+
+.progress-circular {
+  margin: 160px auto;
+  width: 100%;
+  text-align: center;
+}

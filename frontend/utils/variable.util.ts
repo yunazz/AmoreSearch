@@ -91,4 +91,13 @@ export const externalCategory = {
     { name: "코스메틱리포트", value: "코스메틱리포트" },
     { name: "ALLURE", value: "ALLURE" },
   ],
+  COSMETIC: [
+    { name: "전체", value: "" },
+    { name: "스킨", value: "스킨" },
+    { name: "메이크업", value: "메이크업" },
+    { name: "클렌징", value: "클렌징" },
+    { name: "선케어", value: "선케어" },
+    { name: "바디", value: "바디" },
+    { name: "헤어", value: "헤어" },
+  ],
 };

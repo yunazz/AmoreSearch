@@ -104,7 +104,7 @@ watch(post_ctgry, (newValue) => {
             <!-- 회사뉴스 -->
             <template v-if="post_type.value === 'NEWS'">
               <div class="board_cards grid-cols-4">
-                <CardNews
+                <ListItemNews
                   v-for="(item, i) in board?.result"
                   :key="i"
                   :item="item"
@@ -115,9 +115,10 @@ watch(post_ctgry, (newValue) => {
 
             <!-- 보고서 -->
             <template v-else-if="post_type.value === 'REPORT'">
-              <ListDocument
-                v-if="post_type.value === 'REPORT'"
-                :list="board?.result"
+              <ListItemLink
+                v-for="(item, index) in board?.result"
+                :key="index"
+                :item="item"
               />
             </template>
 

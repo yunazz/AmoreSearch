@@ -3,7 +3,6 @@ const tabs = ref([
   { text: "뉴스", value: "NEWS" },
   { text: "저널", value: "JOURNAL" },
 ]);
-const tab = ref("NEWS");
 const post_type = ref({ text: "회사뉴스", value: "NEWS" });
 const source_name = ref({
   name: "코스인코리아닷컴",
@@ -31,6 +30,7 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
+
 const { data: board, status } = useApi("/post/external", {
   key: "post-board",
   query: filter_query,
@@ -95,19 +95,13 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
       <div class="board">
         <div class="board_list">
           <template v-if="status === 'success'">
-            <template v-if="tab === 'NEWS'">
-              <ListLink
-                v-for="(item, index) in board.result"
-                :key="index"
-                :item="item"
-              />
-            </template>
-            <template v-if="tab === 'JOURNAL'">
-              <BoardItemLinks :list="board.result" />
-            </template>
+            <ListItemLink
+              v-for="(item, index) in board.result"
+              :key="index"
+              :item="item"
+            />
           </template>
         </div>
-
         <template v-if="board?.paging">
           <Paging
             :paging="filter"

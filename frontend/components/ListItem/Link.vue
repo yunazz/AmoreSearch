@@ -19,9 +19,11 @@ function addFavorites(item) {
       <p class="list-text text-clamp-2">{{ item.content }}</p>
       <p>
         <span class="text-gray-04 mr-2">{{
-          formatDate(item.published_at)
+          formatDate(item.published_at || item.created_at)
         }}</span>
-        <span class="text-gray-04">{{ item.source_name }}</span>
+        <span class="text-gray-04" v-if="item.source_name">
+          {{ item.source_name }}
+        </span>
       </p>
     </div>
     <div>
@@ -54,7 +56,7 @@ function addFavorites(item) {
 
 <style scoped>
 .list-item {
-  padding: 8px 12px 6px;
+  padding: 10px 16px;
   text-decoration: none;
 }
 .list-item {

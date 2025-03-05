@@ -13,48 +13,12 @@ function openRnb(item) {
 
 <template>
   <div class="board_cards product_card grid-cols-4">
-    <v-card class="board_card" v-for="(item, i) in list" :key="i">
-      <v-btn
-        icon="mdi-star"
-        variant="text"
-        class="icon--toggle position-absolute"
-      />
-      <div class="card-img">
-        <v-img height="250" :src="item.image_url" cover></v-img>
-      </div>
-      <v-card-item>
-        <p class="card_title text-clamp-2">
-          {{ item.product_name }}
-        </p>
-        <v-card-subtitle>
-          <p class="flex gap-2 mt-1">
-            <button class="text-black fw-500 hover_underline">
-              {{ item.brand_name }}
-            </button>
-            <small>|</small>
-            <span class="body--s"> {{ formatNumber(item.price) }}원 </span>
-          </p>
-        </v-card-subtitle>
-      </v-card-item>
-      <v-card-text lines="">
-        <p class="text-clamp-6">{{ item.ingredients }}</p>
-      </v-card-text>
-      <div class="w-full flex justify-between align-center">
-        <div class="flex px-3 gap-1">
-          <v-chip v-for="(tag, idx) in item.tags" :key="idx" size="small">
-            {{ tag }}
-          </v-chip>
-          <v-chip size="small">{{ item.texture }}</v-chip>
-        </div>
-
-        <v-btn
-          icon="mdi-chevron-right"
-          variant="text"
-          class="mr-1 mb-2"
-          @click="openRnb(item)"
-        />
-      </div>
-    </v-card>
+    <ListItemProduct
+      v-for="(item, i) in list"
+      :item="item"
+      :key="i"
+      @showDetail="openRnb"
+    />
 
     <!-- RNB -->
     <v-navigation-drawer
@@ -62,7 +26,7 @@ function openRnb(item) {
       v-model="dialog"
       temporary
       location="right"
-      width="400"
+      width="500"
     >
       <template v-if="targetItem">
         <div class="rnb_wrap">
@@ -96,7 +60,7 @@ function openRnb(item) {
                 <div class="flex px-3 gap-1"></div>
                 <p class="flex gap-2 mt-1">
                   <button class="text-black fw-500 hover_underline">
-                    {{ targetItem.brand_name }}
+                    {{ targetItem.brand_kor }}
                   </button>
                   <small>|</small>
                   <span class="body--s">
@@ -210,6 +174,9 @@ function openRnb(item) {
   </div>
 </template>
 <style scoped>
+h4 {
+  font-size: 0.9375rem;
+}
 .position-absolute {
   position: absolute;
   z-index: 1;

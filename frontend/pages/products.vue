@@ -1,25 +1,27 @@
 <script setup>
-const tab = ref("1");
 const tabs = ref([
-  { text: "자사제품", value: "1" },
-  { text: "타사제품", value: "2" },
+  { text: "자사제품", value: "INTERNAL" },
+  { text: "타사제품", value: "EXTERNAL" },
 ]);
+const scope = ref({ text: "자사제품", value: "INTERNAL" });
+const selected_brand_id = ref(null);
+const category_1 = ref({ name: "전체", value: "" });
+
 const filter = ref({
+  scope: "INTERNAL",
+  category_1: "",
+  brand_ids: selected_brand_id.value,
   current_page: 1,
-  item_per_page: 20,
+  item_per_page: 16,
 });
 
-// const search_query = computed(() => ({
-//   current_page: filter.value.current_page,
-//   item_per_page: 20,
-// }));
-
-// const { data: listData, refresh: refresh } = await useApi(
-//   "/api/admin/members",
-//   {
-//     query: search_query,
-//   }
-// );
+const filter_query = computed(() => ({
+  scope: filter.value.scope,
+  category_1: filter.value.category_1,
+  brand_ids: filter.value.brand_ids,
+  current_page: filter.value.current_page,
+  item_per_page: filter.value.item_per_page,
+}));
 
 function changePage(current_page) {
   if (current_page === filter.value.current_page) {
@@ -28,105 +30,40 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
-const selectedBrand = ref([]);
-const list = ref([
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-  {
-    brand_name: "에스트라",
-    texture: "세럼",
-    price: 33000,
-    image_url: "/img/product2.webp",
-    product_name: "아토베리어365 세라-히알 속수분 앰플 30ml",
-    ingredients:
-      "정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드,정제수, 부틸렌글라이콜, 글리세린, 나이아신아마이드, 1,2-헥산다이올, 베타인, 판테놀, 카보머, 에틸헥실글리세린, 소듐하이알루로네이트(1001 ppm),3-O-에틸아스코빅애씨드, 셀룰로오스검, 트로메타민, 소듐트라이메타포스페이트, 다이포타슘글리시리제이트, 프로판다이올, 아데노신, 하이드록시프로필비스팔미타마이드엠이에이(210 ppm), 소듐메타포스페이트, 글리세릴카프릴레이트, 포타슘하이드록사이드, 소듐락테이트, 바이오사카라이드검-1, 카프릴릭/카프릭트라이글리세라이드, 펜틸렌글라이콜, 시트릭애씨드, 하이드록시에틸우레아, 폴리글리세릴-10스테아레이트, 콜레스테롤, 프로필렌글라이콜, 포타슘세틸포스페이트, 토코페롤, 세라마이드엔피(0.75 ppm), 만니톨, 스테아릭애씨드, 실리카, 아크릴레이트/암모늄메타크릴레이트코폴리머, 하이드로제네이티드레시틴, 팔미틱애씨드, 올레익애씨드, 아라키딕애씨드, 스핑고리피드",
-    category_1: "스킨",
-    category_2: "스킨_로션",
-    tags: ["기능성"],
-  },
-]);
+
+const { data: brands } = useApi("/amorepacific/brands", {
+  key: "cosmetic-brands",
+});
+
+const { data: board, status } = useApi("/product/products", {
+  key: "post-board",
+  query: filter_query,
+});
+
+watch(scope, (newValue) => {
+  filter.value.scope = newValue.value;
+  if (newValue.value == "INTERNAL") {
+    filter.value.category_1 = "";
+    selected_brand_id.value = null;
+  }
+  if (newValue.value == "EXTERNAL") {
+    filter.value.brand_ids = null;
+    category_1.value = { name: "전체", value: "" };
+  }
+  filter.value.current_page = 1;
+});
+
+watch(selected_brand_id, (newValue) => {
+  filter.value.brand_ids = newValue;
+  filter.value.current_page = 1;
+});
+
+watch(category_1, (newValue) => {
+  filter.value.category_1 = newValue.value;
+  filter.value.current_page = 1;
+});
+
+const total_cnt = computed(() => board.value.paging?.total_rows || 0);
 </script>
 
 <template>
@@ -137,7 +74,7 @@ const list = ref([
         <div class="board_tab depth-1">
           <ClientOnly>
             <v-tabs
-              v-model="tab"
+              v-model="scope"
               bg-color="transparent"
               align-tabs="center"
               density="comfortable"
@@ -147,35 +84,37 @@ const list = ref([
                 v-for="tab in tabs"
                 :key="tab.value"
                 :text="tab.text"
-                :value="tab.value"
+                :value="tab"
                 :ripple="false"
               />
             </v-tabs>
           </ClientOnly>
         </div>
       </div>
-      <div v-if="tab === '1'" class="mt-4 mb-2">
+      <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-2">
         <ClientOnly>
           <v-sheet class="mx-auto">
             <v-slide-group
-              multiple
               show-arrows
-              v-model="selectedBrand"
+              v-model="selected_brand_id"
               selected-class="active"
             >
               <v-slide-group-item
-                v-for="(brand, i) in ourBrands"
+                v-for="(brand, i) in brands.result"
                 :key="i"
+                :value="brand?.brand_id"
                 v-slot="{ toggle, selectedClass }"
               >
-                <v-card variant="flat" height="72" width="72">
+                <v-card variant="flat" height="72">
                   <button
                     :class="[selectedClass]"
                     class="list_avatar"
                     @click="toggle"
                   >
-                    <v-img width="64" :src="brand.img_path" />
-                    <small class="text-white fw-500">{{ brand.name }}</small>
+                    <v-img width="64" :src="brand.image_url" />
+                    <small class="text-white fw-500">
+                      {{ brand.brand_kor }}
+                    </small>
                   </button>
                   <div
                     class="d-flex fill-height align-center justify-center"
@@ -184,18 +123,46 @@ const list = ref([
               </v-slide-group-item>
             </v-slide-group>
           </v-sheet>
-          <div class="flex gap-2"></div>
         </ClientOnly>
       </div>
-
+      <div v-if="filter.scope === 'EXTERNAL'" class="board_tab depth-2">
+        <ClientOnly>
+          <v-btn-toggle v-model="category_1" mandatory rounded="0">
+            <v-btn
+              v-for="(board, index) in externalCategory.COSMETIC"
+              :key="index"
+              :value="board"
+              :ripple="false"
+              height="40"
+              min-width="72"
+              selected-class="text-primary"
+            >
+              {{ board.name }}
+            </v-btn>
+          </v-btn-toggle>
+        </ClientOnly>
+      </div>
       <div class="board">
         <div class="board_content">
-          <ClientOnly>
-            <BoardItemProduct :list="list" />
-          </ClientOnly>
+          <div v-if="status === 'pending'" class="progress-circular">
+            <v-progress-circular
+              indeterminate
+              :size="36"
+              :width="5"
+            ></v-progress-circular>
+          </div>
+          <template v-if="status === 'success'">
+            <ListProduct :list="board?.result" />
+          </template>
         </div>
 
-        <Paging :paging="filter" totalRows="10" @changePage="changePage" />
+        <template v-if="board?.paging">
+          <Paging
+            :paging="filter"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
+        </template>
       </div>
     </div>
   </div>
@@ -215,5 +182,8 @@ const list = ref([
   align-items: center;
   grid-template: 4rem;
   margin-top: 10px;
+}
+.list_avatar {
+  margin: 0 6px;
 }
 </style>
