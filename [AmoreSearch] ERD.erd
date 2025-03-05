@@ -1980,7 +1980,7 @@
       "DLZRKGvBktdAFugXdObPX": {
         "id": "DLZRKGvBktdAFugXdObPX",
         "tableId": "2DhjNyI8N_MHFUk1GNVT6",
-        "name": "img_url",
+        "name": "image_url",
         "comment": "이미지 url",
         "dataType": "VARCHAR(200)",
         "default": "",
@@ -2140,7 +2140,7 @@
       "T9EAtMbunWdupTz_nF_uP": {
         "id": "T9EAtMbunWdupTz_nF_uP",
         "tableId": "okixE7U4eKj5X0YaZliBK",
-        "name": "img_url",
+        "name": "image_url",
         "comment": "브랜드 로고",
         "dataType": "VARCHAR(100)",
         "default": "",
@@ -3240,7 +3240,7 @@
       "P9qNjq4UrgjLJO6tsP8sW": {
         "id": "P9qNjq4UrgjLJO6tsP8sW",
         "tableId": "u2NpBdJDrJSLqhUnyAexd",
-        "name": "img_url",
+        "name": "image_url",
         "comment": "이미지 url",
         "dataType": "VARCHAR(100)",
         "default": "",
@@ -3880,7 +3880,7 @@
       "pd1HU-G7Dp8Ji7jyIIvPB": {
         "id": "pd1HU-G7Dp8Ji7jyIIvPB",
         "tableId": "okixE7U4eKj5X0YaZliBK",
-        "name": "img_url",
+        "name": "image_url",
         "comment": "이미지 고유 ID",
         "dataType": "VARCHAR(100)",
         "default": "",

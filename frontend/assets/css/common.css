@@ -608,7 +608,9 @@ body .text-grey-lighten-2 {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   column-gap: 1rem;
 }
-
+.border-1 {
+  border: 1px solid var(--border-color);
+}
 .border-top-1 {
   border-top: 1px solid var(--border-color);
 }

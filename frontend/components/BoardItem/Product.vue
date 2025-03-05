@@ -20,7 +20,7 @@ function openRnb(item) {
         class="icon--toggle position-absolute"
       />
       <div class="card-img">
-        <v-img height="250" :src="item.img_url" cover></v-img>
+        <v-img height="250" :src="item.image_url" cover></v-img>
       </div>
       <v-card-item>
         <p class="card_title text-clamp-2">
@@ -67,7 +67,7 @@ function openRnb(item) {
       <template v-if="targetItem">
         <div class="rnb_wrap">
           <div class="rnb_img card-img">
-            <v-img height="250" :src="targetItem.img_url" cover></v-img>
+            <v-img height="250" :src="targetItem.image_url" cover></v-img>
           </div>
           <div class="rnb_content">
             <div class="rnb_header ml-3 w-full flex align-center">

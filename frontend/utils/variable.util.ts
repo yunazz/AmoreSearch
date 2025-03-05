@@ -54,24 +54,32 @@ export const ourBrands = [
 ];
 
 export const boardCategory = {
-  NEWS: ["전체", "기업", "브랜드", "연구개발", "사회공헌", "지속가능경영"],
+  NEWS: [
+    { name: "전체", value: "" },
+    { name: "기업", value: "기업" },
+    { name: "브랜드", value: "브랜드" },
+    { name: "연구개발", value: "연구개발" },
+    { name: "사회공헌", value: "사회공헌" },
+    { name: "지속가능경영", value: "지속가능경영" },
+  ],
   BRAND: [
     { name: "전체", value: "" },
     { name: "화장품", value: "BEAUTY_CARE" },
     { name: "향수", value: "PERFUME" },
     { name: "메디컬뷰티", value: "MEDICAL_BEAUTY" },
-    { name: "디바이스", value: "  BEAUTY_DEVICE" },
+    { name: "디바이스", value: "BEAUTY_DEVICE" },
     { name: "이너뷰티", value: "INNER_BEAUTY" },
     { name: "헤어", value: "HAIR" },
     { name: "바디", value: "BODY" },
     { name: "덴탈", value: "ORAL_CARE" },
     { name: "티컬처", value: "TEA_CULTURE" },
   ],
-  IR: [
+  REPORT: [
     { name: "전체", value: "" },
-    { name: "실적발표", value: "" },
-    { name: "사업보고서", value: "" },
-    { name: "영업보고서", value: "" },
-    { name: "기타IR", value: "" },
+    { name: "재무제표", value: "재무제표" },
+    { name: "실적발표", value: "경영실적" },
+    { name: "사업보고서", value: "사업보고서" },
+    { name: "영업보고서", value: "영업보고서" },
+    { name: "기타IR", value: "기타IR" },
   ],
 };

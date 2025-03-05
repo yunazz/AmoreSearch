@@ -7,7 +7,7 @@ definePageMeta({
 const snackbar = ref({ active: false, message: "" });
 const form = ref({
   emp_no: "1111111",
-  password: "1111",
+  password: "1",
 });
 
 const visible = ref(false);
@@ -124,9 +124,10 @@ function notify(detail) {
               variant="outlined"
               hide-details
               single-line
-              @click:append-inner="visible = !visible"
               v-model="form.password"
               autocomplete="off"
+              @click:append-inner="visible = !visible"
+              @keydown.enter="login"
             />
             <v-btn
               class="w-full mb-4"
