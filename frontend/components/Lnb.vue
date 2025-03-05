@@ -29,7 +29,9 @@ function active_menu(path) {
   return route.path.indexOf(path) > -1;
 }
 
-function logout() {}
+function logout() {
+  navigateTo("");
+}
 </script>
 
 <template>
@@ -87,7 +89,7 @@ function logout() {}
     <div class="lnb_bottom">
       <v-date-picker show-adjacent-months width="200" color="black" />
       <div>
-        <button class="btn--logout">로그아웃</button>
+        <button class="btn--logout" @click="logout">로그아웃</button>
       </div>
     </div>
   </nav>

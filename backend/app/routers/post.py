@@ -124,7 +124,6 @@ def get_external_boards(
                 count_sql += " AND (title LIKE %s OR content LIKE %s)"
                 params.extend([f"%{query}%", f"%{query}%"])
             
-            print(count_sql)
             # 총 개수 조회
             cursor.execute(count_sql, params) 
             total_count = cursor.fetchone()["COUNT(*)"]
