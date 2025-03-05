@@ -3,81 +3,40 @@ const tabs = ref([
   { text: "뉴스", value: "NEWS" },
   { text: "저널", value: "JOURNAL" },
 ]);
+const tab = ref("NEWS");
+const post_type = ref({ text: "회사뉴스", value: "NEWS" });
+const post_ctgry = ref({ name: "전체", value: "" });
+
 const filter = ref({
-  currentPage: 1,
+  current_page: 1,
   pagePerGroup: 20,
 });
 
-// const search_query = computed(() => ({
-//   currentPage: filter.value.currentPage,
-//   pagePerGroup: 20,
-// }));
+const filter_query = computed(() => ({
+  post_type: post_type.value.value,
+  source: post_ctgry.value.value,
+  current_page: filter.value.current_page,
+  page_per_group: filter.value.pagePerGroup,
+}));
 
-// const { data: listData, refresh: refresh } = await useApi(
-//   "/api/admin/members",
-//   {
-//     query: search_query,
-//   }
-// );
-
-function changePage(currentPage) {
-  if (currentPage === filter.value.currentPage) {
+function changePage(current_page) {
+  if (current_page === filter.value.current_page) {
     return;
   }
-  filter.value.currentPage = currentPage;
+  filter.value.current_page = current_page;
   scrollToTop();
 }
-const list1 = ref([
-  {
-    title: "아모레퍼시픽 2024년 1/4분기 경영실적",
-    subtitle:
-      "CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 2024년 기업가치 제고 계획",
-    subtitle: `아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
-  },
 
-  {
-    title: "아모레퍼시픽 2023년 사업 보고서",
-    subtitle:
-      "아모레퍼시픽은 자사 사업장 내에서 발생하는 온실가스 직접배출량(Scope1)과 전기 등을 구매하면서 발생하는 간접배출량(Scope2)의 총량을 2020년 대비 2050년까지 90% 감축하여 넷제로를 달성하려는 목표를 수립했다. 그 계획의 일환으로 아모레퍼시픽은 적극적인 전사 재생에너지 전환을 추진하고 있으며, 그 결과 2024년 기준 설화수, 라네즈, 해피바스를 비롯한 아모레퍼시픽의 주요 제품을 생산하는 오산, 대전, 안성, 상해 사업장 및 물류 사업장의 재생 전력 100%를 달성했다. 2025년은 아모레퍼시픽 전사 단위의 RE100 달성을 목표로 하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 제18기 (2023) 영업보고서",
-    subtitle:
-      "CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 2024년 1/4분기 경영실적",
-    subtitle:
-      "CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 2024년 기업가치 제고 계획",
-    subtitle: `아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
-  },
-  {
-    title: "아모레퍼시픽 2023년 사업 보고서",
-    subtitle:
-      "아모레퍼시픽은 자사 사업장 내에서 발생하는 온실가스 직접배출량(Scope1)과 전기 등을 구매하면서 발생하는 간접배출량(Scope2)의 총량을 2020년 대비 2050년까지 90% 감축하여 넷제로를 달성하려는 목표를 수립했다. 그 계획의 일환으로 아모레퍼시픽은 적극적인 전사 재생에너지 전환을 추진하고 있으며, 그 결과 2024년 기준 설화수, 라네즈, 해피바스를 비롯한 아모레퍼시픽의 주요 제품을 생산하는 오산, 대전, 안성, 상해 사업장 및 물류 사업장의 재생 전력 100%를 달성했다. 2025년은 아모레퍼시픽 전사 단위의 RE100 달성을 목표로 하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 제18기 (2023) 영업보고서",
-    subtitle:
-      "CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 2024년 1/4분기 경영실적",
-    subtitle:
-      "CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-  },
-  {
-    title: "아모레퍼시픽 2024년 기업가치 제고 계획",
-    subtitle: `아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
-  },
-]);
-const tab = ref("NEWS");
+function onTabChange(tab) {}
+
+function onCategoryChange(ctgry) {}
+
+const { data: board, status } = useApi("/amorestory/board", {
+  key: "amorestory-board",
+  query: filter_query,
+});
+
+const totalCnt = computed(() => board.value.paging?.total_rows);
 </script>
 
 <template>
@@ -108,14 +67,18 @@ const tab = ref("NEWS");
       <div class="board">
         <div class="board_list">
           <template v-if="tab === 'NEWS'">
-            <BoardItemLinks :list="list1" />
+            <BoardItemLinks :list="board.result" />
           </template>
           <template v-if="tab === 'JOURNAL'">
-            <BoardItemLinks :list="list1" />
+            <BoardItemLinks :list="board.result" />
           </template>
         </div>
 
-        <Paging :paging="filter" totalRows="0" @changePage="changePage" />
+        <Paging
+          :paging="filter"
+          :totalRows="totalCnt"
+          @changePage="changePage"
+        />
       </div>
     </div>
   </div>

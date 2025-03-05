@@ -1,42 +1,45 @@
 <script setup>
 const props = defineProps({
   paging: { type: Object, required: true },
-  totalRows: { required: true, default: 0 },
+  total_row: { required: true, default: 0 },
   disabled: { type: Boolean, default: false },
   board_type: { type: String, default: "" },
 });
+
 const emit = defineEmits(["changePage"]);
-const pagePerGroup = 10;
+const page_per_group = 10;
 
 const paging = ref({
-  currentPage: props.paging.currentPage,
-  pagePerGroup: props.paging.pagePerGroup,
-  totalRows: Number(props.totalRows),
+  current_page: props.paging.current_page,
+  item_per_page: props.paging.item_per_page,
+  total_row: Number(props.total_row),
   lastPage: 1,
   groupStartPage: 1,
   groupEndPage: 1,
   pageList: [1],
 });
 set_paging_data();
+
 watch(
-  () => props.paging.currentPage,
+  () => props.paging.current_page,
   (newValue) => {
-    paging.value.currentPage = newValue;
+    console.log(newValue);
+    paging.value.current_page = newValue;
     set_paging_data();
   }
 );
 
-watch(
-  () => props.paging.pagePerGroup,
-  (newValue) => {
-    paging.value.pagePerGroup = newValue;
-    set_paging_data();
-  }
-);
+// watch(
+//   () => props.paging.page_per_group,
+//   (newValue) => {
+//     paging.value.page_per_group = newValue;
+//     set_paging_data();
+//   }
+// );
 
 function groupEndPage() {
   const groupEndPageVal =
-    Math.ceil(paging.value.currentPage / pagePerGroup) * pagePerGroup;
+    Math.ceil(paging.value.current_page / page_per_group) * page_per_group;
   return groupEndPageVal < paging.value.lastPage
     ? groupEndPageVal
     : paging.value.lastPage;
@@ -44,16 +47,18 @@ function groupEndPage() {
 
 function groupStartPage() {
   return (
-    Math.floor((paging.value.currentPage - 1) / pagePerGroup) * pagePerGroup + 1
+    Math.floor((paging.value.current_page - 1) / page_per_group) *
+      page_per_group +
+    1
   );
 }
 
 function set_paging_data() {
   paging.value.pageList = [];
   paging.value.lastPage =
-    paging.value.totalRows == 0
+    paging.value.total_row == 0
       ? 1
-      : Math.ceil(Number(paging.value.totalRows) / paging.value.pagePerGroup);
+      : Math.ceil(Number(paging.value.total_row) / paging.value.item_per_page);
   paging.value.groupStartPage = groupStartPage();
   paging.value.groupEndPage = groupEndPage();
 
@@ -84,15 +89,16 @@ const changePage = (page, board_type) => {
     <!-- <button
       @click="changePage(1)"
       :class="{
-        hide: paging.currentPage === 1 || paging.currentPage <= pagePerGroup,
+        hide: paging.current_page === 1 || paging.current_page <= page_per_group,
       }"
     >
       <v-icon icon="mdi-page-first" />
     </button> -->
     <button
-      @click="changePage(paging.groupStartPage - pagePerGroup)"
+      @click="changePage(paging.groupStartPage - page_per_group)"
       :class="{
-        hide: paging.currentPage === 1 || paging.groupStartPage < pagePerGroup,
+        hide:
+          paging.current_page === 1 || paging.groupStartPage < page_per_group,
       }"
     >
       <v-icon icon="mdi-chevron-left" />
@@ -101,7 +107,7 @@ const changePage = (page, board_type) => {
       <button
         v-for="item in paging.pageList"
         :key="item"
-        :class="{ active: paging.currentPage === item }"
+        :class="{ active: paging.current_page === item }"
         @click="changePage(item)"
       >
         {{ item }}
@@ -110,7 +116,7 @@ const changePage = (page, board_type) => {
     <button
       :class="{
         hide:
-          paging.currentPage === paging.lastPage ||
+          paging.current_page === paging.lastPage ||
           paging.groupStartPage + 9 >= paging.lastPage,
       }"
       @click="changePage(paging.groupEndPage + 1)"
@@ -120,8 +126,8 @@ const changePage = (page, board_type) => {
     <!-- <button
       :class="{
         hide:
-          paging.lastPage === paging.currentPage ||
-          paging.groupEndPage - paging.groupStartPage < pagePerGroup,
+          paging.lastPage === paging.current_page ||
+          paging.groupEndPage - paging.groupStartPage < page_per_group,
       }"
       @click="changePage(paging.lastPage)"
     >

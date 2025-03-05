@@ -13,11 +13,11 @@ router = APIRouter()
 
 
 @router.get("/")
-def get_boards(
+def get_external_boards(
     post_type: str = Query(None), 
     source: str = Query(None), 
     query: str = Query(None), 
-    page_no: int = Query(1), 
+    current_page: int = Query(1), 
     page_per_group: int = Query(12)
 ):
     conn = get_connection()
@@ -33,8 +33,8 @@ def get_boards(
                 params.append(post_type)
 
             if source:
-                sql += " AND post_ctgry = %s"
-                count_sql += " AND post_ctgry = %s"
+                sql += " AND source = %s"
+                count_sql += " AND source = %s"
                 params.append(source)
 
             if query:
@@ -50,7 +50,7 @@ def get_boards(
             sql += " ORDER BY p.created_at DESC"
             
             # 페이징 적용
-            offset = (page_no - 1) * page_per_group
+            offset = (current_page - 1) * page_per_group
             sql += " LIMIT %s OFFSET %s"
             params.extend([page_per_group, offset])
 
@@ -64,7 +64,7 @@ def get_boards(
                 result=result,
                 paging={
                     "total_rows": total_count,
-                    "page_no": page_no,
+                    "current_page": current_page,
                     "page_per_group": page_per_group,
                 }
             )

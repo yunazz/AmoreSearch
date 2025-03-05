@@ -1,8 +1,7 @@
 <script setup>
 const props = defineProps(["list", "listType"]);
 // const emit = defineEmits(["close"]);
-
-function downloadFnc() {
+function linkFnc(item) {
   console.log(item);
 }
 </script>
@@ -10,15 +9,17 @@ function downloadFnc() {
 <template>
   <v-list :items="list" lines="two" item-props>
     <template v-slot:subtitle="{ subtitle }">
-      <div v-html="subtitle" class="mr-10"></div>
+      <div v-html="subtitle" class="mr-8"></div>
     </template>
     <template v-slot:append>
-      <v-btn
-        color="grey-lighten-2"
-        icon="mdi-folder"
-        variant="text"
-        @click="downloadFnc(item)"
-      />
+      <NuxtLink external>
+        <v-btn
+          color="grey-lighten-1"
+          icon="mdi-link"
+          variant="text"
+          @click="linkFnc(item)"
+        />
+      </NuxtLink>
       <v-btn class="icon--toggle" icon="mdi-star" variant="text" />
     </template>
   </v-list>

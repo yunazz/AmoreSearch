@@ -11,22 +11,25 @@ const post_type = ref({ text: "회사뉴스", value: "NEWS" });
 const post_ctgry = ref({ name: "전체", value: "" });
 
 const filter = ref({
-  currentPage: 1,
-  pagePerGroup: 8,
+  post_type: "NEWS",
+  post_ctgry: "",
+  current_page: 1,
+  item_per_page: 8,
 });
 
 const filter_query = computed(() => ({
-  post_type: post_type.value.value,
-  post_ctgry: post_ctgry.value.value,
-  page_no: filter.value.currentPage,
-  page_per_group: filter.value.pagePerGroup,
+  post_type: filter.value.post_type,
+  post_ctgry: filter.value.post_ctgry,
+  current_page: filter.value.current_page,
+  page_per_group: filter.value.item_per_page,
 }));
 
-function changePage(currentPage) {
-  if (currentPage === filter.value.currentPage) {
+function changePage(current_page) {
+  console.log(current_page);
+  if (current_page === filter.value.current_page) {
     return;
   }
-  filter.value.currentPage = currentPage;
+  filter.value.current_page = current_page;
   scrollToTop();
 }
 
@@ -39,7 +42,22 @@ const { data: board, status } = useApi("/amorestory/board", {
   query: filter_query,
 });
 
-const total_cnt = computed(() => board.value.paging?.total_rows);
+const total_cnt = computed(() => board.value.paging.total_rows);
+
+watch(post_type, (newValue) => {
+  filter.value.post_type = newValue.value;
+  filter.value.post_ctgry = "";
+  post_ctgry.value = { name: "전체", value: "" };
+  filter.value.current_page = 1;
+  if (newValue.value === "NEWS") filter.value.item_per_page = 8;
+  else if (newValue.value === "REPORT") filter.value.item_per_page = 20;
+  else if (newValue.value === "BRAND") filter.value.item_per_page = 100;
+});
+
+watch(post_ctgry, (newValue) => {
+  filter.value.post_ctgry = newValue.value;
+  filter.value.current_page = 1;
+});
 </script>
 
 <template>
@@ -103,7 +121,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
 
             <!-- 보고서 -->
             <template v-else-if="post_type.value === 'REPORT'">
-              <BoardItemDocument
+              <ListDocument
                 v-if="post_type.value === 'REPORT'"
                 :list="board?.result"
               />
@@ -141,7 +159,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
           <Paging
             v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
             :paging="filter"
-            :totalRows="total_cnt"
+            :total_row="total_cnt"
             @changePage="changePage"
           />
         </div>

@@ -9,12 +9,12 @@ const tabs = ref([
 const targetItem = ref(null);
 const dialog = ref(false);
 const filter = ref({
-  currentPage: 1,
+  current_page: 1,
   pagePerGroup: 20,
 });
 
 // const search_query = computed(() => ({
-//   currentPage: filter.value.currentPage,
+//   current_page: filter.value.current_page,
 //   pagePerGroup: 20,
 // }));
 
@@ -25,11 +25,11 @@ const filter = ref({
 //   }
 // );
 
-function changePage(currentPage) {
-  if (currentPage === filter.value.currentPage) {
+function changePage(current_page) {
+  if (current_page === filter.value.current_page) {
     return;
   }
-  filter.value.currentPage = currentPage;
+  filter.value.current_page = current_page;
   scrollToTop();
 }
 const list1 = ref([
