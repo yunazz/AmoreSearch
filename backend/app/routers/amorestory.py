@@ -70,7 +70,7 @@ def get_boards(
                     params.append(post_type)
 
                 if post_ctgry:
-                    sql += " AND post_ctgry = %s"
+                    sql += " AND p.post_ctgry = %s"
                     count_sql += " AND post_ctgry = %s"
                     params.append(post_ctgry)
 

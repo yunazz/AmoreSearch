@@ -13,13 +13,14 @@ export const enums = {
   },
 };
 
-const select_items = {
+export const select_items = {
   departments: ["HR팀", "법무팀", "영업팀"],
   company_affiliation: ["아모레퍼시픽그룹", "아모레퍼시픽", "설화수"],
   positions: ["사원", "대리", "팀장", "과장", "차장", "부장", "임원"],
   employment_status: ["재직", "휴직", "정직"],
   all_employment_status: ["재직", "휴직", "정직", "퇴직"],
 };
+
 export const ourBrands = [
   { name: "설화수", img_path: "/img/logo/sulwhasoo.png" },
   { name: "라네즈", img_path: "/img/logo/laneige.png" },

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth,member, amorepacific
+from routers import auth,member, amorestory
 
 app = FastAPI()
 
@@ -19,4 +19,4 @@ def read_root():
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(member.router, prefix="/api/member", tags=["member"])
-app.include_router(amorepacific.router, prefix="/api/amorepacific", tags=["amorepacific"])
+app.include_router(amorestory.router, prefix="/api/amorestory", tags=["amorestory"])

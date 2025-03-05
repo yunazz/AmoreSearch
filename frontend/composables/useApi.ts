@@ -13,7 +13,7 @@ export function useApi<T>(
     },
   }
 ) {
-  return useFetch(url, {
+  return useLazyFetch(url, {
     ...options,
     $fetch: useNuxtApp().$api as typeof $fetch,
   });

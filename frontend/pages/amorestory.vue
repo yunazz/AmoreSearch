@@ -1,20 +1,22 @@
 <script setup>
 const config = useRuntimeConfig().public;
-const tab = ref("NEWS");
 const tabs = [
   { text: "회사뉴스", value: "NEWS" },
   { text: "IR 및 기타 보고서", value: "REPORT" },
   { text: "브랜드", value: "BRAND" },
   // { text: "사내문서", value: "DOCUMENT" },
 ];
+
+const post_type = ref({ text: "회사뉴스", value: "NEWS" });
 const post_ctgry = ref({ name: "전체", value: "" });
 
 const filter = ref({
   currentPage: 1,
   pagePerGroup: 8,
 });
+
 const filter_query = computed(() => ({
-  post_type: tab.value,
+  post_type: post_type.value.value,
   post_ctgry: post_ctgry.value.value,
   page_no: filter.value.currentPage,
   page_per_group: filter.value.pagePerGroup,
@@ -28,18 +30,11 @@ function changePage(currentPage) {
   scrollToTop();
 }
 
-function onCategoryChange(board) {
-  post_ctgry.value = board;
-  filter.value.currentPage = 1;
-}
+function onTabChange(tab) {}
 
-function onTabChange() {
-  post_ctgry.value = { name: "전체", value: "" };
-  filter.value.currentPage = 1;
-  refresh();
-}
+function onCategoryChange(ctgry) {}
 
-const { data: board, refresh } = useApi("/amorepacific/board", {
+const { data: board, status } = useApi("/amorestory/board", {
   key: "amorestory-board",
   query: filter_query,
 });
@@ -55,7 +50,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
         <div class="board_tab depth-1">
           <ClientOnly>
             <v-tabs
-              v-model="tab"
+              v-model="post_type"
               bg-color="transparent"
               align-tabs="center"
               density="comfortable"
@@ -65,8 +60,8 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
                 v-for="tab in tabs"
                 :key="tab.value"
                 :text="tab.text"
-                :value="tab.value"
-                @click="onTabChange"
+                :value="tab"
+                @click="onTabChange(tab)"
                 :ripple="false"
               />
             </v-tabs>
@@ -76,7 +71,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
           <ClientOnly>
             <v-btn-toggle v-model="post_ctgry" mandatory rounded="0">
               <v-btn
-                v-for="(board, index) in boardCategory[tab]"
+                v-for="(board, index) in boardCategory[post_type.value]"
                 :key="index"
                 :value="board"
                 :ripple="false"
@@ -91,48 +86,66 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
           </ClientOnly>
         </div>
       </div>
-      <div class="board">
-        <div v-if="tab === 'NEWS' || tab === 'BRAND'" class="board_content">
-          <!-- 회사뉴스 -->
-          <BoardItemCardNews v-if="tab === 'NEWS'" :list="board?.result" />
-          <!-- 브랜드 -->
-          <div v-if="tab === 'BRAND'" class="card--brand grid-cols-5">
-            <v-card v-for="(item, i) in board?.result" :key="i">
-              <NuxtImg
-                :src="(config.CDN_HOST, item.image_url)"
-                class="align-end"
-                height="82"
-                cover
-              />
-              <div class="brand_info">
-                <v-chip
-                  size="small"
-                  color="sub"
-                  variant="flat"
-                  class="mr-1"
-                  density="comfortable"
-                >
-                  {{ enums.brand_ctgry[item.brand_ctgry] }}
-                </v-chip>
-                <p class="text-white">
-                  {{ item.brand_kor }}
-                </p>
+      <template v-if="status === 'success'">
+        <div class="board">
+          <div class="board_content">
+            <!-- 회사뉴스 -->
+            <template v-if="post_type.value === 'NEWS'">
+              <div class="board_cards grid-cols-4">
+                <CardNews
+                  v-for="(item, i) in board?.result"
+                  :key="i"
+                  :item="item"
+                  :loading="true"
+                />
               </div>
-            </v-card>
-          </div>
-        </div>
-        <div class="board_list" v-else>
-          <!-- REPORT -->
-          <BoardItemDocument v-if="tab === 'REPORT'" :list="board?.result" />
-        </div>
+            </template>
 
-        <Paging
-          v-if="tab === 'NEWS' || tab === 'REPORT'"
-          :paging="filter"
-          :totalRows="total_cnt"
-          @changePage="changePage"
-        />
-      </div>
+            <!-- 보고서 -->
+            <template v-else-if="post_type.value === 'REPORT'">
+              <BoardItemDocument
+                v-if="post_type.value === 'REPORT'"
+                :list="board?.result"
+              />
+            </template>
+
+            <!-- 브랜드 -->
+            <template v-else-if="post_type.value === 'BRAND'">
+              <div class="card--brand grid-cols-5">
+                <v-card v-for="(item, i) in board?.result" :key="i">
+                  <NuxtImg
+                    :src="(config.CDN_HOST, item.image_url)"
+                    class="align-end"
+                    height="82"
+                    cover
+                  />
+                  <div class="brand_info">
+                    <v-chip
+                      size="small"
+                      color="sub"
+                      variant="flat"
+                      class="mr-1"
+                      density="comfortable"
+                    >
+                      {{ enums.brand_ctgry[item.brand_ctgry] }}
+                    </v-chip>
+                    <p class="text-white">
+                      {{ item.brand_kor }}
+                    </p>
+                  </div>
+                </v-card>
+              </div>
+            </template>
+          </div>
+
+          <Paging
+            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
+            :paging="filter"
+            :totalRows="total_cnt"
+            @changePage="changePage"
+          />
+        </div>
+      </template>
     </div>
   </div>
 </template>

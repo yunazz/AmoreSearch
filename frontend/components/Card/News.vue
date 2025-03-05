@@ -1,6 +1,5 @@
 <script setup>
-const props = defineProps(["item", "list", "listType"]);
-// const emit = defineEmits(["close"]);
+const props = defineProps(["item", "loading"]);
 </script>
 
 <template>
