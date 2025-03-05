@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, Query,HTTPException
+from fastapi import APIRouter, Depends, Query, HTTPException
+from typing import Optional
 from sqlalchemy.orm import Session
 from db.session import get_session 
 from db.connection import get_connection 
@@ -76,7 +77,7 @@ def update_my_password(form_data: MyPasswordUpdate, token: str= Depends(oauth2_s
 @router.get("/favorites")
 def get_favorites(
     favorite_type: str = Query(None),
-    query: str = Query(None), 
+    query: Optional[str] = Query(None),
     current_page: int = Query(1), 
     item_per_page: int = Query(12),
     token: str= Depends(oauth2_scheme),

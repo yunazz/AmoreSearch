@@ -7,12 +7,12 @@ from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter()
-
+            
 @router.get("/internal")
 def get_boards(
     post_type: str = Query(None), 
-    post_ctgry: str = Query(None), 
-    query: str = Query(None), 
+    post_ctgry: Optional[str] = Query(None), 
+    query: Optional[str] = Query(None), 
     current_page: int = Query(1), 
     page_per_group: int = Query(12)
 ):
@@ -39,7 +39,7 @@ def get_boards(
                 if post_type=='NEWS':
                     sql += "SELECT p.*, pi.image_url FROM post p LEFT JOIN post_image pi ON p.post_id = pi.post_id AND pi.image_type = 'THUMBNAIL' WHERE 1=1"
                 elif post_type=='REPORT':
-                    sql += "SELECT p.*, d.original_file_url as file_url FROM post p LEFT JOIN document d ON p.document_id = d.document_id WHERE 1=1"
+                    sql += "SELECT p.*, d.original_file_url  FROM post p LEFT JOIN document d ON p.document_id = d.document_id WHERE 1=1"
                 else:
                     sql = "SELECT * FROM post WHERE 1=1"
                     
@@ -97,8 +97,8 @@ def get_boards(
 @router.get("/external")
 def get_external_boards(
     post_type: str = Query(None), 
-    source_name: str = Query(None), 
-    query: str = Query(None), 
+    source_name: Optional[str] = Query(None), 
+    query: Optional[str] = Query(None), 
     current_page: int = Query(1), 
     item_per_page: int = Query(12)
 ):
