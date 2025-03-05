@@ -64,10 +64,13 @@ def get_products(
             total_count = cursor.fetchone()["COUNT(*)"]
 
             # ORDER BY
-            if scope == "INTERNAL" and brand_ids is not None and brand_ids != "":  
-                sql += f" ORDER BY FIELD(cosmetic.brand_id, {brand_ids}) , category_1, category_2"
+            if scope == "INTERNAL":
+                if brand_ids is not None and brand_ids != "": 
+                    sql += f" ORDER BY FIELD(cosmetic.brand_id, {brand_ids}), product_name "
+                else:  
+                    sql += f" ORDER BY cosmetic.product_name, cosmetic.created_at DESC"
             else : 
-                sql += " ORDER BY created_at DESC, category_1, category_2"
+                sql += " ORDER BY product_name, created_at DESC"
 
             
             # 페이징 적용

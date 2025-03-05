@@ -293,6 +293,8 @@ function openRnb(item) {
   dialog.value = true;
   targetItem.value = item;
 }
+const total_cnt = computed(() => 0);
+// const total_cnt = computed(() => board.value.paging.total_rows);
 </script>
 
 <template>
@@ -330,7 +332,14 @@ function openRnb(item) {
           <ListProduct v-if="tab == '3'" :list="list3" />
         </div>
 
-        <Paging :paging="filter" totalRows="10" @changePage="changePage" />
+        <template v-if="board?.paging && total_cnt != 0">
+          <Paging
+            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
+            :paging="filter"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
+        </template>
       </div>
     </div>
   </div>

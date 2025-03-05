@@ -2,29 +2,16 @@
 definePageMeta({
   middleware: ["auth"],
 });
-
-const member = useMember();
-const tab = ref("MEMBER");
 const tabs = ref([
   { text: "재직직원", value: "MEMBER" },
   { text: "퇴직직원", value: "NO_MEMBER" },
 ]);
+
 const filter = ref({
+  query: "",
   current_page: 1,
-  item_per_page: 20,
+  item_per_page: 16,
 });
-
-// const search_query = computed(() => ({
-//   current_page: filter.value.current_page,
-//   item_per_page: 20,
-// }));
-
-// const { data: listData, refresh: refresh } = await useApi(
-//   "/api/admin/members",
-//   {
-//     query: search_query,
-//   }
-// );
 
 function changePage(current_page) {
   if (current_page === filter.value.current_page) {
@@ -187,7 +174,9 @@ const list1 = ref([
   },
 ]);
 
-const totals = list1.value.length;
+const total_cnt = 20;
+// const total_cnt = computed(() => board.value.paging.total_rows);
+
 const propItem = ref(null);
 
 const dialog = ref(false);
@@ -247,7 +236,7 @@ async function registerMember() {}
       <div class="board">
         <div class="board_util">
           <div class="board_desc">
-            <span class="body--m text-gray-03">total: {{ list1.length }}</span>
+            <span class="body--m text-gray-03">total: {{ total_cnt }}</span>
           </div>
           <small v-if="tab === 'NO_MEMBER'" class="ml-2">
             퇴직직원의 정보는 관리자만 수정 가능합니다.
@@ -281,7 +270,7 @@ async function registerMember() {}
               <tr v-for="(item, index) in list1" :key="item.name">
                 <!-- @click="openDialog('info', item)"
               class="cur-p" -->
-                <td class="text-center">{{ totals - index }}</td>
+                <td class="text-center">{{ total_cnt - index }}</td>
                 <td>
                   <v-icon
                     v-if="item.role == 2"
@@ -316,7 +305,14 @@ async function registerMember() {}
           </v-table>
         </div>
 
-        <Paging :paging="filter" totalRows="198" @changePage="changePage" />
+        <template v-if="board?.paging && total_cnt != 0">
+          <Paging
+            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
+            :paging="filter"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
+        </template>
       </div>
     </div>
     <PopupMember
