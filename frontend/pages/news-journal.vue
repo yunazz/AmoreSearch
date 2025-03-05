@@ -31,7 +31,7 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
-const { data: board, status } = useApi("/post/board", {
+const { data: board, status } = useApi("/post/external", {
   key: "post-board",
   query: filter_query,
 });
@@ -46,6 +46,7 @@ watch(source_name, (newValue) => {
   filter.value.source_name = newValue.value;
   filter.value.current_page = 1;
 });
+
 const total_cnt = computed(() => board.value.paging?.total_rows);
 </script>
 

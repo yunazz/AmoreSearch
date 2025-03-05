@@ -33,7 +33,7 @@ function changePage(current_page) {
   scrollToTop();
 }
 
-const { data: board, status } = useApi("/amorestory/board", {
+const { data: board, status } = useApi("/post/internal", {
   key: "amorestory-board",
   query: filter_query,
 });

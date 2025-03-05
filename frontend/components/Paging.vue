@@ -23,19 +23,18 @@ set_paging_data();
 watch(
   () => props.paging.current_page,
   (newValue) => {
-    console.log(newValue);
     paging.value.current_page = newValue;
     set_paging_data();
   }
 );
 
-// watch(
-//   () => props.paging.page_per_group,
-//   (newValue) => {
-//     paging.value.page_per_group = newValue;
-//     set_paging_data();
-//   }
-// );
+watch(
+  () => props.total_row,
+  (newValue) => {
+    paging.value.total_row = newValue;
+    set_paging_data();
+  }
+);
 
 function groupEndPage() {
   const groupEndPageVal =
