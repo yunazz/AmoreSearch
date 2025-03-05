@@ -5,18 +5,23 @@ const tabs = ref([
 ]);
 const tab = ref("NEWS");
 const post_type = ref({ text: "회사뉴스", value: "NEWS" });
-const post_ctgry = ref({ name: "전체", value: "" });
+const source_name = ref({
+  name: "코스인코리아닷컴",
+  value: "코스인코리아닷컴",
+});
 
 const filter = ref({
+  post_type: "NEWS",
+  source_name: "코스인코리아닷컴",
   current_page: 1,
-  pagePerGroup: 20,
+  item_per_page: 20,
 });
 
 const filter_query = computed(() => ({
-  post_type: post_type.value.value,
-  source: post_ctgry.value.value,
+  post_type: filter.value.post_type,
+  source_name: filter.value.source_name,
   current_page: filter.value.current_page,
-  page_per_group: filter.value.pagePerGroup,
+  item_per_page: filter.value.item_per_page,
 }));
 
 function changePage(current_page) {
@@ -26,17 +31,22 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
-
-function onTabChange(tab) {}
-
-function onCategoryChange(ctgry) {}
-
-const { data: board, status } = useApi("/amorestory/board", {
-  key: "amorestory-board",
+const { data: board, status } = useApi("/post/board", {
+  key: "post-board",
   query: filter_query,
 });
 
-const totalCnt = computed(() => board.value.paging?.total_rows);
+watch(post_type, (newValue) => {
+  filter.value.post_type = newValue.value;
+  source_name.value = externalCategory[newValue.value][0];
+  filter.value.source_name = source_name.value.value;
+  filter.value.current_page = 1;
+});
+watch(source_name, (newValue) => {
+  filter.value.source_name = newValue.value;
+  filter.value.current_page = 1;
+});
+const total_cnt = computed(() => board.value.paging?.total_rows);
 </script>
 
 <template>
@@ -47,7 +57,7 @@ const totalCnt = computed(() => board.value.paging?.total_rows);
         <div class="board_tab depth-1">
           <ClientOnly>
             <v-tabs
-              v-model="tab"
+              v-model="post_type"
               bg-color="transparent"
               align-tabs="center"
               density="comfortable"
@@ -57,28 +67,53 @@ const totalCnt = computed(() => board.value.paging?.total_rows);
                 v-for="tab in tabs"
                 :key="tab.value"
                 :text="tab.text"
-                :value="tab.value"
+                :value="tab"
                 :ripple="false"
               />
             </v-tabs>
           </ClientOnly>
         </div>
+        <div class="board_tab depth-2">
+          <ClientOnly>
+            <v-btn-toggle v-model="source_name" mandatory rounded="0">
+              <v-btn
+                v-for="(board, index) in externalCategory[post_type.value]"
+                :key="index"
+                :value="board"
+                :ripple="false"
+                height="40"
+                min-width="72"
+                selected-class="text-primary"
+              >
+                {{ board.name }}
+              </v-btn>
+            </v-btn-toggle>
+          </ClientOnly>
+        </div>
       </div>
       <div class="board">
         <div class="board_list">
-          <template v-if="tab === 'NEWS'">
-            <BoardItemLinks :list="board.result" />
-          </template>
-          <template v-if="tab === 'JOURNAL'">
-            <BoardItemLinks :list="board.result" />
+          <template v-if="status === 'success'">
+            <template v-if="tab === 'NEWS'">
+              <ListLink
+                v-for="(item, index) in board.result"
+                :key="index"
+                :item="item"
+              />
+            </template>
+            <template v-if="tab === 'JOURNAL'">
+              <BoardItemLinks :list="board.result" />
+            </template>
           </template>
         </div>
 
-        <Paging
-          :paging="filter"
-          :totalRows="totalCnt"
-          @changePage="changePage"
-        />
+        <template v-if="board?.paging">
+          <Paging
+            :paging="filter"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
+        </template>
       </div>
     </div>
   </div>

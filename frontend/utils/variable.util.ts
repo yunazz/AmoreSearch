@@ -84,3 +84,11 @@ export const boardCategory = {
     { name: "기타IR", value: "기타IR" },
   ],
 };
+
+export const externalCategory = {
+  NEWS: [{ name: "코스인코리아닷컴", value: "코스인코리아닷컴" }],
+  JOURNAL: [
+    { name: "코스메틱리포트", value: "코스메틱리포트" },
+    { name: "ALLURE", value: "ALLURE" },
+  ],
+};

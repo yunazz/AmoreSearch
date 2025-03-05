@@ -6,12 +6,12 @@ const tabs = ref([
 ]);
 const filter = ref({
   current_page: 1,
-  pagePerGroup: 20,
+  item_per_page: 20,
 });
 
 // const search_query = computed(() => ({
 //   current_page: filter.value.current_page,
-//   pagePerGroup: 20,
+//   item_per_page: 20,
 // }));
 
 // const { data: listData, refresh: refresh } = await useApi(

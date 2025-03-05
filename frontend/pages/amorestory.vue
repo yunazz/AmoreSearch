@@ -21,7 +21,7 @@ const filter_query = computed(() => ({
   post_type: filter.value.post_type,
   post_ctgry: filter.value.post_ctgry,
   current_page: filter.value.current_page,
-  page_per_group: filter.value.item_per_page,
+  item_per_page: filter.value.item_per_page,
 }));
 
 function changePage(current_page) {
@@ -32,10 +32,6 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
-
-function onTabChange(tab) {}
-
-function onCategoryChange(ctgry) {}
 
 const { data: board, status } = useApi("/amorestory/board", {
   key: "amorestory-board",
@@ -79,7 +75,6 @@ watch(post_ctgry, (newValue) => {
                 :key="tab.value"
                 :text="tab.text"
                 :value="tab"
-                @click="onTabChange(tab)"
                 :ripple="false"
               />
             </v-tabs>
@@ -96,7 +91,6 @@ watch(post_ctgry, (newValue) => {
                 height="40"
                 min-width="72"
                 selected-class="text-primary"
-                @click="onCategoryChange(board)"
               >
                 {{ board.name }}
               </v-btn>
@@ -156,12 +150,14 @@ watch(post_ctgry, (newValue) => {
             </template>
           </div>
 
-          <Paging
-            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
-            :paging="filter"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
+          <template v-if="board?.paging">
+            <Paging
+              v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
+              :paging="filter"
+              :total_row="total_cnt"
+              @changePage="changePage"
+            />
+          </template>
         </div>
       </template>
     </div>

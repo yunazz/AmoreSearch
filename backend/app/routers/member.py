@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, Query,HTTPException
 from sqlalchemy.orm import Session
 from db.session import get_session 
+from db.connection import get_connection 
 from schemas.response import BaseResponse
 from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate, MemberBase, MemberCreate, MemberUpdate, MembersResponse
 from core.security import create_access_token, hash_password, decode_access_token, verify_password
 from model import Member 
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 router = APIRouter()
 
@@ -69,3 +71,93 @@ def update_my_password(form_data: MyPasswordUpdate, token: str= Depends(oauth2_s
 #     members = get_members(db=db, skip=skip, limit=limit)
 #     return members
 
+
+# ✅ 즐겨찾기 조회
+@router.get("/favorites")
+def get_favorites(
+    favorite_type: str = Query(None),
+    query: str = Query(None), 
+    current_page: int = Query(1), 
+    item_per_page: int = Query(12),
+    token: str= Depends(oauth2_scheme),
+):
+    conn = get_connection()
+    try:
+        with conn.cursor() as cursor:
+            member = decode_access_token(token)
+            
+            sql = f"""
+            SELECT * from favorites WHERE member_id = {member.member_id} 
+            JOIN document on document.document_id = favorite.document_id 
+            JOIN document on document.document_id = favorite.document_id 
+            """
+            count_sql = f"SELECT COUNT(*) from favorites WHERE member_id = {member.member_id}"
+            params = []
+
+            if favorite_type:
+                sql += " AND favorite_type = %s"
+                count_sql += " AND favorite_type = %s"
+                params.append(favorite_type)
+
+            if query:
+                sql += " AND (title LIKE %s OR content LIKE %s)"
+                count_sql += " AND (title LIKE %s OR content LIKE %s)"
+                params.extend([f"%{query}%", f"%{query}%"])
+            
+            # 총 개수 조회
+            cursor.execute(count_sql, params) 
+            total_count = cursor.fetchone()["COUNT(*)"]
+
+            # ORDER BY
+            sql += " ORDER BY created_at DESC"
+            
+            # 페이징 적용
+            offset = (current_page - 1) * item_per_page
+            sql += " LIMIT %s OFFSET %s"
+            params.extend([item_per_page, offset])
+
+            # 데이터 조회
+            cursor.execute(sql, params)
+            result = cursor.fetchall()
+
+            return BaseResponse(
+                code=0,
+                msg="조회 성공",
+                result=result,
+                paging={
+                    "total_rows": total_count,
+                    "current_page": current_page,
+                }
+            )
+
+    finally:
+        conn.close()
+
+    return BaseResponse(code=1, msg="조회 실패")
+
+
+# ✅ 즐겨찾기 추가
+@router.post("/favorites")
+def add_favorites(
+    scope: str, 
+    target_id: int, 
+    favorite_type: str,
+    token: str= Depends(oauth2_scheme),
+):
+    conn = get_connection()
+    try:
+        with conn.cursor() as cursor:
+            member = decode_access_token(token)
+            
+            cursor.execute(
+                'INSERT INTO favorites (scope, favorite_type, target_id, member_id) values (%s, %s, %s)', 
+                [scope, favorite_type, target_id, target_id, member.member_id]
+            )
+    finally:
+        conn.close()
+        
+        
+# ✅ 즐겨찾기 삭제
+@router.put("/favorites")
+def remove_favorites():
+    pass

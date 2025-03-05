@@ -12,10 +12,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-        
-@app.get("/")
-def read_root():
-    return {"Hello": "World!"}
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(member.router, prefix="/api/member", tags=["member"])

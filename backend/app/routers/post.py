@@ -2,40 +2,36 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from db.connection import get_connection 
 from schemas.response import BaseResponse
-# from schemas.amorepacific import BrandRequest
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-from model import Brand
-from schemas.amorepacific import BrandResponse
 
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("/board")
 def get_external_boards(
     post_type: str = Query(None), 
-    source: str = Query(None), 
+    source_name: str = Query(None), 
     query: str = Query(None), 
     current_page: int = Query(1), 
-    page_per_group: int = Query(12)
+    item_per_page: int = Query(12)
 ):
     conn = get_connection()
     try:
         with conn.cursor() as cursor:
-            sql += "SELECT * from post_external WHERE 1=1"
+            sql = "SELECT * from post_external LEFT JOIN document ON post_external.document_id = document.document_id WHERE 1=1"
             count_sql = "SELECT COUNT(*) FROM post_external WHERE 1=1"
             params = []
-
+        
             if post_type:
                 sql += " AND post_type = %s"
                 count_sql += " AND post_type = %s"
                 params.append(post_type)
 
-            if source:
-                sql += " AND source = %s"
-                count_sql += " AND source = %s"
-                params.append(source)
+            if source_name:
+                sql += " AND source_name = %s"
+                count_sql += " AND source_name = %s"
+                params.append(source_name)
 
             if query:
                 sql += " AND (title LIKE %s OR content LIKE %s)"
@@ -47,12 +43,12 @@ def get_external_boards(
             total_count = cursor.fetchone()["COUNT(*)"]
 
             # ORDER BY
-            sql += " ORDER BY p.created_at DESC"
+            sql += " ORDER BY published_at DESC"
             
             # 페이징 적용
-            offset = (current_page - 1) * page_per_group
+            offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"
-            params.extend([page_per_group, offset])
+            params.extend([item_per_page, offset])
 
             # 데이터 조회
             cursor.execute(sql, params)
@@ -65,7 +61,6 @@ def get_external_boards(
                 paging={
                     "total_rows": total_count,
                     "current_page": current_page,
-                    "page_per_group": page_per_group,
                 }
             )
 
