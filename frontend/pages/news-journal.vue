@@ -102,7 +102,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
             />
           </template>
         </div>
-        <template v-if="board?.paging">
+        <template v-if="board?.paging && total_cnt != 0">
           <Paging
             :paging="filter"
             :total_row="total_cnt"

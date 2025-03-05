@@ -151,7 +151,7 @@ watch(post_ctgry, (newValue) => {
             </template>
           </div>
 
-          <template v-if="board?.paging">
+          <template v-if="board?.paging && total_cnt != 0">
             <Paging
               v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
               :paging="filter"

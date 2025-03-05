@@ -144,19 +144,12 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
       </div>
       <div class="board">
         <div class="board_content">
-          <div v-if="status === 'pending'" class="progress-circular">
-            <v-progress-circular
-              indeterminate
-              :size="36"
-              :width="5"
-            ></v-progress-circular>
-          </div>
           <template v-if="status === 'success'">
             <ListProduct :list="board?.result" />
           </template>
         </div>
 
-        <template v-if="board?.paging">
+        <template v-if="board?.paging && total_cnt != 0">
           <Paging
             :paging="filter"
             :total_row="total_cnt"
