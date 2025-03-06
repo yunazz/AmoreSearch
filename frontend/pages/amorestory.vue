@@ -25,7 +25,6 @@ const filter_query = computed(() => ({
 }));
 
 function changePage(current_page) {
-  console.log(current_page);
   if (current_page === filter.value.current_page) {
     return;
   }

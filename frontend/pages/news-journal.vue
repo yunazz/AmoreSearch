@@ -89,11 +89,11 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
             </v-btn-toggle>
           </div>
         </div>
-        <div class="board">
+        <div v-if="status === 'success'" class="board">
           <div class="board_list">
             <template v-if="status === 'success'">
               <ListItemLink
-                v-for="(item, index) in board.result"
+                v-for="(item, index) in board?.result"
                 :key="index"
                 :item="item"
               />

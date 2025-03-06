@@ -92,7 +92,7 @@ const changePage = (page, board_type) => {
         <template v-if="status === 'pending'">
           <p class="text-gray-03">조회중입니다. 잠시만 기다려주세요.</p>
         </template>
-        <template v-else-if="status === 'success'">
+        <template v-else>
           <p class="text-gray-03">조회된 결과가 없습니다.</p>
         </template>
       </div>

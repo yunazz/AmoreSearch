@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from typing import Optional
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from db.session import get_session 
 from db.connection import get_connection 
 from schemas.response import BaseResponse
-from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate, MemberBase, MemberCreate, MemberUpdate, MembersResponse
+from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate
 from core.security import create_access_token, hash_password, decode_access_token, verify_password
 from model import Member 
 from fastapi.security import  OAuth2PasswordBearer
@@ -49,69 +50,6 @@ def update_my_password(form_data: MyPasswordUpdate, token: str= Depends(oauth2_s
     db.commit()
     db.refresh(db_member) 
     return BaseResponse(code=0, msg="변경되었습니다.",)
-
-# # 회원 생성
-# @router.post("/", response_model=MembersResponse)
-# def add_member(member: MemberCreate, db: Session = Depends(get_session)):
-#     db_member = add_member(db=db, member=member)
-#     if not db_member:
-#         raise HTTPException(status_code=400, detail="회원 생성 실패")
-#     return db_member
-
-# 모든 회원 조회
-@router.get("/list",)
-def get_members(
-    employment_status: Optional[str]=None,
-    current_page: int = Query(1), 
-    item_per_page: int = Query(12),
-    token: str= Depends(oauth2_scheme),
-):
-    conn = get_connection()
-    try:
-        with conn.cursor() as cursor:
-            member = decode_access_token(token)
-            
-            if member.get('role') < 2 or member.get('department') != 'HR팀':
-                return BaseResponse(
-                    code=0,
-                    msg="권한 없음",
-                )
-            # sql = "SELECT * FROM member WHERE role != 3"
-            # count_sql = "SELECT COUNT(*) FROM member WHERE role != 3"
-            sql = "SELECT * FROM member "
-            count_sql = "SELECT COUNT(*) FROM member "
-            params = []
-            
-            if employment_status:
-                sql += " AND employment_status = %s"
-                count_sql += " AND employment_status = %s"
-                params.append(employment_status)
-                
-            cursor.execute(count_sql, params) 
-            total_count = cursor.fetchone()["COUNT(*)"]
-
-            sql += " ORDER BY created_at DESC"
-            
-            offset = (current_page - 1) * item_per_page
-            sql += " LIMIT %s OFFSET %s"
-            params.extend([item_per_page, offset])
-
-            cursor.execute(sql, params)
-            result = cursor.fetchall()
-
-            return BaseResponse(
-                code=0,
-                msg="조회 성공",
-                result=result,
-                paging={
-                    "total_rows": total_count,
-                    "current_page": current_page,
-                }
-            )
-    finally:
-        conn.close()
-
-    return BaseResponse(code=1, msg="조회 실패")
 
 
 # 즐겨찾기 조회

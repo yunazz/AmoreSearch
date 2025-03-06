@@ -52,35 +52,39 @@ const items1 = [
 <template>
   <div id="AiSearch" class="content">
     <div class="content_inner">
-      <div class="content_center">
-        <h2 class="fw-700 gradient-text mb-6">
-          안녕하세요,
-          <span class="ml-1"> {{ member.name }} {{ member.position }}님 </span>
-          <br />
-          무엇을 도와드릴까요?
-        </h2>
+      <ClientOnly>
+        <div class="content_center">
+          <h2 class="fw-700 gradient-text mb-6">
+            안녕하세요,
+            <span class="ml-1">
+              {{ member.name }} {{ member.position }}님
+            </span>
+            <br />
+            무엇을 도와드릴까요?
+          </h2>
 
-        <div>
-          <SearchInput
-            :texts="[
-              '최근에 출시한 우리회사 제품들을 소개해줘',
-              '선크림에 주요한 성분들에 대해서 알려줘',
-            ]"
-          />
-        </div>
-        <div class="flex justify-center mt-6">
-          <v-chip-group v-model="tag" selected-class="text-primary" mandatory>
-            <v-chip
-              filter
-              v-for="tag in tags"
-              :key="tag"
-              :text="tag"
-              :value="tag"
-              style="font-size: 15px; font-weight: 500; padding: 20px 22px"
+          <div>
+            <SearchInput
+              :texts="[
+                '최근에 출시한 우리회사 제품들을 소개해줘',
+                '선크림에 주요한 성분들에 대해서 알려줘',
+              ]"
             />
-          </v-chip-group>
+          </div>
+          <div class="flex justify-center mt-6">
+            <v-chip-group v-model="tag" selected-class="text-primary" mandatory>
+              <v-chip
+                filter
+                v-for="tag in tags"
+                :key="tag"
+                :text="tag"
+                :value="tag"
+                style="font-size: 15px; font-weight: 500; padding: 20px 22px"
+              />
+            </v-chip-group>
+          </div>
         </div>
-      </div>
+      </ClientOnly>
     </div>
   </div>
 </template>

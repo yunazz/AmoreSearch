@@ -42,9 +42,9 @@ async function loginSuccess(access_token) {
   await navigateTo("/dashboard");
 }
 
-function notify(detail) {
+function notify(msg) {
   snackbar.value.active = true;
-  snackbar.value.message = detail;
+  snackbar.value.message = msg;
 }
 </script>
 

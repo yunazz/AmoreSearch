@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth,member, amorepacific, post, product
+from routers import auth, admin, member, amorepacific, post, product
 
 app = FastAPI()
 
@@ -14,6 +14,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
 app.include_router(member.router, prefix="/api/member", tags=["member"])
 app.include_router(amorepacific.router, prefix="/api/amorepacific", tags=["amorepacific"])
 app.include_router(post.router, prefix="/api/post", tags=["post"])

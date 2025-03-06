@@ -93,12 +93,13 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
         <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-8">
           <v-sheet class="mx-auto">
             <v-slide-group
+              v-if="brands"
               show-arrows
               v-model="selected_brand_id"
               selected-class="active"
             >
               <v-slide-group-item
-                v-for="(brand, i) in brands.result"
+                v-for="(brand, i) in brands?.result"
                 :key="i"
                 :value="brand?.brand_id"
                 v-slot="{ toggle, selectedClass }"
@@ -137,7 +138,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
             </v-btn>
           </v-btn-toggle>
         </div>
-        <div class="board">
+        <div class="board" v-if="status === 'success'">
           <div class="board_content">
             <template v-if="status === 'success'">
               <ListProduct :list="board?.result" />

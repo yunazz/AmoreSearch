@@ -13,15 +13,14 @@ function openRnb(item) {
 
 <template>
   <div class="board_cards product_card grid-cols-4">
-    <ListItemProduct
-      v-for="(item, i) in list"
-      :item="item"
-      :key="i"
-      @showDetail="openRnb"
-    />
-
-    <!-- RNB -->
     <ClientOnly>
+      <ListItemProduct
+        v-for="(item, i) in list"
+        :item="item"
+        :key="i"
+        @showDetail="openRnb"
+      />
+      <!-- RNB -->
       <v-navigation-drawer
         class="rnb"
         v-model="dialog"
