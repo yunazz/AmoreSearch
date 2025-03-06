@@ -2,16 +2,26 @@
 definePageMeta({
   middleware: ["auth"],
 });
+
+const member = useMember();
 const tabs = ref([
-  { text: "재직직원", value: "MEMBER" },
-  { text: "퇴직직원", value: "NO_MEMBER" },
+  { text: "재직직원", value: "" },
+  { text: "퇴직직원", value: "퇴직" },
 ]);
+const employment_status = ref({ text: "재직직원", value: "MEMBER" });
 
 const filter = ref({
+  employment_status: "",
   query: "",
   current_page: 1,
-  item_per_page: 16,
+  item_per_page: 20,
 });
+
+const filter_query = computed(() => ({
+  employment_status: filter.value.employment_status,
+  current_page: filter.value.current_page,
+  item_per_page: filter.value.item_per_page,
+}));
 
 function changePage(current_page) {
   if (current_page === filter.value.current_page) {
@@ -20,162 +30,12 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
+const { data: board, status } = useApi("/member/list", {
+  key: "member-list",
+  query: filter_query,
+});
 
-const list1 = ref([
-  {
-    member_id: 1,
-    role: 2,
-    emp_no: "1032645132",
-    name: "홍길동",
-    company_affiliation: "아모레퍼시픽",
-    department: "HR팀",
-    position: "사원",
-    birth_date: "1995-01-01",
-    phone: "01044701123",
-    hire_date: "2010-01-01",
-    employment_status: "퇴직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 2,
-    role: 1,
-    emp_no: "1032645133",
-    name: "김영희",
-    company_affiliation: "아모레퍼시픽그룹",
-    department: "재무팀",
-    position: "대리",
-    birth_date: "1990-05-12",
-    phone: "01051237894",
-    hire_date: "2012-06-15",
-    employment_status: "퇴직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 3,
-    role: 1,
-    emp_no: "1032645134",
-    name: "박철수",
-    company_affiliation: "설화수",
-    department: "마케팅팀",
-    position: "과장",
-    birth_date: "1987-09-23",
-    phone: "01092345678",
-    hire_date: "2008-09-01",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 4,
-    role: 1,
-    emp_no: "1032645135",
-    name: "이민호",
-    company_affiliation: "에뛰드",
-    department: "영업팀",
-    position: "대리",
-    birth_date: "1992-11-05",
-    phone: "01011055678",
-    hire_date: "2015-03-10",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 5,
-    role: 1,
-    emp_no: "1032645136",
-    name: "정수진",
-    company_affiliation: "아모레퍼시픽",
-    department: "영업팀",
-    position: "사원",
-    birth_date: "1996-04-18",
-    phone: "01098765432",
-    hire_date: "2020-07-01",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 6,
-    role: 1,
-    emp_no: "1032645137",
-    name: "최재혁",
-    company_affiliation: "아모레퍼시픽그룹",
-    department: "IT팀",
-    position: "차장",
-    birth_date: "1985-02-27",
-    phone: "01033445566",
-    hire_date: "2007-12-20",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 7,
-    role: 1,
-    emp_no: "1032645138",
-    name: "김서연",
-    company_affiliation: "이니스프리",
-    department: "마케팅팀",
-    position: "대리",
-    birth_date: "1991-07-09",
-    phone: "01077889900",
-    hire_date: "2013-08-05",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 8,
-    role: 1,
-    emp_no: "1032645139",
-    name: "오지훈",
-    company_affiliation: "아모레퍼시픽",
-    department: "연구원",
-    position: "과장",
-    birth_date: "1988-06-14",
-    phone: "01022334455",
-    hire_date: "2009-11-25",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 9,
-    role: 1,
-    emp_no: "1032645140",
-    name: "한예린",
-    company_affiliation: "에뛰드",
-    department: "영업팀",
-    position: "사원",
-    birth_date: "1997-08-30",
-    phone: "01011223344",
-    hire_date: "2021-05-17",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-  {
-    member_id: 10,
-    role: 1,
-    emp_no: "1032645141",
-    name: "유준석",
-    company_affiliation: "아모레퍼시픽그룹",
-    department: "법무팀",
-    position: "부장",
-    birth_date: "1982-12-03",
-    phone: "01044556677",
-    hire_date: "2005-01-10",
-    employment_status: "재직",
-    resign_date: "",
-    resign_reason: "",
-  },
-]);
-
-const total_cnt = 20;
-// const total_cnt = computed(() => board.value.paging.total_rows);
+const total_cnt = computed(() => board.value.paging.total_rows);
 
 const propItem = ref(null);
 
@@ -206,6 +66,11 @@ async function submitDialog(mode, formData) {
 
 async function editMember() {}
 async function registerMember() {}
+
+watch(employment_status, (newValue) => {
+  filter.value.employment_status = newValue.value;
+  filter.value.current_page = 1;
+});
 </script>
 
 <template>
@@ -216,7 +81,7 @@ async function registerMember() {}
         <div class="board_tab depth-1">
           <ClientOnly>
             <v-tabs
-              v-model="tab"
+              v-model="employment_status"
               bg-color="transparent"
               align-tabs="center"
               density="comfortable"
@@ -226,7 +91,7 @@ async function registerMember() {}
                 v-for="tab in tabs"
                 :key="tab.value"
                 :text="tab.text"
-                :value="tab.value"
+                :value="tab"
                 :ripple="false"
               />
             </v-tabs>
@@ -238,17 +103,18 @@ async function registerMember() {}
           <div class="board_desc">
             <span class="body--m text-gray-03">total: {{ total_cnt }}</span>
           </div>
-          <small v-if="tab === 'NO_MEMBER'" class="ml-2">
+          <small v-if="employment_status.value === 'NO_MEMBER'" class="ml-2">
             퇴직직원의 정보는 관리자만 수정 가능합니다.
           </small>
           <v-btn
-            v-if="tab === 'MEMBER'"
+            v-if="employment_status.value === 'MEMBER'"
             density="comfortable"
             icon="mdi-plus"
             color="black"
             @click="openDialog('register')"
           />
         </div>
+
         <div class="board_list">
           <v-table>
             <thead>
@@ -267,7 +133,7 @@ async function registerMember() {}
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in list1" :key="item.name">
+              <tr v-for="(item, index) in board?.result" :key="item.name">
                 <!-- @click="openDialog('info', item)"
               class="cur-p" -->
                 <td class="text-center">{{ total_cnt - index }}</td>
@@ -305,14 +171,12 @@ async function registerMember() {}
           </v-table>
         </div>
 
-        <template v-if="board?.paging && total_cnt != 0">
-          <Paging
-            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
-            :paging="filter"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
-        </template>
+        <Paging
+          :paging="filter"
+          :status="status"
+          :total_row="total_cnt"
+          @changePage="changePage"
+        />
       </div>
     </div>
     <PopupMember

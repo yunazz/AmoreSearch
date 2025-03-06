@@ -224,7 +224,6 @@ main.main {
   letter-spacing: 1px;
 }
 .board_cards {
-  margin: 1rem auto 2rem;
   display: grid;
   max-width: 1400px;
   min-width: 1000px;
@@ -270,7 +269,7 @@ main.main {
 }
 
 .board_content {
-  min-height: 200px;
+  min-height: 100px;
 }
 
 .board_list {

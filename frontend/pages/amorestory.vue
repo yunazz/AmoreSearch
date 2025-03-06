@@ -103,7 +103,7 @@ watch(post_ctgry, (newValue) => {
           <div class="board_content">
             <!-- 회사뉴스 -->
             <template v-if="post_type.value === 'NEWS'">
-              <div class="board_cards grid-cols-4">
+              <div v-if="board?.result" class="board_cards grid-cols-4">
                 <ListItemNews
                   v-for="(item, i) in board?.result"
                   :key="i"
@@ -151,14 +151,13 @@ watch(post_ctgry, (newValue) => {
             </template>
           </div>
 
-          <template v-if="board?.paging && total_cnt != 0">
-            <Paging
-              v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
-              :paging="filter"
-              :total_row="total_cnt"
-              @changePage="changePage"
-            />
-          </template>
+          <Paging
+            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
+            :paging="filter"
+            :status="status"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
         </div>
       </template>
     </div>

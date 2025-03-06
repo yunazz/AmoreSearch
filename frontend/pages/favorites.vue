@@ -8,10 +8,6 @@ const tabs = ref([
 ]);
 const targetItem = ref(null);
 const dialog = ref(false);
-const filter = ref({
-  current_page: 1,
-  item_per_page: 20,
-});
 
 // const search_query = computed(() => ({
 //   current_page: filter.value.current_page,
@@ -289,6 +285,24 @@ const list4 = ref([
   },
 ]);
 
+const filter = ref({
+  employment_status: "",
+  query: "",
+  current_page: 1,
+  item_per_page: 20,
+});
+
+const filter_query = computed(() => ({
+  employment_status: filter.value.employment_status,
+  current_page: filter.value.current_page,
+  item_per_page: filter.value.item_per_page,
+}));
+
+const { data: board, status } = useApi("/member/list", {
+  key: "member-list",
+  query: filter_query,
+});
+
 function openRnb(item) {
   dialog.value = true;
   targetItem.value = item;
@@ -332,14 +346,12 @@ const total_cnt = computed(() => 0);
           <ListProduct v-if="tab == '3'" :list="list3" />
         </div>
 
-        <template v-if="board?.paging && total_cnt != 0">
-          <Paging
-            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
-            :paging="filter"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
-        </template>
+        <Paging
+          :paging="filter"
+          :status="status"
+          :total_row="total_cnt"
+          @changePage="changePage"
+        />
       </div>
     </div>
   </div>

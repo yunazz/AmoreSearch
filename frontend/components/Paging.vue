@@ -1,6 +1,7 @@
 <script setup>
 const props = defineProps({
   paging: { type: Object, required: true },
+  status: { type: String },
   total_row: { required: true, default: 0 },
   disabled: { type: Boolean, default: false },
   board_type: { type: String, default: "" },
@@ -85,7 +86,20 @@ const changePage = (page, board_type) => {
 </script>
 <template>
   <div class="paging">
-    <!-- <button
+    <template v-if="total_row === 0 || status === 'pending'">
+      <div class="no-result">
+        <v-icon icon="mdi-magnify" color="grey-lighten-1" />
+        <template v-if="status === 'pending'">
+          <p class="text-gray-03">조회중입니다. 잠시만 기다려주세요.</p>
+        </template>
+        <template v-else-if="status === 'success'">
+          <p class="text-gray-03">조회된 결과가 없습니다.</p>
+        </template>
+      </div>
+    </template>
+
+    <template v-else>
+      <!-- <button
       @click="changePage(1)"
       :class="{
         hide: paging.current_page === 1 || paging.current_page <= page_per_group,
@@ -93,36 +107,36 @@ const changePage = (page, board_type) => {
     >
       <v-icon icon="mdi-page-first" />
     </button> -->
-    <button
-      @click="changePage(paging.groupStartPage - page_per_group)"
-      :class="{
-        hide:
-          paging.current_page === 1 || paging.groupStartPage < page_per_group,
-      }"
-    >
-      <v-icon icon="mdi-chevron-left" />
-    </button>
-    <div class="paging_num">
       <button
-        v-for="item in paging.pageList"
-        :key="item"
-        :class="{ active: paging.current_page === item }"
-        @click="changePage(item)"
+        @click="changePage(paging.groupStartPage - page_per_group)"
+        :class="{
+          hide:
+            paging.current_page === 1 || paging.groupStartPage < page_per_group,
+        }"
       >
-        {{ item }}
+        <v-icon icon="mdi-chevron-left" />
       </button>
-    </div>
-    <button
-      :class="{
-        hide:
-          paging.current_page === paging.lastPage ||
-          paging.groupStartPage + 9 >= paging.lastPage,
-      }"
-      @click="changePage(paging.groupEndPage + 1)"
-    >
-      <v-icon icon="mdi-chevron-right" />
-    </button>
-    <!-- <button
+      <div class="paging_num">
+        <button
+          v-for="item in paging.pageList"
+          :key="item"
+          :class="{ active: paging.current_page === item }"
+          @click="changePage(item)"
+        >
+          {{ item }}
+        </button>
+      </div>
+      <button
+        :class="{
+          hide:
+            paging.current_page === paging.lastPage ||
+            paging.groupStartPage + 9 >= paging.lastPage,
+        }"
+        @click="changePage(paging.groupEndPage + 1)"
+      >
+        <v-icon icon="mdi-chevron-right" />
+      </button>
+      <!-- <button
       :class="{
         hide:
           paging.lastPage === paging.current_page ||
@@ -132,6 +146,7 @@ const changePage = (page, board_type) => {
     >
       <v-icon icon="mdi-page-last" />
     </button> -->
+    </template>
   </div>
 </template>
 <style scoped>
@@ -159,5 +174,21 @@ const changePage = (page, board_type) => {
 .paging .hide {
   opacity: 0;
   pointer-events: none;
+}
+
+.no-result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  row-gap: 10px;
+}
+
+.no-result i {
+  font-size: 40px;
+}
+.no-result p {
+  font-size: 0.8125rem;
 }
 </style>

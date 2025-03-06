@@ -36,7 +36,7 @@ const { data: brands } = useApi("/amorepacific/brands", {
 });
 
 const { data: board, status } = useApi("/product/products", {
-  key: "post-board",
+  key: "product-board",
   query: filter_query,
 });
 
@@ -91,7 +91,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
           </ClientOnly>
         </div>
       </div>
-      <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-2">
+      <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-8">
         <ClientOnly>
           <v-sheet class="mx-auto">
             <v-slide-group
@@ -149,13 +149,12 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
           </template>
         </div>
 
-        <template v-if="board?.paging && total_cnt != 0">
-          <Paging
-            :paging="filter"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
-        </template>
+        <Paging
+          :paging="filter"
+          :status="status"
+          :total_row="total_cnt"
+          @changePage="changePage"
+        />
       </div>
     </div>
   </div>
