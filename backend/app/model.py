@@ -21,13 +21,11 @@ class Member(Base):
     department = mapped_column(String(20), nullable=True, comment='부서')
     birth_date = mapped_column(Date, nullable=True, comment='생년월일')
     hire_date = mapped_column(Date, nullable=True, comment='입사일')
-    resign_date = mapped_column(Date, nullable=True, comment='퇴사일')
-    resign_reason = mapped_column(String(100), nullable=True, comment='퇴사 사유')
+    resign_date = mapped_column(Date, nullable=True, comment='퇴직일')
+    resign_reason = mapped_column(String(100), nullable=True, comment='퇴직사유')
     created_at = mapped_column(TIMESTAMP, nullable=False,  server_default=func.current_timestamp(), comment='등록일시')
 
-    __table_args__ = (
-        UniqueConstraint('emp_no', name='emp_no'),
-    )
+ 
     
 class Brand(Base):
     __tablename__ = "brand"

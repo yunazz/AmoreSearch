@@ -69,7 +69,7 @@ function logout() {
           </li>
         </ul>
         <template
-          v-if="member.role > 2 || member.department === 'HR팀'"
+          v-if="member.role > 2 || member.department === 'HR'"
         ></template>
         <small class="text-gray-01">ADMIN</small>
         <ul class="lnb_list">

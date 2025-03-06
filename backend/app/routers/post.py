@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from db.connection import get_connection 
-from schemas.response import BaseResponse
+from schemas.response import BaseResponse, ListResponse
 # from schemas.amorepacific import BrandRequest
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -77,7 +77,7 @@ def get_boards(
                 cursor.execute(sql, params)
                 result = cursor.fetchall()
 
-                return BaseResponse(
+                return ListResponse(
                     code=0,
                     msg="조회 성공",
                     result=result,
@@ -90,7 +90,7 @@ def get_boards(
     finally:
         conn.close()
 
-    return BaseResponse(code=1, msg="조회 실패")
+    return ListResponse(code=1, msg="조회 실패")
 
 
 
@@ -140,7 +140,7 @@ def get_external_boards(
             cursor.execute(sql, params)
             result = cursor.fetchall()
 
-            return BaseResponse(
+            return ListResponse(
                 code=0,
                 msg="조회 성공",
                 result=result,

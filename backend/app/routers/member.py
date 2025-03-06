@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from db.session import get_session 
 from db.connection import get_connection 
-from schemas.response import BaseResponse
+from schemas.response import BaseResponse, ListResponse
 from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate
 from core.security import create_access_token, hash_password, decode_access_token, verify_password
 from model import Member 
@@ -49,7 +49,7 @@ def update_my_password(form_data: MyPasswordUpdate, token: str= Depends(oauth2_s
     db_member.password = new_password
     db.commit()
     db.refresh(db_member) 
-    return BaseResponse(code=0, msg="변경되었습니다.",)
+    return BaseResponse(code=0, msg="변경되었습니다.")
 
 
 # 즐겨찾기 조회

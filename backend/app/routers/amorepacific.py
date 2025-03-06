@@ -1,7 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, Query
 from db.connection import get_connection 
-from schemas.response import BaseResponse
+from schemas.response import BaseResponse, ListResponse
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -18,7 +18,7 @@ def get_boards():
             cursor.execute(sql, params)
             brands = cursor.fetchall()
 
-            return BaseResponse(code=0, msg="조회 성공", result=brands)
+            return ListResponse(code=0, msg="조회 성공", result=brands)
 
     finally:
         conn.close()       

@@ -47,7 +47,7 @@ export function scrollToTop() {
 // 	return false;
 // };
 
-export const is_empty = (value: any): boolean => {
+export const isEmpty = (value: any): boolean => {
   // falsy값 chk : false, 0, "", null, undefined, NaN
   if (!value) return true;
   // 빈 배열 chk

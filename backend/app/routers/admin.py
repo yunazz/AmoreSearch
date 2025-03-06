@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from db.session import get_session 
 from db.connection import get_connection 
-from schemas.response import BaseResponse
+from schemas.response import BaseResponse, ListResponse
 from schemas.admin import MemberBase, MemberCreate, MemberUpdate, MembersResponse
 from core.security import create_access_token, hash_password, decode_access_token, verify_password
 from model import Member 
@@ -22,8 +22,8 @@ def add_member(
     db: Session = Depends(get_session)
     ):
     user = decode_access_token(token)
-    if user.get("role") < 2 or user.get('department') != 'HR팀':
-        return BaseResponse(code=0, msg="권한 없음")
+    if user.get("role") < 2 or user.get('department') != 'HR':
+        return BaseResponse(code=1, msg="권한 없음")
     try:
         new_member = Member(
             name=member.name,
@@ -43,67 +43,53 @@ def add_member(
         db.commit()
         db.refresh(new_member)
 
-        return {
-            "code": 0,
-            "msg": "등록되었습니다.",
-        }
-       
+        return BaseResponse(code=0, msg="등록되었습니다.")
+          
     except IntegrityError as e:
         db.rollback()  
-        return BaseResponse(code=0, msg="이미 등록된 사원번호입니다.")
+        return BaseResponse(code=1, msg="이미 등록된 사원번호입니다.")
 
     except Exception as e:
         db.rollback() 
-        return BaseResponse(code=0, msg="서버 오류 발생")
+        return BaseResponse(code=9, msg="서버 오류 발생")
 
 
 # 회원 수정
 @router.put("/member")
-def add_member(
-    member: MemberCreate, 
-    token: str= Depends(oauth2_scheme),
+def update_member(
+    member: MemberUpdate,
+    token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_session)
-    ):
+):
     user = decode_access_token(token)
-    if user.get("role") < 2 or user.get('department') != 'HR팀':
-        return BaseResponse(code=0, msg="권한 없음")
+    if user.get("role") < 2 or user.get('department') != 'HR':
+        return BaseResponse(code=1, msg="권한 없음")
+
+    db_member = db.query(Member).filter(Member.member_id == member.member_id).first()
+    if not db_member:
+        return BaseResponse(code=1, msg="회원 정보가 없습니다.")
+
+    update_data = member.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_member, key, value)
+    
     try:
-        new_member = Member(
-            name=member.name,
-            emp_no=member.emp_no,
-            phone=member.phone,
-            company_affiliation=member.company_affiliation,
-            position=member.position,
-            employment_status=member.employment_status,
-            department=member.department,
-            role=member.role,
-            birth_date=member.birth_date,
-            hire_date=member.hire_date,
-            password= hash_password(member.password)
-        )
-
-        db.add(new_member)
         db.commit()
-        db.refresh(new_member)
-
-        return {
-            "code": 0,
-            "msg": "등록되었습니다.",
-        }
-       
-    except IntegrityError as e:
-        db.rollback()  
-        return BaseResponse(code=0, msg="이미 등록된 사원번호입니다.")
+        db.refresh(db_member)
+        return BaseResponse(code=0, msg="수정되었습니다.")
+    
+    except IntegrityError:
+        db.rollback()
+        return BaseResponse(code=9, msg="서버 오류 발생")
 
     except Exception as e:
-        db.rollback() 
-        return BaseResponse(code=0, msg="서버 오류 발생")
-           
+        db.rollback()
+        return BaseResponse(code=9, msg="서버 오류 발생")
 
 # 모든 회원 조회
 @router.get("/members",)
 def get_members(
-    employment_status: Optional[str]=None,
+    employment_status: str,
     current_page: int = Query(1), 
     item_per_page: int = Query(12),
     token: str= Depends(oauth2_scheme),
@@ -113,7 +99,7 @@ def get_members(
         with conn.cursor() as cursor:
             member = decode_access_token(token)
             
-            if member.get('role') < 2 or member.get('department') != 'HR팀':
+            if member.get('role') < 2 or member.get('department') != 'HR':
                 return BaseResponse(
                     code=0,
                     msg="권한 없음",
@@ -122,8 +108,11 @@ def get_members(
             count_sql = "SELECT COUNT(*) FROM member WHERE role != 3"
             params = []
             
-            if employment_status:
-                sql += " AND employment_status = %s"
+            if employment_status == '':
+                sql += " AND employment_status != '퇴직'"
+                count_sql += " AND employment_status != '퇴직'"
+            else:
+                sql += " AND employment_status =  %s"
                 count_sql += " AND employment_status = %s"
                 params.append(employment_status)
                 
@@ -132,6 +121,7 @@ def get_members(
 
             sql += " ORDER BY created_at DESC"
             
+            print(sql)
             offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"
             params.extend([item_per_page, offset])
@@ -139,7 +129,7 @@ def get_members(
             cursor.execute(sql, params)
             result = cursor.fetchall()
 
-            return BaseResponse(
+            return ListResponse(
                 code=0,
                 msg="조회 성공",
                 result=result,

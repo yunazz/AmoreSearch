@@ -65,12 +65,10 @@ function closeDialog() {
 async function successDialog(mode) {
   if (mode === "register") {
     filter.value.current_page = 1;
-    refresh();
-    closeDialog();
   } else {
-    refresh();
-    closeDialog();
   }
+  refresh();
+  closeDialog();
 }
 watch(employment_status, (newValue) => {
   filter.value.employment_status = newValue.value;
@@ -136,7 +134,7 @@ watch(employment_status, (newValue) => {
                   <th class="text-center" style="width: 70px">수정</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody v-if="status != 'pending'">
                 <tr v-for="(item, index) in board?.result" :key="item.name">
                   <!-- @click="openDialog('info', item)"
               class="cur-p" -->

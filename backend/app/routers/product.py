@@ -1,7 +1,7 @@
 from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from db.connection import get_connection 
-from schemas.response import BaseResponse
+from schemas.response import BaseResponse, ListResponse
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -82,7 +82,7 @@ def get_products(
             cursor.execute(sql, params)
             result = cursor.fetchall()
 
-            return BaseResponse(
+            return ListResponse(
                 code=0,
                 msg="조회 성공",
                 result=result,

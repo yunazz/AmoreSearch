@@ -18,10 +18,9 @@ class MemberBase(BaseModel):
 class MemberUpdate(BaseModel):
     member_id: int
     name: Optional[str] = None
-    emp_no: Optional[str] = None
-    name: Optional[str] = None
     phone: Optional[str] = None
     company_affiliation: Optional[str] = None
+    department: Optional[str] = None
     position: Optional[str] = None
     employment_status: Optional[str] = None
     role: Optional[int] = None
@@ -29,11 +28,11 @@ class MemberUpdate(BaseModel):
     hire_date: Optional[date] = None
     resign_date: Optional[date] = None
     resign_reason: Optional[str] = None
+    password: Optional[str] = None
 
-class MemberCreate(MemberBase):
+class MemberCreate(BaseModel):
     name: str
     emp_no: str
-    name: str
     phone: str
     company_affiliation: str
     department: str

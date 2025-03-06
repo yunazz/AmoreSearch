@@ -6,8 +6,8 @@ definePageMeta({
 
 const snackbar = ref({ active: false, message: "" });
 const form = ref({
-  emp_no: "1111111",
-  password: "1",
+  emp_no: "",
+  password: "",
 });
 
 const visible = ref(false);
