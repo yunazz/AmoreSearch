@@ -1,38 +1,38 @@
 <script setup>
 const member = useMember();
 const props = defineProps({
-  dialog: { type: Boolean },
-  mode: { type: String },
+  is_active: { type: Boolean, required: true },
+  mode: { type: String, default: "register" },
   item: {
     type: Object,
-    default: {
-      role: 1,
-      emp_no: "",
-      name: "",
-      company_affiliation: "",
-      department: "",
-      position: "사원",
-      birth_date: "",
-      phone: "",
-      hire_date: "",
-      employment_status: "재직",
-      resign_date: "",
-      resign_reason: "",
-    },
   },
 });
-const emit = defineEmits(["submit", "close"]);
+
+const emit = defineEmits(["update:is_active", "success", "close", "open"]);
 const modeText = computed(() => {
   if (props.mode === "register") return "등록";
   if (props.mode === "edit") return "수정";
 });
-const isDisabled = computed(
-  () => props.item?.employment_status === "퇴직" && member.role !== 3
-);
-const form = ref({ ...props.item, password: "" });
+const isDisabled = computed(() => props.item?.employment_status === "퇴직");
+
+const form = ref({
+  role: 1,
+  emp_no: "",
+  name: "",
+  company_affiliation: "",
+  department: "",
+  position: "사원",
+  birth_date: "",
+  phone: "",
+  hire_date: "",
+  employment_status: "재직",
+  resign_date: "",
+  resign_reason: "",
+  password: "",
+});
 
 const valid = ref(false);
-// Date picker 관련
+
 const menu_birth = ref(false);
 const menu_hire = ref(false);
 const menu_resign = ref(false);
@@ -55,29 +55,90 @@ function initResignOptions() {
     datepicker_resign = null;
   }
 }
+
+function set_form() {
+  if (props.mode === "edit") {
+    form.value.role = props.item?.role;
+    form.value.emp_no = props.item?.emp_no;
+    form.value.name = props.item?.name;
+    form.value.company_affiliation = props.item?.company_affiliation;
+    form.value.department = props.item?.department;
+    form.value.position = props.item?.position;
+    form.value.birth_date = props.item?.birth_date;
+    form.value.phone = props.item?.phone;
+    form.value.hire_date = props.item?.hire_date;
+    form.value.employment_status = props.item?.employment_status;
+    form.value.resign_date = props.item?.resign_date;
+    form.value.resign_reason = props.item?.resign_reason;
+    form.value.password = "";
+  } else {
+    form.value.role = 1;
+    form.value.emp_no = "";
+    form.value.name = "";
+    form.value.company_affiliation = "";
+    form.value.department = "";
+    form.value.position = "";
+    form.value.birth_date = "";
+    form.value.phone = "";
+    form.value.hire_date = "";
+    form.value.employment_status = "";
+    form.value.resign_date = "";
+    form.value.resign_reason = "";
+    form.value.password = "";
+  }
+}
+
+watch(
+  () => props.is_active, // 🔥 props 값이 변경될 때 감지
+  (newVal) => {
+    if (newVal) set_form();
+  }
+);
+
+const onDialogChange = (val) => {
+  emit("update:is_active", val); // 부모에게 닫힌 상태 전달
+};
 </script>
 
 <template>
-  <v-dialog v-model="$attrs" max-width="560" scrollable>
+  <v-dialog
+    :model-value="is_active"
+    scrollable
+    max-width="560"
+    @update:model-value="onDialogChange"
+    persistent
+  >
     <v-card>
       <v-toolbar align="center" color="black" class="px-7">
         직원 {{ modeText }}
       </v-toolbar>
       <v-card-text>
-        <v-form v-model="valid" class="pt-2">
-          <div class="input_cont flex align-center" v-if="member.role >= 2">
-            <label class="mr-4">권한</label>
+        <v-form v-model="valid" class="pt-1">
+          <div class="input_cont flex align-center" v-if="member?.role >= 2">
+            <label class="mr-4 mb-0">권한</label>
             <v-chip-group
               v-model="form.role"
               mandatory
               selected-class="chip-selected"
+              color="primary"
             >
-              <v-chip color="grey-lighten-2" :value="2" :disabled="isDisabled"
-                >관리자</v-chip
-              >
-              <v-chip color="grey-lighten-2" :value="1" :disabled="isDisabled"
-                >일반</v-chip
-              >
+              <template v-if="form.role === 3">
+                <span color="grey-lighten-2" :value="3"> 시스템관리자 </span>
+              </template>
+              <template v-else>
+                <v-chip
+                  color="grey-lighten-2"
+                  :value="2"
+                  :disabled="isDisabled || form.role === 3"
+                  >관리자</v-chip
+                >
+                <v-chip
+                  color="grey-lighten-2"
+                  :value="1"
+                  :disabled="isDisabled || form.role === 3"
+                  >일반</v-chip
+                >
+              </template>
             </v-chip-group>
           </div>
           <div class="grid-cols-2">
@@ -163,7 +224,7 @@ function initResignOptions() {
                       hide-header
                       show-adjacent-months
                       v-model="datepicker_birth"
-                      @update:modelValue="form.birth_date = formatDate($event)"
+                      @update:is_active="form.birth_date = formatDate($event)"
                     />
                   </v-menu>
                 </v-text-field>
@@ -190,7 +251,7 @@ function initResignOptions() {
                       hide-header
                       show-adjacent-months
                       v-model="datepicker_hire"
-                      @update:modelValue="form.hire_date = formatDate($event)"
+                      @update:is_active="form.hire_date = formatDate($event)"
                     />
                   </v-menu>
                 </v-text-field>
@@ -269,20 +330,20 @@ function initResignOptions() {
                         'YYYY-MM-DD 형식으로 입력해주세요',
                     ]"
                     prepend-inner-icon="mdi-calendar"
-                    :disabled="isDisabled && member.role < 2"
+                    :disabled="isDisabled && member?.role < 2"
                     readonly
                   >
                     <v-menu
                       v-model="menu_resign"
                       :close-on-content-click="false"
                       activator="parent"
-                      :disabled="isDisabled && member.role < 2"
+                      :disabled="isDisabled && member?.role < 2"
                     >
                       <v-date-picker
                         hide-header
                         show-adjacent-months
                         v-model="datepicker_resign"
-                        @update:modelValue="
+                        @update:is_active="
                           form.resign_date = formatDate($event)
                         "
                       />
@@ -299,7 +360,7 @@ function initResignOptions() {
                 rows="5"
                 variant="outlined"
                 auto-grow
-                :disabled="isDisabled && member.role < 2"
+                :disabled="isDisabled && member?.role < 2"
               />
             </div>
           </template>
@@ -315,7 +376,7 @@ function initResignOptions() {
           color="gray-black"
           text
           width="80"
-          @click="close"
+          @click="onDialogChange(false)"
         >
           취소
         </v-btn>

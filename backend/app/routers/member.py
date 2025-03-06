@@ -76,8 +76,10 @@ def get_members(
                     code=0,
                     msg="권한 없음",
                 )
-            sql = "SELECT * FROM member WHERE role != 3"
-            count_sql = "SELECT COUNT(*) FROM member WHERE role != 3"
+            # sql = "SELECT * FROM member WHERE role != 3"
+            # count_sql = "SELECT COUNT(*) FROM member WHERE role != 3"
+            sql = "SELECT * FROM member "
+            count_sql = "SELECT COUNT(*) FROM member "
             params = []
             
             if employment_status:

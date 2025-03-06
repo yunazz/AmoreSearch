@@ -49,7 +49,7 @@ function openDialog(mode, item) {
 }
 
 function closeDialog(mode) {
-  dialog.value = false;
+  // dialog.value = false;
   dialogMode.value = null;
 }
 
@@ -103,11 +103,11 @@ watch(employment_status, (newValue) => {
           <div class="board_desc">
             <span class="body--m text-gray-03">total: {{ total_cnt }}</span>
           </div>
-          <small v-if="employment_status.value === 'NO_MEMBER'" class="ml-2">
+          <small v-if="employment_status.value === '퇴직'" class="ml-2">
             퇴직직원의 정보는 관리자만 수정 가능합니다.
           </small>
           <v-btn
-            v-if="employment_status.value === 'MEMBER'"
+            v-if="employment_status.value === ''"
             density="comfortable"
             icon="mdi-plus"
             color="black"
@@ -160,7 +160,9 @@ watch(employment_status, (newValue) => {
                     color="grey-lighten-2"
                     class="icon--toggle"
                     :class="
-                      tab === 'MEMBER' || member.role >= 2 ? 'active' : ''
+                      employment_status === '' || member.role >= 2
+                        ? 'active'
+                        : ''
                     "
                     @click.stop="openDialog('edit', item)"
                     variant="text"
@@ -180,11 +182,12 @@ watch(employment_status, (newValue) => {
       </div>
     </div>
     <PopupMember
-      v-model="dialog"
       :mode="dialogMode"
+      :is_active="dialog"
       :item="propItem"
+      @update:is_active="dialog = $event"
       @close="closeDialog"
-      @submit="submitDialog"
+      @success="submitDialog"
     />
   </div>
 </template>
