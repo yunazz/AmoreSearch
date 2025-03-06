@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (to.path !== "/") {
       if (!login_token.value) return navigateTo("/");
 
-      const { code, detail, result }: any = await $http(`/auth/me`);
+      const { code, result }: any = await $http(`/auth/me`);
       if (code === 0) {
         member.value = result;
       } else {

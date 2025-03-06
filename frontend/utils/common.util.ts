@@ -1,13 +1,12 @@
-import { defu } from "defu";
-
 export function $http(url: string, options?: any) {
   const config = useRuntimeConfig();
   const login_token = useCookie("login_token");
 
-  const settings = defu(options, {
+  const settings = {
     baseURL: config.public.SERVER_HOST + "/api",
     headers: { Authorization: `Bearer ${login_token.value ?? ""}` },
-  });
+    ...options,
+  };
 
   return $fetch<{ code: number; msg: string; result: any }>(url, settings);
 }

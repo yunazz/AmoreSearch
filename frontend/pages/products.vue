@@ -69,10 +69,10 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
 <template>
   <div id="Products" class="content">
     <div class="content_inner">
-      <div class="page_header">
-        <h2 class="page_title">화장품</h2>
-        <div class="board_tab depth-1">
-          <ClientOnly>
+      <ClientOnly>
+        <div class="page_header">
+          <h2 class="page_title">화장품</h2>
+          <div class="board_tab depth-1">
             <v-tabs
               v-model="scope"
               bg-color="transparent"
@@ -88,11 +88,9 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
                 :ripple="false"
               />
             </v-tabs>
-          </ClientOnly>
+          </div>
         </div>
-      </div>
-      <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-8">
-        <ClientOnly>
+        <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-8">
           <v-sheet class="mx-auto">
             <v-slide-group
               show-arrows
@@ -123,10 +121,8 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
               </v-slide-group-item>
             </v-slide-group>
           </v-sheet>
-        </ClientOnly>
-      </div>
-      <div v-if="filter.scope === 'EXTERNAL'" class="board_tab depth-2">
-        <ClientOnly>
+        </div>
+        <div v-if="filter.scope === 'EXTERNAL'" class="board_tab depth-2">
           <v-btn-toggle v-model="category_1" mandatory rounded="0">
             <v-btn
               v-for="(board, index) in externalCategory.COSMETIC"
@@ -140,22 +136,22 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
               {{ board.name }}
             </v-btn>
           </v-btn-toggle>
-        </ClientOnly>
-      </div>
-      <div class="board">
-        <div class="board_content">
-          <template v-if="status === 'success'">
-            <ListProduct :list="board?.result" />
-          </template>
         </div>
+        <div class="board">
+          <div class="board_content">
+            <template v-if="status === 'success'">
+              <ListProduct :list="board?.result" />
+            </template>
+          </div>
 
-        <Paging
-          :paging="filter"
-          :status="status"
-          :total_row="total_cnt"
-          @changePage="changePage"
-        />
-      </div>
+          <Paging
+            :paging="filter"
+            :status="status"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
+        </div>
+      </ClientOnly>
     </div>
   </div>
 </template>

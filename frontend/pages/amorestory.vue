@@ -59,10 +59,10 @@ watch(post_ctgry, (newValue) => {
 <template>
   <div id="AmoreStory" class="content">
     <div class="content_inner">
-      <div class="page_header">
-        <h2 class="page_title">아모레스토리</h2>
-        <div class="board_tab depth-1">
-          <ClientOnly>
+      <ClientOnly>
+        <div class="page_header">
+          <h2 class="page_title">아모레스토리</h2>
+          <div class="board_tab depth-1">
             <v-tabs
               v-model="post_type"
               bg-color="transparent"
@@ -78,10 +78,8 @@ watch(post_ctgry, (newValue) => {
                 :ripple="false"
               />
             </v-tabs>
-          </ClientOnly>
-        </div>
-        <div class="board_tab depth-2">
-          <ClientOnly>
+          </div>
+          <div class="board_tab depth-2">
             <v-btn-toggle v-model="post_ctgry" mandatory rounded="0">
               <v-btn
                 v-for="(board, index) in boardCategory[post_type.value]"
@@ -95,71 +93,71 @@ watch(post_ctgry, (newValue) => {
                 {{ board.name }}
               </v-btn>
             </v-btn-toggle>
-          </ClientOnly>
-        </div>
-      </div>
-      <template v-if="status === 'success'">
-        <div class="board">
-          <div class="board_content">
-            <!-- 회사뉴스 -->
-            <template v-if="post_type.value === 'NEWS'">
-              <div v-if="board?.result" class="board_cards grid-cols-4">
-                <ListItemNews
-                  v-for="(item, i) in board?.result"
-                  :key="i"
-                  :item="item"
-                  :loading="true"
-                />
-              </div>
-            </template>
-
-            <!-- 보고서 -->
-            <template v-else-if="post_type.value === 'REPORT'">
-              <ListItemLink
-                v-for="(item, index) in board?.result"
-                :key="index"
-                :item="item"
-              />
-            </template>
-
-            <!-- 브랜드 -->
-            <template v-else-if="post_type.value === 'BRAND'">
-              <div class="card--brand grid-cols-5">
-                <v-card v-for="(item, i) in board?.result" :key="i">
-                  <NuxtImg
-                    :src="(config.CDN_HOST, item.image_url)"
-                    class="align-end"
-                    height="82"
-                    cover
-                  />
-                  <div class="brand_info">
-                    <v-chip
-                      size="small"
-                      color="sub"
-                      variant="flat"
-                      class="mr-1"
-                      density="comfortable"
-                    >
-                      {{ enums.brand_ctgry[item.brand_ctgry] }}
-                    </v-chip>
-                    <p class="text-white">
-                      {{ item.brand_kor }}
-                    </p>
-                  </div>
-                </v-card>
-              </div>
-            </template>
           </div>
-
-          <Paging
-            v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
-            :paging="filter"
-            :status="status"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
         </div>
-      </template>
+        <template v-if="status === 'success'">
+          <div class="board">
+            <div class="board_content">
+              <!-- 회사뉴스 -->
+              <template v-if="post_type.value === 'NEWS'">
+                <div v-if="board?.result" class="board_cards grid-cols-4">
+                  <ListItemNews
+                    v-for="(item, i) in board?.result"
+                    :key="i"
+                    :item="item"
+                    :loading="true"
+                  />
+                </div>
+              </template>
+
+              <!-- 보고서 -->
+              <template v-else-if="post_type.value === 'REPORT'">
+                <ListItemLink
+                  v-for="(item, index) in board?.result"
+                  :key="index"
+                  :item="item"
+                />
+              </template>
+
+              <!-- 브랜드 -->
+              <template v-else-if="post_type.value === 'BRAND'">
+                <div class="card--brand grid-cols-5">
+                  <v-card v-for="(item, i) in board?.result" :key="i">
+                    <NuxtImg
+                      :src="(config.CDN_HOST, item.image_url)"
+                      class="align-end"
+                      height="82"
+                      cover
+                    />
+                    <div class="brand_info">
+                      <v-chip
+                        size="small"
+                        color="sub"
+                        variant="flat"
+                        class="mr-1"
+                        density="comfortable"
+                      >
+                        {{ enums.brand_ctgry[item.brand_ctgry] }}
+                      </v-chip>
+                      <p class="text-white">
+                        {{ item.brand_kor }}
+                      </p>
+                    </div>
+                  </v-card>
+                </div>
+              </template>
+            </div>
+
+            <Paging
+              v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
+              :paging="filter"
+              :status="status"
+              :total_row="total_cnt"
+              @changePage="changePage"
+            />
+          </div>
+        </template>
+      </ClientOnly>
     </div>
   </div>
 </template>

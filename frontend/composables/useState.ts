@@ -17,7 +17,7 @@ export function useLoginHandler() {
       refreshCookie("login_token");
 
       const response: any = await $http("/auth/me", {
-        headers: { Authorization: `Bearer ${login_token.value}` },
+        headers: { Authorization: `Bearer ${str_login_token}` },
       });
       if (response.detail === "성공") {
         member.value = response.result;

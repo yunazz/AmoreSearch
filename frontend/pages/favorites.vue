@@ -314,10 +314,10 @@ const total_cnt = computed(() => 0);
 <template>
   <div id="Favorites" class="content">
     <div class="content_inner">
-      <div class="page_header">
-        <h2 class="page_title">즐겨찾기</h2>
-        <div class="board_tab depth-1">
-          <ClientOnly>
+      <ClientOnly>
+        <div class="page_header">
+          <h2 class="page_title">즐겨찾기</h2>
+          <div class="board_tab depth-1">
             <v-tabs
               v-model="tab"
               bg-color="transparent"
@@ -333,26 +333,26 @@ const total_cnt = computed(() => 0);
                 :ripple="false"
               />
             </v-tabs>
-          </ClientOnly>
+          </div>
         </div>
-      </div>
-      <div class="board">
-        <div v-if="tab == '1' || tab == '4'" class="board_list">
-          <!-- <BoardItemLinks v-if="tab == '1'" :list="list1" /> -->
-          <!-- <BoardItemDocument v-if="tab == '4'" :list="list4" /> -->
-        </div>
-        <div v-else class="board_content">
-          <!-- <BoardItemCardNews v-if="tab == '2'" :list="list2" /> -->
-          <ListProduct v-if="tab == '3'" :list="list3" />
-        </div>
+        <div class="board">
+          <div v-if="tab == '1' || tab == '4'" class="board_list">
+            <!-- <BoardItemLinks v-if="tab == '1'" :list="list1" /> -->
+            <!-- <BoardItemDocument v-if="tab == '4'" :list="list4" /> -->
+          </div>
+          <div v-else class="board_content">
+            <!-- <BoardItemCardNews v-if="tab == '2'" :list="list2" /> -->
+            <ListProduct v-if="tab == '3'" :list="list3" />
+          </div>
 
-        <Paging
-          :paging="filter"
-          :status="status"
-          :total_row="total_cnt"
-          @changePage="changePage"
-        />
-      </div>
+          <Paging
+            :paging="filter"
+            :status="status"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
+        </div>
+      </ClientOnly>
     </div>
   </div>
 </template>
