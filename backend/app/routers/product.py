@@ -59,11 +59,9 @@ def get_products(
                 count_sql += " AND (title LIKE %s OR content LIKE %s)"
                 params.extend([f"%{query}%", f"%{query}%"])
             
-            # 총 개수 조회
             cursor.execute(count_sql, params) 
             total_count = cursor.fetchone()["COUNT(*)"]
 
-            # ORDER BY
             if scope == "INTERNAL":
                 if brand_ids is not None and brand_ids != "": 
                     sql += f" ORDER BY FIELD(cosmetic.brand_id, {brand_ids}), product_name "
@@ -73,12 +71,10 @@ def get_products(
                 sql += " ORDER BY product_name, created_at DESC"
 
             
-            # 페이징 적용
             offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"
             params.extend([item_per_page, offset])
 
-            # 데이터 조회
             cursor.execute(sql, params)
             result = cursor.fetchall()
 

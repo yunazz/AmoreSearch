@@ -61,42 +61,95 @@ def get_favorites(
     item_per_page: int = Query(12),
     token: str= Depends(oauth2_scheme),
 ):
-    conn = get_connection()
+    member = decode_access_token(token)
+    
     try:
+        conn = get_connection() 
         with conn.cursor() as cursor:
-            member = decode_access_token(token)
-            
-            sql = f"""
-            SELECT * from favorites WHERE member_id = {member.member_id} 
-            JOIN document on document.document_id = favorite.document_id 
-            JOIN document on document.document_id = favorite.document_id 
-            """
-            count_sql = f"SELECT COUNT(*) from favorites WHERE member_id = {member.member_id}"
+            sql = ""
+            count_sql = "SELECT COUNT(*) from favorites"
             params = []
 
-            if favorite_type:
-                sql += " AND favorite_type = %s"
-                count_sql += " AND favorite_type = %s"
-                params.append(favorite_type)
+            # favorite_type : 외부뉴스/저널 
+            if favorite_type =='EXTERNAL_POST':
+                sql +=  """
+                SELECT * FROM favorites
+                    JOIN post_external ON favorites.target_id = post_external.post_external_id
+                    JOIN 
+                        (SELECT post_id, image_url from post_image WHERE scope='EXTERNAL' AND image_type='THUMBNAIL') post_image 
+                    ON post_external.post_external_id = post_image.post_id
+                WHERE favorites.scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL')
+                """
+                count_sql += " WHERE scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL') "
+                
+            # favorite_type : 회사뉴스
+            elif favorite_type =='INTERNAL_POST':
+                sql +=  """
+                SELECT * FROM favorites
+                    JOIN post ON target_id = post_id
+                    JOIN 
+                        (SELECT post_id, image_url from post_image WHERE scope='EXTERNAL' AND image_type='THUMBNAIL') post_image 
+                    ON post.post_id = post_image.post_id
+                WHERE favorites.scope='INTERNAL' AND favorite_type = 'NEWS'
+                """
+                count_sql += " WHERE scope='INTERNAL' AND favorite_type = 'NEWS'"
+                
+            # favorite_type : 화장품
+            elif favorite_type =='COSMETIC':
+                sql +=  """
+                SELECT *,
+                    CASE
+                        WHEN favorites.scope = 'EXTERNAL' THEN cosmetic_external.image_url
+                        WHEN favorites.scope = 'INTERNAL' THEN cosmetic.image_url
+                        END AS image_url
+                FROM favorites
+                        LEFT JOIN cosmetic_external ON favorites.scope = 'EXTERNAL' AND favorites.favorite_type = 'COSMETIC' AND favorites.target_id = cosmetic_external.cosmetic_id
+                        LEFT JOIN cosmetic ON favorites.scope = 'INTERNAL' AND favorites.favorite_type = 'COSMETIC' AND favorites.target_id = cosmetic.cosmetic_id
+                WHERE favorite_type = 'COSMETIC'
+                """
+                count_sql += " WHERE favorite_type = 'COSMETIC'"
+
+            # favorite_type : 사내문서
+            elif favorite_type =='INTERNAL_DOCS':
+                sql +=  """
+                SELECT * FROM favorites
+                    JOIN post ON target_id = post_id
+                    JOIN 
+                        (SELECT * from document WHERE scope='EXTERNAL' ) document 
+                    ON post.document_id = document.document_id
+                WHERE favorites.scope='INTERNAL' AND favorite_type != 'NEWS'
+                """
+                count_sql += " WHERE favorites.scope='INTERNAL' AND favorite_type != 'NEWS'"
+           
+            # favorite_type : 텍스트
+            elif favorite_type =='TEXT':
+                sql += " WHERE favorite_type = 'TEXT'"
+                count_sql += " WHERE favorite_type = 'TEXT'"
+           
 
             if query:
                 sql += " AND (title LIKE %s OR content LIKE %s)"
                 count_sql += " AND (title LIKE %s OR content LIKE %s)"
                 params.extend([f"%{query}%", f"%{query}%"])
+        
+            sql += " AND member_id = %s"
+            count_sql += " AND member_id = %s"
+            params.append(member.get('member_id'))
             
             cursor.execute(count_sql, params) 
             total_count = cursor.fetchone()["COUNT(*)"]
 
-            sql += " ORDER BY created_at DESC"
+            sql += " ORDER BY favorites.created_at DESC"
+
             
             offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"
             params.extend([item_per_page, offset])
-
+            print(sql)
             cursor.execute(sql, params)
             result = cursor.fetchall()
 
-            return BaseResponse(
+            return ListResponse(
                 code=0,
                 msg="조회 성공",
                 result=result,
@@ -116,9 +169,33 @@ def get_favorites(
 @router.post("/favorites")
 def add_favorites(
     scope: str, 
-    target_id: int, 
     favorite_type: str,
+    target_id: int, 
     token: str= Depends(oauth2_scheme),
+):
+    conn = get_connection()
+    try:
+        with conn.cursor() as cursor:
+            member = decode_access_token(token)
+            print(member)
+            
+            cursor.execute(
+                'INSERT INTO favorites (scope, favorite_type, target_id, member_id) values (%s, %s, %s, %s)', 
+                [scope, favorite_type, target_id, target_id, member.member_id]
+            )
+            conn.commit()
+            
+            return BaseResponse(code=0, msg="즐겨찾기가 되었습니다." if cursor.rowcount > 0 else "이미 존재하는 즐겨찾기 입니다")
+    finally:
+        conn.close()
+        
+        
+# 즐겨찾기 삭제
+@router.delete("/favorites")
+def remove_favorites(scope: str, 
+    favorite_type: str,
+    target_id: int, 
+    token: str= Depends(oauth2_scheme)
 ):
     conn = get_connection()
     try:
@@ -126,14 +203,11 @@ def add_favorites(
             member = decode_access_token(token)
             
             cursor.execute(
-                'INSERT INTO favorites (scope, favorite_type, target_id, member_id) values (%s, %s, %s)', 
+                'DELETE FROM favorites where scope = %s AND favorite_type = %s AND target_id = %s AND member_id = %s', 
                 [scope, favorite_type, target_id, target_id, member.member_id]
             )
+            conn.commit()
+            
+            return BaseResponse(code=0, msg="즐겨찾기가 취소되었습니다.")
     finally:
         conn.close()
-        
-        
-# 즐겨찾기 삭제
-@router.put("/favorites")
-def remove_favorites():
-    pass

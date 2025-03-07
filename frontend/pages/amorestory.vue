@@ -2,7 +2,7 @@
 const config = useRuntimeConfig().public;
 const tabs = [
   { text: "회사뉴스", value: "NEWS" },
-  { text: "IR 및 기타 보고서", value: "REPORT" },
+  { text: "사내문서", value: "REPORT" },
   { text: "브랜드", value: "BRAND" },
   // { text: "사내문서", value: "DOCUMENT" },
 ];

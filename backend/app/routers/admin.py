@@ -121,7 +121,6 @@ def get_members(
 
             sql += " ORDER BY created_at DESC"
             
-            print(sql)
             offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"
             params.extend([item_per_page, offset])
