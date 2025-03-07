@@ -5,6 +5,7 @@ const tabs = ref([
   { text: "회사뉴스", value: "INTERNAL_NEWS" },
   { text: "사내문서", value: "INTERNAL_DOCS" },
 ]);
+const snackbar = ref({ active: false, message: "" });
 const favorite_type = ref({ text: "뉴스/저널", value: "NEWS_JOURNAL" });
 
 const dialog = ref(false);
@@ -31,22 +32,7 @@ const {
   key: "favorites-board",
   query: filter_query,
 });
-
-async function removeFavorites(item) {
-  const body = {
-    favorite_type: item.favorite_type,
-    target_id: item.target_id,
-    source: item.source,
-  };
-  try {
-    const { code, msg } = await $http("/member/favorites", {
-      method: "DELETE",
-      body,
-    });
-    console.log(code);
-    console.log(msg);
-  } catch (e) {}
-}
+const total_cnt = computed(() => board.value.paging.total_rows);
 
 function openRnb(item) {
   dialog.value = true;
@@ -60,10 +46,13 @@ function changePage(current_page) {
   filter.value.current_page = current_page;
   scrollToTop();
 }
-const total_cnt = computed(() => board.value.paging.total_rows);
+
+function notify(msg) {
+  snackbar.value.active = true;
+  snackbar.value.message = msg;
+}
 
 watch(favorite_type, (newValue) => {
-  console.log(newValue);
   filter.value.favorite_type = newValue.value;
   changePage(1);
 });
@@ -95,47 +84,61 @@ watch(favorite_type, (newValue) => {
         </div>
         <div class="board">
           <div class="board_content">
-            <div v-if="board?.result" class="board_cards grid-cols-4">
-              <template v-if="filter.favorite_type == 'EXTERNAL_POST'">
-                <ListItemLink
-                  v-for="(item, index) in board?.result"
-                  :key="index"
-                />
-              </template>
+            <template v-if="filter.favorite_type == 'EXTERNAL_POST'">
+              <ListItemLink
+                v-for="item in board?.result"
+                :key="item?.target_id"
+                :item="item"
+                :is_favorite="true"
+                scope="EXTERNAL"
+                @notify="notify"
+                @success="refresh"
+              />
+            </template>
 
-              <template v-else-if="filter.favorite_type == 'COSMETIC'">
-                <ListProduct :list="board?.result" />
-              </template>
+            <template v-else-if="filter.favorite_type == 'COSMETIC'">
+              <ListProduct :list="board?.result" />
+            </template>
 
-              <template v-else-if="filter.favorite_type == 'INTERNAL_NEWS'">
+            <template v-else-if="filter.favorite_type == 'INTERNAL_NEWS'">
+              <div v-if="board?.result" class="board_cards grid-cols-4">
                 <ListItemNews
-                  v-for="(item, index) in board?.result"
-                  :key="index"
+                  v-for="item in board?.result"
+                  :key="item?.target_id"
                   :item="item"
                   :is_favorite="true"
                   scope="INTERNAL"
+                  @notify="notify"
                   @success="refresh"
                 />
-              </template>
+              </div>
+            </template>
 
-              <template v-else-if="filter.favorite_type == 'INTERNAL_DOCS'">
-                <ListItemLink
-                  v-for="(item, index) in board?.result"
-                  :key="index"
-                />
-              </template>
-            </div>
-
-            <Paging
-              no-content-text="등록된 즐겨찾기가 없습니다."
-              no-content-icon="mdi-star-off"
-              :paging="filter"
-              :status="status"
-              :total_row="total_cnt"
-              @changePage="changePage"
-            />
+            <template v-else-if="filter.favorite_type == 'INTERNAL_DOCS'">
+              <ListItemLink
+                v-for="(item, index) in board?.result"
+                :key="index"
+                :is_favorite="true"
+                :item="item"
+                scope="INTERNAL"
+                @notify="notify"
+                @success="refresh"
+              />
+            </template>
           </div>
+
+          <Paging
+            no-content-text="등록된 즐겨찾기가 없습니다."
+            no-content-icon="mdi-star-off"
+            :paging="filter"
+            :status="status"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
         </div>
+        <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
+          {{ snackbar.message }}
+        </v-snackbar>
       </ClientOnly>
     </div>
   </div>

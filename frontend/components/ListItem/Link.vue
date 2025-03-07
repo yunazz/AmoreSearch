@@ -1,14 +1,39 @@
 <script setup>
-const props = defineProps(["item"]);
-// const emit = defineEmits(["close"]);
+const props = defineProps(["item", "scope", "is_favorite"]);
+const emit = defineEmits(["success", "notify"]);
+
+const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
+
 function linkFnc(url) {
   window.open(url);
 }
 function downloadFnc(item) {
   window.open(item.original_file_url);
 }
-function addFavorites(item) {
-  console.log(item);
+
+async function toggleFavorites(item) {
+  const body = {
+    favorite_type: item.post_type,
+    target_id: item.post_id || item.post_external_id,
+    scope: props.scope,
+  };
+
+  let method = "";
+  if (is_favorite.value) method = "DELETE";
+  if (!is_favorite.value) method = "POST";
+
+  try {
+    const { code, msg } = await $http("/member/favorites", {
+      method,
+      body,
+    });
+
+    emit("notify", msg);
+    emit("success");
+    if (code == 0) is_favorite.value = !is_favorite.value;
+  } catch (e) {
+    emit("notify", "서버 오류 발생");
+  }
 }
 </script>
 
@@ -30,7 +55,7 @@ function addFavorites(item) {
       <div>
         <template v-if="item?.original_file_url">
           <v-btn
-            color="grey-lighten-2"
+            color="sub"
             icon="mdi-folder"
             variant="text"
             @click="downloadFnc(item)"
@@ -38,7 +63,7 @@ function addFavorites(item) {
         </template>
         <template v-else>
           <v-btn
-            color="grey-lighten-1"
+            color="sub"
             icon="mdi-link"
             variant="text"
             @click="linkFnc(item.source_url)"
@@ -47,9 +72,10 @@ function addFavorites(item) {
 
         <v-btn
           class="icon--toggle"
+          :class="{ active: is_favorite }"
           icon="mdi-star"
           variant="text"
-          @click="addFavorites(item)"
+          @click="toggleFavorites(item)"
         />
       </div>
     </div>

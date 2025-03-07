@@ -4,7 +4,6 @@ const tabs = [
   { text: "회사뉴스", value: "NEWS" },
   { text: "사내문서", value: "REPORT" },
   { text: "브랜드", value: "BRAND" },
-  // { text: "사내문서", value: "DOCUMENT" },
 ];
 const snackbar = ref({ active: false, message: "" });
 
@@ -37,7 +36,6 @@ const { data: board, status } = useApi("/post/internal", {
   key: "amorestory-board",
   query: filter_query,
 });
-
 const total_cnt = computed(() => board.value.paging.total_rows);
 
 function notify(msg) {

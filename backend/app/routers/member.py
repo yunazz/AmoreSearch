@@ -74,9 +74,7 @@ def get_favorites(
                 sql +=  """
                 SELECT * FROM favorites
                     JOIN post_external ON favorites.target_id = post_external.post_external_id
-                    JOIN 
-                        (SELECT post_id, image_url from post_image WHERE scope='EXTERNAL' AND image_type='THUMBNAIL') post_image 
-                    ON post_external.post_external_id = post_image.post_id
+                    LEFT JOIN document ON post_external.document_id = document.document_id
                 WHERE favorites.scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL')
                 """
                 count_sql += " WHERE scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL') "
@@ -114,7 +112,7 @@ def get_favorites(
                 SELECT * FROM favorites
                     JOIN post ON target_id = post_id
                     JOIN 
-                        (SELECT * from document WHERE scope='EXTERNAL' ) document 
+                        (SELECT * from document WHERE scope='INTERNAL' ) document 
                     ON post.document_id = document.document_id
                 WHERE favorites.scope='INTERNAL' AND favorite_type != 'NEWS'
                 """

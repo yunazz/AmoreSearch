@@ -94,8 +94,10 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
             <template v-if="status === 'success'">
               <ListItemLink
                 v-for="(item, index) in board?.result"
+                scope="EXTERNAL"
                 :key="index"
                 :item="item"
+                @success="refresh"
               />
             </template>
           </div>
