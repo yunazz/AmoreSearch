@@ -13,6 +13,32 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter()
 
+# 내 정보 조회
+@router.get("/me")
+def update_me(token: str= Depends(oauth2_scheme)):
+    member = decode_access_token(token)
+    
+    try:
+        conn = get_connection() 
+        with conn.cursor() as cursor:
+            cursor.execute("""
+            SELECT 
+                emp_no, name, role, phone, employment_status, company_affiliation, 
+                position, department, birth_date, hire_date
+            FROM member WHERE member_id = %s
+            """, [member.get('member_id')])
+            
+            result = cursor.fetchone()
+
+            return BaseResponse(
+                code=0,
+                msg="조회 성공",
+                result=result,
+            )
+                           
+    finally:
+            conn.close()
+
 # 내 정보 수정
 @router.put("/me")
 def update_me(form_data: MyPageUpdate, token: str= Depends(oauth2_scheme), db: Session = Depends(get_session)):

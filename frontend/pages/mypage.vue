@@ -37,6 +37,11 @@ async function updateMyInfo() {
 
   await useLoginHandler().refresh(result);
 }
+
+const { data: mypage } = useApi("/member/me", {
+  key: "mypage-board",
+  transform: ({ result }) => result,
+});
 </script>
 
 <template>
@@ -46,41 +51,17 @@ async function updateMyInfo() {
         <h2 class="page_title">마이페이지</h2>
       </div>
       <div id="myInfo" class="flex">
-        <!-- <div>
-          <h3>
-            <v-icon
-              v-if="member.role == 2"
-              icon="mdi-shield-account"
-              color="primary"
-              class="mr-2 mb-2"
-            />
-            <span> {{ member.name }} </span>
-          </h3>
-          <v-divider class="mt-1 mb-2" thickness="2" />
-          <div class="info_summary px-1">
-            <p><span>권한</span>{{ enums.roles[member.role] }}</p>
-            <p><span>사원번호</span>{{ member.emp_no }}</p>
-            <p><span>입사일</span>{{ member.hire_date }}</p>
-          </div>
-          <v-divider class="mt-2" thickness="2" />
-        </div> -->
-
         <section class="info_detail">
-          <!-- <h4>
-            <v-icon icon="mdi-smart-card-outline" class="mr-1" />
-            회원정보
-          </h4> -->
-
           <article>
             <h5>
               <v-icon
-                v-if="member.role > 1"
+                v-if="mypage.role > 1"
                 icon="mdi-shield-account"
                 color="primary"
                 class="mr-1"
               />
-              {{ member.name }}
-              <span class="fw-500 ml-2">{{ member.position }}</span>
+              {{ mypage.name }}
+              <span class="fw-500 ml-2">{{ mypage.position }}</span>
             </h5>
 
             <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
@@ -92,20 +73,20 @@ async function updateMyInfo() {
 
             <div class="grid-cols-2 ml-4 mb-3">
               <p>
-                <b class="mr-8">소속 / 근무부서</b>
-                {{ member.company_affiliation }} / {{ member.department }}
+                <b class="mr-6">소속 / 근무부서</b>
+                {{ mypage.company_affiliation }} / {{ mypage.department }}
               </p>
               <p>
-                <b class="mr-8">사원번호</b>
-                {{ member.emp_no }}
+                <b class="mr-6">사원번호</b>
+                {{ mypage.emp_no }}
               </p>
               <p>
-                <b class="mr-8">근무상태</b>
-                {{ member.employment_status }}
+                <b class="mr-6">근무상태</b>
+                {{ mypage.employment_status }}
               </p>
               <p>
-                <b class="mr-8">입사일</b>
-                {{ member.hire_Date }}
+                <b class="mr-6">입사일</b>
+                {{ mypage.hire_date }}
               </p>
             </div>
           </article>
@@ -118,8 +99,8 @@ async function updateMyInfo() {
             </b>
             <div class="grid-cols-2 ml-4 mb-3">
               <p>
-                <b>생년월일</b>
-                <span>{{ member.birth_date }}</span>
+                <b class="mr-6">생년월일</b>
+                <span>{{ mypage.birth_date }}</span>
               </p>
               <div class="input_cont">
                 <b class="pr-7"> 휴대폰번호 </b>
@@ -198,7 +179,6 @@ async function updateMyInfo() {
 
 #myInfo {
   display: flex;
-  /* flex-direction: column; */
   justify-content: center;
   margin: 1.5rem auto 2.25rem;
   column-gap: 2.75rem;
@@ -263,7 +243,6 @@ async function updateMyInfo() {
   margin-bottom: 8px;
   font-weight: 600;
 }
-
 article.my-setting {
   margin-top: 70px;
 }
