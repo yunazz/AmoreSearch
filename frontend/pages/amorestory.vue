@@ -6,6 +6,7 @@ const tabs = [
   { text: "브랜드", value: "BRAND" },
   // { text: "사내문서", value: "DOCUMENT" },
 ];
+const snackbar = ref({ active: false, message: "" });
 
 const post_type = ref({ text: "회사뉴스", value: "NEWS" });
 const post_ctgry = ref({ name: "전체", value: "" });
@@ -38,6 +39,11 @@ const { data: board, status } = useApi("/post/internal", {
 });
 
 const total_cnt = computed(() => board.value.paging.total_rows);
+
+function notify(msg) {
+  snackbar.value.active = true;
+  snackbar.value.message = msg;
+}
 
 watch(post_type, (newValue) => {
   filter.value.post_type = newValue.value;
@@ -104,7 +110,8 @@ watch(post_ctgry, (newValue) => {
                     v-for="(item, i) in board?.result"
                     :key="i"
                     :item="item"
-                    :loading="true"
+                    scope="INTERNAL"
+                    @notify="notify"
                   />
                 </div>
               </template>
@@ -114,6 +121,7 @@ watch(post_ctgry, (newValue) => {
                 <ListItemLink
                   v-for="(item, index) in board?.result"
                   :key="index"
+                  scope="INTERNAL"
                   :item="item"
                 />
               </template>
@@ -156,6 +164,9 @@ watch(post_ctgry, (newValue) => {
             />
           </div>
         </template>
+        <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
+          {{ snackbar.message }}
+        </v-snackbar>
       </ClientOnly>
     </div>
   </div>

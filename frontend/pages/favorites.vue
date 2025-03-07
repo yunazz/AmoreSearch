@@ -1,8 +1,8 @@
 <script setup>
 const tabs = ref([
   { text: "뉴스/저널", value: "EXTERNAL_POST" },
-  { text: "회사뉴스", value: "INTERNAL_POST" },
   { text: "화장품", value: "COSMETIC" },
+  { text: "회사뉴스", value: "INTERNAL_NEWS" },
   { text: "사내문서", value: "INTERNAL_DOCS" },
 ]);
 const favorite_type = ref({ text: "뉴스/저널", value: "NEWS_JOURNAL" });
@@ -38,13 +38,14 @@ async function removeFavorites(item) {
     target_id: item.target_id,
     source: item.source,
   };
-  const { code, msg } = await $http("/member/favorites", {
-    method: "DELETE",
-    body,
-  });
-
-  console.log(code);
-  console.log(msg);
+  try {
+    const { code, msg } = await $http("/member/favorites", {
+      method: "DELETE",
+      body,
+    });
+    console.log(code);
+    console.log(msg);
+  } catch (e) {}
 }
 
 function openRnb(item) {
@@ -93,37 +94,47 @@ watch(favorite_type, (newValue) => {
           </div>
         </div>
         <div class="board">
-          <div v-if="board?.result" class="board_list">
-            <template v-if="filter.favorite_type == 'EXTERNAL_POST'">
-              <ListItemLink
-                v-for="(item, index) in board?.result"
-                :key="index"
-              />
-            </template>
-            <template v-else-if="filter.favorite_type == 'INTERNAL_POST'">
-              <ListItemNews
-                v-for="(item, index) in board?.result"
-                :key="index"
-                :item="item"
-              />
-            </template>
-            <template v-else-if="filter.favorite_type == 'COSMETIC'">
-              <ListProduct :list="board?.result" />
-            </template>
-            <template v-else-if="filter.favorite_type == 'INTERNAL_DOCS'">
-              <ListItemLink
-                v-for="(item, index) in board?.result"
-                :key="index"
-              />
-            </template>
-          </div>
+          <div class="board_content">
+            <div v-if="board?.result" class="board_cards grid-cols-4">
+              <template v-if="filter.favorite_type == 'EXTERNAL_POST'">
+                <ListItemLink
+                  v-for="(item, index) in board?.result"
+                  :key="index"
+                />
+              </template>
 
-          <Paging
-            :paging="filter"
-            :status="status"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
+              <template v-else-if="filter.favorite_type == 'COSMETIC'">
+                <ListProduct :list="board?.result" />
+              </template>
+
+              <template v-else-if="filter.favorite_type == 'INTERNAL_NEWS'">
+                <ListItemNews
+                  v-for="(item, index) in board?.result"
+                  :key="index"
+                  :item="item"
+                  :is_favorite="true"
+                  scope="INTERNAL"
+                  @success="refresh"
+                />
+              </template>
+
+              <template v-else-if="filter.favorite_type == 'INTERNAL_DOCS'">
+                <ListItemLink
+                  v-for="(item, index) in board?.result"
+                  :key="index"
+                />
+              </template>
+            </div>
+
+            <Paging
+              no-content-text="등록된 즐겨찾기가 없습니다."
+              no-content-icon="mdi-star-off"
+              :paging="filter"
+              :status="status"
+              :total_row="total_cnt"
+              @changePage="changePage"
+            />
+          </div>
         </div>
       </ClientOnly>
     </div>

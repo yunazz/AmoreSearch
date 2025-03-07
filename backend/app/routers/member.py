@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, Query, HTTPException
 from typing import Optional
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 from db.session import get_session 
 from db.connection import get_connection 
 from schemas.response import BaseResponse, ListResponse
-from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate
+from schemas.member import MyPageUpdate, MyPageResponse, MyPasswordUpdate, FavoriteRequest
 from core.security import create_access_token, hash_password, decode_access_token, verify_password
 from model import Member 
 from fastapi.security import  OAuth2PasswordBearer
@@ -83,12 +82,12 @@ def get_favorites(
                 count_sql += " WHERE scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL') "
                 
             # favorite_type : 회사뉴스
-            elif favorite_type =='INTERNAL_POST':
+            elif favorite_type =='INTERNAL_NEWS':
                 sql +=  """
                 SELECT * FROM favorites
                     JOIN post ON target_id = post_id
                     JOIN 
-                        (SELECT post_id, image_url from post_image WHERE scope='EXTERNAL' AND image_type='THUMBNAIL') post_image 
+                        (SELECT post_id, image_url from post_image WHERE scope='INTERNAL' AND image_type='THUMBNAIL') post_image 
                     ON post.post_id = post_image.post_id
                 WHERE favorites.scope='INTERNAL' AND favorite_type = 'NEWS'
                 """
@@ -144,8 +143,8 @@ def get_favorites(
             
             offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"
+            
             params.extend([item_per_page, offset])
-            print(sql)
             cursor.execute(sql, params)
             result = cursor.fetchall()
 
@@ -165,36 +164,31 @@ def get_favorites(
     return BaseResponse(code=1, msg="조회 실패")
 
 
-# 즐겨찾기 추가
 @router.post("/favorites")
 def add_favorites(
-    scope: str, 
-    favorite_type: str,
-    target_id: int, 
-    token: str= Depends(oauth2_scheme),
+    body: FavoriteRequest,
+    token: str = Depends(oauth2_scheme),
 ):
     try:
         conn = get_connection()
         with conn.cursor() as cursor:
             member = decode_access_token(token)
-            print(member)
             
             cursor.execute(
                 'INSERT INTO favorites (scope, favorite_type, target_id, member_id) values (%s, %s, %s, %s)', 
-                [scope, favorite_type, target_id, target_id, member.get('member_id')]
+                [body.scope, body.favorite_type, body.target_id, member.get('member_id')]
             )
             conn.commit()
             
-            return BaseResponse(code=0, msg="즐겨찾기가 되었습니다." if cursor.rowcount > 0 else "이미 존재하는 즐겨찾기 입니다")
+            return BaseResponse(code=0, msg="즐겨찾기 추가되었습니다." if cursor.rowcount > 0 else "이미 존재하는 즐겨찾기 입니다")
     finally:
         conn.close()
         
         
 # 즐겨찾기 삭제
 @router.delete("/favorites")
-def remove_favorites(scope: str, 
-    favorite_type: str,
-    target_id: int, 
+def remove_favorites(
+    body: FavoriteRequest,
     token: str= Depends(oauth2_scheme)
 ):
     try:
@@ -203,11 +197,11 @@ def remove_favorites(scope: str,
             member = decode_access_token(token)
             
             cursor.execute(
-                'DELETE FROM favorites where scope = %s AND favorite_type = %s AND target_id = %s AND member_id = %s', 
-                [scope, favorite_type, target_id, target_id, member.member_id]
+                "DELETE FROM favorites where scope = %s AND favorite_type = %s AND target_id = %s AND member_id = %s", 
+                [body.scope, body.favorite_type, body.target_id, member.get('member_id')]
             )
             conn.commit()
             
-            return BaseResponse(code=0, msg="즐겨찾기가 취소되었습니다.")
+            return BaseResponse(code=0, msg="즐겨찾기 삭제되었습니다.")
     finally:
         conn.close()

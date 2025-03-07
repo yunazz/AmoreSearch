@@ -37,11 +37,31 @@ def get_boards(
             else:
                 sql = ''
                 if post_type=='NEWS':
-                    sql += "SELECT p.*, pi.image_url FROM post p LEFT JOIN post_image pi ON p.post_id = pi.post_id AND pi.image_type = 'THUMBNAIL' WHERE 1=1"
+                    sql += """
+                    SELECT p.*, pi.image_url,
+                        CASE 
+                            WHEN f.target_id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS is_favorite
+                    FROM post p
+                    LEFT JOIN post_image pi ON p.post_id = pi.post_id AND pi.image_type = 'THUMBNAIL'
+                    LEFT JOIN (SELECT target_id FROM favorites WHERE scope = 'INTERNAL' AND favorite_type = 'NEWS') f ON p.post_id = f.target_id 
+                    WHERE 1=1
+                    """
                 elif post_type=='REPORT':
-                    sql += "SELECT p.*, d.original_file_url  FROM post p LEFT JOIN document d ON p.document_id = d.document_id WHERE 1=1"
+                    sql += """
+                    SELECT p.*, d.original_file_url,
+                        CASE 
+                            WHEN f.target_id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS is_favorite
+                    FROM post p 
+                    LEFT JOIN document d ON p.document_id = d.document_id 
+                    LEFT JOIN (SELECT target_id FROM favorites WHERE scope = 'INTERNAL' AND favorite_type = 'REPORT') f ON p.post_id = f.target_id 
+                    WHERE 1=1
+                    """
                 else:
-                    sql = "SELECT * FROM post WHERE 1=1"
+                    sql = "SELECT * FROM post WHERE 1=1 JOIN (SELECT target_id FROM favorites WHERE scope='INTERNAL' AND favorite_type != 'NEWS' AND favorite_type != 'JOURNAL') ON post.post_id = favorites.target_id  "
                     
                 count_sql = "SELECT COUNT(*) FROM post WHERE 1=1"
                 params = []

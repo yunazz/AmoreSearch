@@ -23,16 +23,8 @@ class MyPageResponse(BaseModel):
 class MyPasswordUpdate(BaseModel):
     password: str
     new_password: str
-
-class MemberBase(BaseModel):
-    name: str
-    emp_no: str
-    phone: str
-    company_affiliation: Optional[str] = None
-    position: str
-    employment_status: str
-    role: int
-    birth_date: date
-    hire_date: date 
-    resign_date: Optional[date] = None
-    resign_reason: Optional[str] = None
+    
+class FavoriteRequest(BaseModel):
+    scope: str
+    favorite_type: str
+    target_id: int

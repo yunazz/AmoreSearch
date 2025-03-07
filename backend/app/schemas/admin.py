@@ -2,19 +2,6 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import date, datetime
 
-class MemberBase(BaseModel):
-    name: str
-    emp_no: str
-    phone: str
-    company_affiliation: Optional[str] = None
-    position: str
-    employment_status: str
-    role: int
-    birth_date: date
-    hire_date: date 
-    resign_date: Optional[date] = None
-    resign_reason: Optional[str] = None
-
 class MemberUpdate(BaseModel):
     member_id: int
     name: Optional[str] = None

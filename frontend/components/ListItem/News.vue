@@ -1,18 +1,32 @@
 <script setup>
-const props = defineProps(["item", "loading"]);
-async function addFavorites() {
-  const body = {
-    favorite_type: item.favorite_type,
-    target_id: item.target_id,
-    source: item.source,
-  };
-  const { code, msg } = await $http("/member/favorites", {
-    method: "POST",
-    body,
-  });
+const props = defineProps(["item", "scope", "is_favorite"]);
+const emit = defineEmits(["success", "notify"]);
 
-  console.log(code);
-  console.log(msg);
+const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
+
+async function toggleFavorites(item) {
+  const body = {
+    favorite_type: item.post_type,
+    target_id: item.post_id,
+    scope: props.scope,
+  };
+
+  let method = "";
+  if (is_favorite.value) method = "DELETE";
+  if (!is_favorite.value) method = "POST";
+
+  try {
+    const { code, msg } = await $http("/member/favorites", {
+      method,
+      body,
+    });
+
+    emit("notify", msg);
+    emit("success");
+    if (code == 0) is_favorite.value = !is_favorite.value;
+  } catch (e) {
+    emit("notify", "서버 오류 발생");
+  }
 }
 </script>
 
@@ -33,9 +47,10 @@ async function addFavorites() {
       <span class="v-card-date">{{ formatDate(item.created_at) }}</span>
       <v-btn
         class="icon--toggle"
+        :class="{ active: is_favorite }"
         icon="mdi-star"
         variant="text"
-        @click="addFavorites"
+        @click="toggleFavorites(item)"
       />
     </div>
   </v-card>

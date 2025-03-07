@@ -1,12 +1,12 @@
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, Query
 from typing import Optional
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from db.session import get_session 
 from db.connection import get_connection 
 from schemas.response import BaseResponse, ListResponse
-from schemas.admin import MemberBase, MemberCreate, MemberUpdate, MembersResponse
-from core.security import create_access_token, hash_password, decode_access_token, verify_password
+from schemas.admin import  MemberCreate, MemberUpdate
+from core.security import hash_password, decode_access_token
 from model import Member 
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")

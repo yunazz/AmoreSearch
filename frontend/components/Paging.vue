@@ -4,7 +4,9 @@ const props = defineProps({
   status: { type: String },
   total_row: { required: true, default: 0 },
   disabled: { type: Boolean, default: false },
-  board_type: { type: String, default: "" },
+  boardType: { type: String, default: "" },
+  noContentText: { type: String, default: "" },
+  noContentIcon: { type: String, default: "" },
 });
 
 const emit = defineEmits(["changePage"]);
@@ -73,7 +75,7 @@ function set_paging_data() {
   }
 }
 
-const changePage = (page, board_type) => {
+const changePage = (page, boardType) => {
   if (props.disabled) {
     return;
   }
@@ -81,23 +83,32 @@ const changePage = (page, board_type) => {
   if (page <= 0) _page = 1;
   if (page >= paging.value.lastPage) _page = paging.value.lastPage;
 
-  emit("changePage", _page, props.board_type);
+  emit("changePage", _page, props.boardType);
 };
 </script>
 <template>
   <div class="paging">
+    <!-- list 조회중 / 결과없음 -->
     <template v-if="total_row === 0 || status === 'pending'">
       <div class="no-result">
-        <v-icon icon="mdi-magnify" color="grey-lighten-1" />
         <template v-if="status === 'pending'">
-          <p class="text-gray-03">조회중입니다. 잠시만 기다려주세요.</p>
+          <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+          <p class="text-gray-02">조회중입니다. 잠시만 기다려주세요.</p>
         </template>
+
         <template v-else>
-          <p class="text-gray-03">조회된 결과가 없습니다.</p>
+          <v-icon
+            :icon="noContentIcon || ' mdi-magnify'"
+            color="grey-lighten-2"
+          />
+          <p class="text-gray-02">
+            {{ noContentText || "조회된 결과가 없습니다." }}
+          </p>
         </template>
       </div>
     </template>
 
+    <!--  -->
     <template v-else>
       <!-- <button
       @click="changePage(1)"
@@ -182,11 +193,11 @@ const changePage = (page, board_type) => {
   justify-content: center;
   align-items: center;
   width: 100%;
-  row-gap: 10px;
+  row-gap: 12px;
 }
 
 .no-result i {
-  font-size: 40px;
+  font-size: 36px;
 }
 .no-result p {
   font-size: 0.8125rem;
