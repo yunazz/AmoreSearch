@@ -46,7 +46,7 @@ async function updateMyInfo() {
         <h2 class="page_title">마이페이지</h2>
       </div>
       <div id="myInfo" class="flex">
-        <div>
+        <!-- <div>
           <h3>
             <v-icon
               v-if="member.role == 2"
@@ -56,46 +56,73 @@ async function updateMyInfo() {
             />
             <span> {{ member.name }} </span>
           </h3>
-          <v-divider class="mb-2" thickness="2" />
+          <v-divider class="mt-1 mb-2" thickness="2" />
           <div class="info_summary px-1">
             <p><span>권한</span>{{ enums.roles[member.role] }}</p>
             <p><span>사원번호</span>{{ member.emp_no }}</p>
             <p><span>입사일</span>{{ member.hire_date }}</p>
           </div>
           <v-divider class="mt-2" thickness="2" />
-        </div>
+        </div> -->
 
         <section class="info_detail">
-          <h4><v-icon icon="mdi-smart-card-outline" class="mr-3" />회원정보</h4>
-          <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
+          <!-- <h4>
+            <v-icon icon="mdi-smart-card-outline" class="mr-1" />
+            회원정보
+          </h4> -->
 
           <article>
-            <h5><small class="mr-2">▶</small>직원정보</h5>
-            <div class="grid-cols-2">
+            <h5>
+              <v-icon
+                v-if="member.role > 1"
+                icon="mdi-shield-account"
+                color="primary"
+                class="mr-1"
+              />
+              {{ member.name }}
+              <span class="fw-500 ml-2">{{ member.position }}</span>
+            </h5>
+
+            <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
+
+            <b>
+              <small style="font-size: 8px" class="mr-2">▶</small>
+              직원 정보
+            </b>
+
+            <div class="grid-cols-2 ml-4 mb-3">
               <p>
-                <span>직급</span>
-                <span>{{ member.position }}</span>
+                <b class="mr-8">소속 / 근무부서</b>
+                {{ member.company_affiliation }} / {{ member.department }}
               </p>
               <p>
-                <span>소속/부서</span>
-                <span>
-                  {{ member.company_affiliation }} /
-                  {{ member.department }}
-                </span>
+                <b class="mr-8">사원번호</b>
+                {{ member.emp_no }}
+              </p>
+              <p>
+                <b class="mr-8">근무상태</b>
+                {{ member.employment_status }}
+              </p>
+              <p>
+                <b class="mr-8">입사일</b>
+                {{ member.hire_Date }}
               </p>
             </div>
           </article>
-          <v-divider class="mt-4 mb-5" />
+          <v-divider class="mt-4 mb-3" />
 
-          <article class="mb-6">
-            <h5><small class="mr-2">▶</small> 개인정보</h5>
-            <div class="grid-cols-2">
+          <article>
+            <b>
+              <small style="font-size: 8px" class="mr-2">▶</small>
+              개인 정보
+            </b>
+            <div class="grid-cols-2 ml-4 mb-3">
               <p>
-                <span>생년월일</span>
+                <b>생년월일</b>
                 <span>{{ member.birth_date }}</span>
               </p>
               <div class="input_cont">
-                <label> 휴대폰번호 </label>
+                <b class="pr-7"> 휴대폰번호 </b>
                 <div class="flex gap-2">
                   <v-text-field
                     width="184"
@@ -121,20 +148,20 @@ async function updateMyInfo() {
               </div>
             </div>
           </article>
+
           <article class="my-setting">
-            <h5></h5>
             <v-divider thickness="2" opacity=".8" />
-            <div>
-              <p><small class="mr-2">▶</small> 비밀번호 변경</p>
+            <div class="px-3">
+              <p>
+                <v-icon icon="mdi-lock-outline " class="mr-2" /> 비밀번호 변경
+              </p>
               <p>
                 <v-btn
                   @click="dialogPwdChange = true"
-                  color="primary"
+                  color="black"
                   width="160"
                   rounded
-                  variant="outlined"
                 >
-                  <v-icon icon="mdi-lock-outline " class="mr-2" />
                   비밀번호 변경
                 </v-btn>
               </p>
@@ -152,7 +179,7 @@ async function updateMyInfo() {
       v-model="dialogPwdChange"
       @notify="notify"
       @close="dialogPwdChange = false"
-    />
+    ></PopupPasswordChange>
 
     <PopupConfirm
       v-model="dialogConfirm.active"
@@ -160,7 +187,7 @@ async function updateMyInfo() {
       :text="dialogConfirm.text"
       @submit="updateMyInfo"
       @close="dialogConfirm.active = false"
-    />
+    ></PopupConfirm>
   </div>
 </template>
 
@@ -172,7 +199,7 @@ async function updateMyInfo() {
 #myInfo {
   display: flex;
   /* flex-direction: column; */
-  width: 1000px;
+  justify-content: center;
   margin: 1.5rem auto 2.25rem;
   column-gap: 2.75rem;
 }
@@ -220,14 +247,19 @@ async function updateMyInfo() {
   font-weight: 400;
 }
 #myInfo h4 {
-  font-size: var(--title-size-m);
-  margin-bottom: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--main-color);
+}
+#myInfo h4 i {
+  margin-bottom: 2px;
+  font-weight: 500;
 }
 #myInfo h5 {
-  font-size: var(--title-size-s);
+  font-size: 18px;
   display: flex;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 8px;
   font-weight: 600;
 }
@@ -244,25 +276,11 @@ article.my-setting > div {
 article.my-setting p {
   font-weight: 500;
 }
-#myInfo .info_detail p {
+#myInfo .info_detail p,
+#myInfo .info_detail b {
   display: flex;
   align-items: center;
-  height: 36px;
-}
-#myInfo p span:nth-of-type(1) {
-  width: 86px;
-  font-size: 0.8125rem;
-  color: var(--color-gray-04);
-}
-#myInfo p span:nth-of-type(2) {
+  height: 35px;
   font-size: 0.875rem;
-  color: var(--color-black);
-}
-
-#passwordChange {
-  width: 100%;
-}
-#passwordChange .input_cont label {
-  width: 120px;
 }
 </style>
