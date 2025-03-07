@@ -3,6 +3,7 @@ const tabs = ref([
   { text: "뉴스", value: "NEWS" },
   { text: "저널", value: "JOURNAL" },
 ]);
+const snackbar = ref({ active: false, message: "" });
 const post_type = ref({ text: "회사뉴스", value: "NEWS" });
 const source_name = ref({
   name: "코스인코리아닷컴",
@@ -35,6 +36,12 @@ const { data: board, status } = useApi("/post/external", {
   key: "post-board",
   query: filter_query,
 });
+const total_cnt = computed(() => board.value.paging?.total_rows);
+
+function notify(msg) {
+  snackbar.value.active = true;
+  snackbar.value.message = msg;
+}
 
 watch(post_type, (newValue) => {
   filter.value.post_type = newValue.value;
@@ -46,8 +53,6 @@ watch(source_name, (newValue) => {
   filter.value.source_name = newValue.value;
   filter.value.current_page = 1;
 });
-
-const total_cnt = computed(() => board.value.paging?.total_rows);
 </script>
 
 <template>
@@ -91,13 +96,22 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
         </div>
         <div v-if="status === 'success'" class="board">
           <div class="board_list">
-            <template v-if="status === 'success'">
-              <ListItemLink
-                v-for="(item, index) in board?.result"
+            <template v-if="filter.post_type == 'NEWS'">
+              <ListItemNews
+                v-for="item in board?.result"
                 scope="EXTERNAL"
-                :key="index"
+                :key="item.post_external_id"
                 :item="item"
-                @success="refresh"
+                @notify="notify"
+              />
+            </template>
+            <template v-else-if="filter.post_type == 'JOURNAL'">
+              <ListItemLink
+                v-for="item in board?.result"
+                scope="EXTERNAL"
+                :key="item.post_external_id"
+                :item="item"
+                @notify="notify"
               />
             </template>
           </div>
@@ -108,6 +122,9 @@ const total_cnt = computed(() => board.value.paging?.total_rows);
             @changePage="changePage"
           />
         </div>
+        <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
+          {{ snackbar.message }}
+        </v-snackbar>
       </ClientOnly>
     </div>
   </div>

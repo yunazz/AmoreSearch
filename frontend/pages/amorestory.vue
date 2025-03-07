@@ -104,7 +104,7 @@ watch(post_ctgry, (newValue) => {
               <!-- 회사뉴스 -->
               <template v-if="post_type.value === 'NEWS'">
                 <div v-if="board?.result" class="board_cards grid-cols-4">
-                  <ListItemNews
+                  <ListItemCardNews
                     v-for="(item, i) in board?.result"
                     :key="i"
                     :item="item"

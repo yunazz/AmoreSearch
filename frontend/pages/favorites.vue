@@ -1,6 +1,7 @@
 <script setup>
 const tabs = ref([
-  { text: "뉴스/저널", value: "EXTERNAL_POST" },
+  { text: "뉴스", value: "EXTERNAL_NEWS" },
+  { text: "저널", value: "EXTERNAL_JOURNAL" },
   { text: "화장품", value: "COSMETIC" },
   { text: "회사뉴스", value: "INTERNAL_NEWS" },
   { text: "사내문서", value: "INTERNAL_DOCS" },
@@ -11,7 +12,7 @@ const favorite_type = ref({ text: "뉴스/저널", value: "NEWS_JOURNAL" });
 const dialog = ref(false);
 
 const filter = ref({
-  favorite_type: "EXTERNAL_POST",
+  favorite_type: "EXTERNAL_NEWS",
   query: "",
   current_page: 1,
   item_per_page: 20,
@@ -33,11 +34,6 @@ const {
   query: filter_query,
 });
 const total_cnt = computed(() => board.value.paging.total_rows);
-
-function openRnb(item) {
-  dialog.value = true;
-  targetItem.value = item;
-}
 
 function changePage(current_page) {
   if (current_page === filter.value.current_page) {
@@ -83,8 +79,19 @@ watch(favorite_type, (newValue) => {
           </div>
         </div>
         <div class="board">
-          <div class="board_content">
-            <template v-if="filter.favorite_type == 'EXTERNAL_POST'">
+          <div class="board_list">
+            <template v-if="filter.favorite_type == 'EXTERNAL_NEWS'">
+              <ListItemNews
+                v-for="item in board?.result"
+                :key="item?.target_id"
+                :item="item"
+                :is_favorite="true"
+                scope="EXTERNAL"
+                @notify="notify"
+                @success="refresh"
+              />
+            </template>
+            <template v-if="filter.favorite_type == 'EXTERNAL_JOURNAL'">
               <ListItemLink
                 v-for="item in board?.result"
                 :key="item?.target_id"
@@ -97,12 +104,17 @@ watch(favorite_type, (newValue) => {
             </template>
 
             <template v-else-if="filter.favorite_type == 'COSMETIC'">
-              <ListProduct :list="board?.result" />
+              <ListProduct
+                :list="board?.result"
+                :is_favorite="true"
+                @notify="notify"
+                @success="refresh"
+              />
             </template>
 
             <template v-else-if="filter.favorite_type == 'INTERNAL_NEWS'">
               <div v-if="board?.result" class="board_cards grid-cols-4">
-                <ListItemNews
+                <ListItemCardNews
                   v-for="item in board?.result"
                   :key="item?.target_id"
                   :item="item"

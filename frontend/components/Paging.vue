@@ -75,7 +75,7 @@ function set_paging_data() {
   }
 }
 
-const changePage = (page, boardType) => {
+const changePage = (page) => {
   if (props.disabled) {
     return;
   }
@@ -83,7 +83,7 @@ const changePage = (page, boardType) => {
   if (page <= 0) _page = 1;
   if (page >= paging.value.lastPage) _page = paging.value.lastPage;
 
-  emit("changePage", _page, props.boardType);
+  emit("changePage", _page);
 };
 </script>
 <template>
@@ -113,25 +113,26 @@ const changePage = (page, boardType) => {
       <!-- <button
       @click="changePage(1)"
       :class="{
-        hide: paging.current_page === 1 || paging.current_page <= page_per_group,
+        hide: paging?.current_page === 1 || paging?.current_page <= page_per_group,
       }"
     >
       <v-icon icon="mdi-page-first" />
     </button> -->
       <button
-        @click="changePage(paging.groupStartPage - page_per_group)"
+        @click="changePage(paging?.groupStartPage - page_per_group)"
         :class="{
           hide:
-            paging.current_page === 1 || paging.groupStartPage < page_per_group,
+            paging?.current_page === 1 ||
+            paging?.groupStartPage < page_per_group,
         }"
       >
         <v-icon icon="mdi-chevron-left" />
       </button>
       <div class="paging_num">
         <button
-          v-for="item in paging.pageList"
+          v-for="item in paging?.pageList"
           :key="item"
-          :class="{ active: paging.current_page === item }"
+          :class="{ active: paging?.current_page === item }"
           @click="changePage(item)"
         >
           {{ item }}
@@ -140,20 +141,20 @@ const changePage = (page, boardType) => {
       <button
         :class="{
           hide:
-            paging.current_page === paging.lastPage ||
-            paging.groupStartPage + 9 >= paging.lastPage,
+            paging?.current_page === paging?.lastPage ||
+            paging?.groupStartPage + 9 >= paging?.lastPage,
         }"
-        @click="changePage(paging.groupEndPage + 1)"
+        @click="changePage(paging?.groupEndPage + 1)"
       >
         <v-icon icon="mdi-chevron-right" />
       </button>
       <!-- <button
       :class="{
         hide:
-          paging.lastPage === paging.current_page ||
-          paging.groupEndPage - paging.groupStartPage < page_per_group,
+          paging?.lastPage === paging?.current_page ||
+          paging?.groupEndPage - paging?.groupStartPage < page_per_group,
       }"
-      @click="changePage(paging.lastPage)"
+      @click="changePage(paging?.lastPage)"
     >
       <v-icon icon="mdi-page-last" />
     </button> -->

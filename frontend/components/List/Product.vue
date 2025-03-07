@@ -1,6 +1,13 @@
 <script setup>
-const props = defineProps(["list", "listType"]);
-// const emit = defineEmits(["close"]);
+const props = defineProps({
+  list: { required: true },
+  scope: { default: false },
+  is_favorite: {
+    type: Boolean,
+    required: false,
+  },
+});
+const emit = defineEmits(["notify", "success"]);
 
 const dialog = ref(false);
 const targetItem = ref(null);
@@ -9,15 +16,26 @@ function openRnb(item) {
   dialog.value = true;
   targetItem.value = item;
 }
+function notify(msg) {
+  emit("notify", msg);
+}
+function success() {
+  emit("success");
+}
 </script>
 
 <template>
   <div class="board_cards product_card grid-cols-4">
     <ClientOnly>
       <ListItemProduct
-        v-for="(item, i) in list"
+        v-for="item in list"
         :item="item"
-        :key="i"
+        :key="item"
+        :scope="scope"
+        favorite_type="COSMETIC"
+        :is_favorite="is_favorite"
+        @notify="notify"
+        @success="success"
         @showDetail="openRnb"
       />
       <!-- RNB -->

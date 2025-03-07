@@ -4,10 +4,17 @@ const emit = defineEmits(["success", "notify"]);
 
 const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
 
+function linkFnc(url) {
+  window.open(url);
+}
+function downloadFnc(item) {
+  window.open(item.original_file_url);
+}
+
 async function toggleFavorites(item) {
   const body = {
     favorite_type: item.post_type,
-    target_id: item.post_id,
+    target_id: item.post_id || item.post_external_id,
     scope: props.scope,
   };
 
@@ -31,27 +38,93 @@ async function toggleFavorites(item) {
 </script>
 
 <template>
-  <v-card class="board_card">
-    <div class="card-img">
-      <v-img
-        height="180px"
-        :src="item.image_url"
-        cover
-        style="border: 1px solid #f1f1f1"
-      ></v-img>
+  <ClientOnly>
+    <div external class="list-item">
+      <div class="list-left">
+        <div class="">
+          <v-img
+            width="180px"
+            height="110px"
+            :src="item.thumbnail_image_url"
+            cover
+          ></v-img>
+        </div>
+        <div>
+          <p class="list-title">{{ item.title }}</p>
+          <p class="list-text text-clamp-4">{{ item.content }}</p>
+          <p>
+            <span class="text-gray-04 mr-2">{{
+              formatDate(item.published_at || item.created_at)
+            }}</span>
+            <span class="text-gray-04" v-if="item.source_name">
+              {{ item.source_name }}
+            </span>
+          </p>
+        </div>
+      </div>
+      <div>
+        <template v-if="item?.original_file_url">
+          <v-btn
+            color="sub"
+            icon="mdi-folder"
+            variant="text"
+            @click="downloadFnc(item)"
+          />
+        </template>
+        <template v-else>
+          <v-btn
+            color="sub"
+            icon="mdi-link"
+            variant="text"
+            @click="linkFnc(item.source_url)"
+          />
+        </template>
+
+        <v-btn
+          class="icon--toggle"
+          :class="{ active: is_favorite }"
+          icon="mdi-star"
+          variant="text"
+          @click="toggleFavorites(item)"
+        />
+      </div>
     </div>
-    <v-card-text class="mt-4 text-clamp-2" style="min-height: 40px">
-      <b class="fw-500">{{ item.title }}</b>
-    </v-card-text>
-    <div class="v-card-custom-action pr-1 pb-1">
-      <span class="v-card-date">{{ formatDate(item.created_at) }}</span>
-      <v-btn
-        class="icon--toggle"
-        :class="{ active: is_favorite }"
-        icon="mdi-star"
-        variant="text"
-        @click="toggleFavorites(item)"
-      />
-    </div>
-  </v-card>
+  </ClientOnly>
 </template>
+
+<style scoped>
+.list-item {
+  padding: 10px 16px;
+  text-decoration: none;
+}
+.list-item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+}
+.list-item .list-title {
+  font-weight: 500;
+  line-height: 1.5rem;
+  font-size: 0.9375rem;
+  margin-bottom: 2px;
+}
+.list-left {
+  display: flex;
+  column-gap: 20px;
+  width: calc(100% - 120px);
+}
+.list-item p {
+  font-size: 0.8125rem;
+  line-height: 1rem;
+}
+.list-item p.list-text {
+  margin-bottom: 4px;
+  font-size: 0.8125rem;
+}
+
+.list-item:last-of-type {
+  border-bottom: 1px solid var(--border-color);
+}
+</style>

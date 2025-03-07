@@ -268,10 +268,6 @@ main.main {
   max-width: 40px;
 }
 
-.board_content {
-  min-height: 100px;
-}
-
 .board_list {
   min-width: 1100px;
   max-width: 1400px;
@@ -538,4 +534,9 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   margin: 160px auto;
   width: 100%;
   text-align: center;
+}
+.v-snackbar__wrapper.v-snackbar--variant-elevated {
+}
+.v-overlay__content.bg-primary.v-snackbar--variant-elevated {
+  min-width: 100px;
 }

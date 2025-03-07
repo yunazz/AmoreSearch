@@ -25,8 +25,16 @@ def get_products(
             
             if scope == "INTERNAL":
                 sql += """
-                    SELECT cosmetic.*, brand.brand_kor as brand_kor FROM cosmetic 
+                    SELECT cosmetic.*, brand.brand_kor as brand_kor,  
+                        CASE 
+                            WHEN f.target_id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS is_favorite
+                    FROM cosmetic 
                     JOIN brand ON cosmetic.brand_id = brand.brand_id 
+                    LEFT JOIN 
+                        (SELECT * FROM favorites WHERE scope = 'INTERNAL' AND favorite_type = 'COSMETIC') f
+                    ON f.target_id = cosmetic.cosmetic_id 
                     WHERE 1=1
                 """
                 count_sql += "SELECT COUNT(*) FROM cosmetic WHERE 1=1"

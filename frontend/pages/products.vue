@@ -3,6 +3,7 @@ const tabs = ref([
   { text: "자사제품", value: "INTERNAL" },
   { text: "타사제품", value: "EXTERNAL" },
 ]);
+const snackbar = ref({ active: false, message: "" });
 const scope = ref({ text: "자사제품", value: "INTERNAL" });
 const selected_brand_id = ref(null);
 const category_1 = ref({ name: "전체", value: "" });
@@ -35,10 +36,19 @@ const { data: brands } = useApi("/amorepacific/brands", {
   key: "cosmetic-brands",
 });
 
-const { data: board, status } = useApi("/product/products", {
+const {
+  data: board,
+  status,
+  refresh,
+} = useApi("/product/products", {
   key: "product-board",
   query: filter_query,
 });
+
+function notify(msg) {
+  snackbar.value.active = true;
+  snackbar.value.message = msg;
+}
 
 watch(scope, (newValue) => {
   filter.value.scope = newValue.value;
@@ -90,7 +100,7 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
             </v-tabs>
           </div>
         </div>
-        <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-8">
+        <div v-if="filter.scope === 'INTERNAL'" class="mt-4 mb-6">
           <v-sheet class="mx-auto">
             <v-slide-group
               v-if="brands"
@@ -139,9 +149,14 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
           </v-btn-toggle>
         </div>
         <div class="board" v-if="status === 'success'">
-          <div class="board_content">
+          <div class="board_list">
             <template v-if="status === 'success'">
-              <ListProduct :list="board?.result" />
+              <ListProduct
+                :list="board?.result"
+                :scope="filter.scope"
+                :is_favorite="false"
+                @notify="notify"
+              />
             </template>
           </div>
 
@@ -152,6 +167,9 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
             @changePage="changePage"
           />
         </div>
+        <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
+          {{ snackbar.message }}
+        </v-snackbar>
       </ClientOnly>
     </div>
   </div>

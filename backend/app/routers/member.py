@@ -69,15 +69,24 @@ def get_favorites(
             count_sql = "SELECT COUNT(*) from favorites"
             params = []
 
-            # favorite_type : 외부뉴스/저널 
-            if favorite_type =='EXTERNAL_POST':
+            # favorite_type : 뉴스
+            if favorite_type =='EXTERNAL_NEWS':
+                sql +=  """
+                SELECT * FROM favorites
+                    JOIN post_external ON favorites.target_id = post_external.post_external_id
+                WHERE favorites.scope='EXTERNAL' AND favorite_type = 'NEWS' 
+                """
+                count_sql += " WHERE scope='EXTERNAL' AND favorite_type = 'NEWS' "
+            
+            # favorite_type : 저널 
+            elif favorite_type =='EXTERNAL_JOURNAL':
                 sql +=  """
                 SELECT * FROM favorites
                     JOIN post_external ON favorites.target_id = post_external.post_external_id
                     LEFT JOIN document ON post_external.document_id = document.document_id
-                WHERE favorites.scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL')
+                WHERE favorites.scope='EXTERNAL' AND favorite_type = 'JOURNAL' 
                 """
-                count_sql += " WHERE scope='EXTERNAL' AND (favorite_type = 'NEWS' OR favorite_type = 'JOURNAL') "
+                count_sql += " WHERE scope='EXTERNAL' AND favorite_type = 'JOURNAL' "
                 
             # favorite_type : 회사뉴스
             elif favorite_type =='INTERNAL_NEWS':
@@ -94,14 +103,52 @@ def get_favorites(
             # favorite_type : 화장품
             elif favorite_type =='COSMETIC':
                 sql +=  """
-                SELECT *,
-                    CASE
-                        WHEN favorites.scope = 'EXTERNAL' THEN cosmetic_external.image_url
-                        WHEN favorites.scope = 'INTERNAL' THEN cosmetic.image_url
-                        END AS image_url
+                SELECT 
+                    favorites.favorite_id,
+                    favorites.scope,
+                    favorites.favorite_type,
+                    favorites.target_id,
+                    cosmetic_external.cosmetic_id AS external_cosmetic_id,
+                    cosmetic_external.category_1 AS external_category_1,
+                    cosmetic_external.category_2 AS external_category_2,
+                    cosmetic_external.product_name AS external_product_name,
+                    cosmetic_external.product_info AS external_product_info,
+                    cosmetic_external.brand_kor AS external_brand_kor,
+                    cosmetic_external.capacity AS external_capacity,
+                    cosmetic_external.specification AS external_specification,
+                    cosmetic_external.expiration_date AS external_expiration_date,
+                    cosmetic_external.use_period AS external_use_period,
+                    cosmetic_external.ingredients AS external_ingredients,
+                    cosmetic_external.precaution AS external_precaution,
+                    cosmetic_external.price AS external_price,
+                    cosmetic_external.manufacture AS external_manufacture,
+                    cosmetic_external.quality_standards AS external_quality_standards,
+                    cosmetic_external.mfds AS external_mfds,
+                    cosmetic_external.image_url AS external_image_url,
+
+                    cosmetic.cosmetic_id,
+                    cosmetic.category_1,
+                    cosmetic.category_2,
+                    cosmetic.product_name,
+                    cosmetic.product_info,
+                    cosmetic.capacity,
+                    cosmetic.specification,
+                    cosmetic.expiration_date,
+                    cosmetic.use_period,
+                    cosmetic.ingredients,
+                    cosmetic.precaution,
+                    cosmetic.price,
+                    cosmetic.manufacture,
+                    cosmetic.quality_standards,
+                    cosmetic.mfds,
+                    cosmetic.image_url,
+                    
+                    brand.brand_kor as brand_kor
+                    
                 FROM favorites
-                        LEFT JOIN cosmetic_external ON favorites.scope = 'EXTERNAL' AND favorites.favorite_type = 'COSMETIC' AND favorites.target_id = cosmetic_external.cosmetic_id
-                        LEFT JOIN cosmetic ON favorites.scope = 'INTERNAL' AND favorites.favorite_type = 'COSMETIC' AND favorites.target_id = cosmetic.cosmetic_id
+                    LEFT JOIN cosmetic_external ON favorites.scope = 'EXTERNAL' AND favorites.favorite_type = 'COSMETIC' AND favorites.target_id = cosmetic_external.cosmetic_id
+                    LEFT JOIN cosmetic ON favorites.scope = 'INTERNAL' AND favorites.favorite_type = 'COSMETIC' AND favorites.target_id = cosmetic.cosmetic_id
+                    LEFT JOIN brand ON brand.brand_id = cosmetic.brand_id
                 WHERE favorite_type = 'COSMETIC'
                 """
                 count_sql += " WHERE favorite_type = 'COSMETIC'"
@@ -178,7 +225,7 @@ def add_favorites(
             )
             conn.commit()
             
-            return BaseResponse(code=0, msg="즐겨찾기 추가되었습니다." if cursor.rowcount > 0 else "이미 존재하는 즐겨찾기 입니다")
+            return BaseResponse(code=0, msg="즐겨찾기에 추가되었습니다." if cursor.rowcount > 0 else "이미 존재하는 즐겨찾기 입니다")
     finally:
         conn.close()
         
@@ -200,6 +247,6 @@ def remove_favorites(
             )
             conn.commit()
             
-            return BaseResponse(code=0, msg="즐겨찾기 삭제되었습니다.")
+            return BaseResponse(code=0, msg="즐겨찾기에서 삭제되었습니다.")
     finally:
         conn.close()

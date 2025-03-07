@@ -622,14 +622,21 @@ body .text-grey-lighten-2 {
 }
 .text-clamp-2 {
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 최대 6줄 표시 */
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .text-clamp-6 {
   display: -webkit-box;
-  -webkit-line-clamp: 6; /* 최대 6줄 표시 */
+  -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
