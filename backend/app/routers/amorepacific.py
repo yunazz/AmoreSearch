@@ -9,8 +9,8 @@ router = APIRouter()
 
 @router.get("/brands")
 def get_boards():
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             sql = "SELECT * FROM brand WHERE brand_kor != '아모레퍼시픽'"
             params = []

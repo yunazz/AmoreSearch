@@ -16,8 +16,8 @@ def get_boards(
     current_page: int = Query(1), 
     page_per_group: int = Query(12)
 ):
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             # BRAND 유형의 게시글 조회
             if post_type == "BRAND":
@@ -102,8 +102,8 @@ def get_external_boards(
     current_page: int = Query(1), 
     item_per_page: int = Query(12)
 ):
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             sql = "SELECT * from post_external LEFT JOIN document ON post_external.document_id = document.document_id WHERE 1=1"
             count_sql = "SELECT COUNT(*) FROM post_external WHERE 1=1"

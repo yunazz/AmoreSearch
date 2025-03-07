@@ -173,15 +173,15 @@ def add_favorites(
     target_id: int, 
     token: str= Depends(oauth2_scheme),
 ):
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             member = decode_access_token(token)
             print(member)
             
             cursor.execute(
                 'INSERT INTO favorites (scope, favorite_type, target_id, member_id) values (%s, %s, %s, %s)', 
-                [scope, favorite_type, target_id, target_id, member.member_id]
+                [scope, favorite_type, target_id, target_id, member.get('member_id')]
             )
             conn.commit()
             
@@ -197,8 +197,8 @@ def remove_favorites(scope: str,
     target_id: int, 
     token: str= Depends(oauth2_scheme)
 ):
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             member = decode_access_token(token)
             

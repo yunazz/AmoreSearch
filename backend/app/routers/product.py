@@ -17,8 +17,8 @@ def get_products(
     current_page: int = Query(1), 
     item_per_page: int = Query(12)
 ):
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             sql = ''
             count_sql = ''

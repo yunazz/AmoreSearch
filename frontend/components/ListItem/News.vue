@@ -1,5 +1,19 @@
 <script setup>
 const props = defineProps(["item", "loading"]);
+async function addFavorites() {
+  const body = {
+    favorite_type: item.favorite_type,
+    target_id: item.target_id,
+    source: item.source,
+  };
+  const { code, msg } = await $http("/member/favorites", {
+    method: "POST",
+    body,
+  });
+
+  console.log(code);
+  console.log(msg);
+}
 </script>
 
 <template>
@@ -17,7 +31,12 @@ const props = defineProps(["item", "loading"]);
     </v-card-text>
     <div class="v-card-custom-action pr-1 pb-1">
       <span class="v-card-date">{{ formatDate(item.created_at) }}</span>
-      <v-btn class="icon--toggle" icon="mdi-star" variant="text" />
+      <v-btn
+        class="icon--toggle"
+        icon="mdi-star"
+        variant="text"
+        @click="addFavorites"
+      />
     </div>
   </v-card>
 </template>

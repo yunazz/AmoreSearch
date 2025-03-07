@@ -94,8 +94,8 @@ def get_members(
     item_per_page: int = Query(12),
     token: str= Depends(oauth2_scheme),
 ):
-    conn = get_connection()
     try:
+        conn = get_connection()
         with conn.cursor() as cursor:
             member = decode_access_token(token)
             
