@@ -177,6 +177,7 @@ watch(employment_status, (newValue) => {
             </div>
 
             <Paging
+              v-if="total_cnt"
               :paging="filter"
               :status="status"
               :total_row="total_cnt"

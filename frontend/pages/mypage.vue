@@ -50,105 +50,107 @@ const { data: mypage } = useApi("/member/me", {
         <h2 class="page_title">마이페이지</h2>
       </div>
       <div id="myInfo" class="flex">
-        <section class="info_detail" v-if="mypage?.result">
-          <article>
-            <h5>
-              <v-icon
-                v-if="mypage?.role > 1"
-                icon="mdi-shield-account"
-                color="primary"
-                class="mr-1"
-              />
-              {{ mypage.result?.name }}
-              <span class="fw-500 ml-2">{{ mypage.result?.position }}</span>
-            </h5>
+        <ClientOnly>
+          <section class="info_detail" v-if="mypage?.result">
+            <article>
+              <h5>
+                <v-icon
+                  v-if="mypage?.role > 1"
+                  icon="mdi-shield-account"
+                  color="primary"
+                  class="mr-1"
+                />
+                {{ mypage.result?.name }}
+                <span class="fw-500 ml-2">{{ mypage.result?.position }}</span>
+              </h5>
 
-            <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
+              <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
 
-            <b>
-              <small style="font-size: 8px" class="mr-2">▶</small>
-              직원 정보
-            </b>
+              <b>
+                <small style="font-size: 8px" class="mr-2">▶</small>
+                직원 정보
+              </b>
 
-            <div class="grid-cols-2 ml-4 mb-3">
-              <p>
-                <b class="mr-6">소속 / 근무부서</b>
-                {{ mypage.result?.company_affiliation }} /
-                {{ mypage.result?.department }}
-              </p>
-              <p>
-                <b class="mr-6">사원번호</b>
-                {{ mypage.result?.emp_no }}
-              </p>
-              <p>
-                <b class="mr-6">근무상태</b>
-                {{ mypage.result?.employment_status }}
-              </p>
-              <p>
-                <b class="mr-6">입사일</b>
-                {{ mypage.result?.hire_date }}
-              </p>
-            </div>
-          </article>
-          <v-divider class="mt-4 mb-3" />
+              <div class="grid-cols-2 ml-4 mb-3">
+                <p>
+                  <b class="mr-6">소속 / 근무부서</b>
+                  {{ mypage.result?.company_affiliation }} /
+                  {{ mypage.result?.department }}
+                </p>
+                <p>
+                  <b class="mr-6">사원번호</b>
+                  {{ mypage.result?.emp_no }}
+                </p>
+                <p>
+                  <b class="mr-6">근무상태</b>
+                  {{ mypage.result?.employment_status }}
+                </p>
+                <p>
+                  <b class="mr-6">입사일</b>
+                  {{ mypage.result?.hire_date }}
+                </p>
+              </div>
+            </article>
+            <v-divider class="mt-4 mb-3" />
 
-          <article>
-            <b>
-              <small style="font-size: 8px" class="mr-2">▶</small>
-              개인 정보
-            </b>
-            <div class="grid-cols-2 ml-4 mb-3">
-              <p>
-                <b class="mr-6">생년월일</b>
-                <span>{{ mypage.result?.birth_date }}</span>
-              </p>
-              <div class="input_cont">
-                <b class="pr-7"> 휴대폰번호 </b>
-                <div class="flex gap-2">
-                  <v-text-field
-                    width="184"
-                    hide-details
-                    variant="outlined"
-                    v-model="form.phone"
-                    v-mask="'###-####-####'"
-                  />
-                  <v-btn
-                    width="70"
-                    color="black"
-                    @click="
-                      activate_confirm(
-                        dialogConfirm,
-                        '회원정보 수정',
-                        '수정하시겠습니까?'
-                      )
-                    "
-                  >
-                    수정
-                  </v-btn>
+            <article>
+              <b>
+                <small style="font-size: 8px" class="mr-2">▶</small>
+                개인 정보
+              </b>
+              <div class="grid-cols-2 ml-4 mb-3">
+                <p>
+                  <b class="mr-6">생년월일</b>
+                  <span>{{ mypage.result?.birth_date }}</span>
+                </p>
+                <div class="input_cont">
+                  <b class="pr-7"> 휴대폰번호 </b>
+                  <div class="flex gap-2">
+                    <v-text-field
+                      width="184"
+                      hide-details
+                      variant="outlined"
+                      v-model="form.phone"
+                      v-mask="'###-####-####'"
+                    />
+                    <v-btn
+                      width="70"
+                      color="black"
+                      @click="
+                        activate_confirm(
+                          dialogConfirm,
+                          '회원정보 수정',
+                          '수정하시겠습니까?'
+                        )
+                      "
+                    >
+                      수정
+                    </v-btn>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
+            </article>
 
-          <article class="my-setting">
-            <v-divider thickness="2" opacity=".8" />
-            <div class="px-3">
-              <p>
-                <v-icon icon="mdi-lock-outline " class="mr-2" /> 비밀번호 변경
-              </p>
-              <p>
-                <v-btn
-                  @click="dialogPwdChange = true"
-                  color="black"
-                  width="160"
-                  rounded
-                >
-                  비밀번호 변경
-                </v-btn>
-              </p>
-            </div>
-          </article>
-        </section>
+            <article class="my-setting">
+              <v-divider thickness="2" opacity=".8" />
+              <div class="px-3">
+                <p>
+                  <v-icon icon="mdi-lock-outline " class="mr-2" /> 비밀번호 변경
+                </p>
+                <p>
+                  <v-btn
+                    @click="dialogPwdChange = true"
+                    color="black"
+                    width="160"
+                    rounded
+                  >
+                    비밀번호 변경
+                  </v-btn>
+                </p>
+              </div>
+            </article>
+          </section>
+        </ClientOnly>
       </div>
     </div>
 
