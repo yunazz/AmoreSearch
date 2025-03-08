@@ -1,7 +1,7 @@
 <script setup>
 const props = defineProps({
   paging: { type: Object, required: true },
-  status: { type: String },
+  status: { type: String, default: "" },
   total_row: { required: true, default: 0 },
   disabled: { type: Boolean, default: false },
   boardType: { type: String, default: "" },

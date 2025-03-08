@@ -9,16 +9,18 @@ const source_name = ref({
   name: "코스인코리아닷컴",
   value: "코스인코리아닷컴",
 });
-
+const query = ref("");
 const filter = ref({
   post_type: "NEWS",
   source_name: "코스인코리아닷컴",
+  query: "",
   current_page: 1,
   item_per_page: 10,
 });
 
 const filter_query = computed(() => ({
   post_type: filter.value.post_type,
+  query: filter.value.query,
   source_name: filter.value.source_name,
   current_page: filter.value.current_page,
   item_per_page: filter.value.item_per_page,
@@ -42,12 +44,16 @@ function notify(msg) {
   snackbar.value.active = true;
   snackbar.value.message = msg;
 }
-
+function change_query() {
+  filter.value.query = query.value;
+}
 watch(post_type, (newValue) => {
   filter.value.post_type = newValue.value;
   source_name.value = externalCategory[newValue.value][0];
   filter.value.source_name = source_name.value.value;
   filter.value.current_page = 1;
+  query.value = "";
+  change_query();
 });
 watch(source_name, (newValue) => {
   filter.value.source_name = newValue.value;
@@ -94,7 +100,7 @@ watch(source_name, (newValue) => {
             </v-btn-toggle>
           </div>
         </div>
-        <!-- <div class="search_input_cont mb-5">
+        <div class="search_input_cont mb-5">
           <v-text-field
             variant="underlined"
             prepend-inner-icon="mdi-magnify"
@@ -103,8 +109,10 @@ watch(source_name, (newValue) => {
             rounded="lg"
             density="compact"
             placeholder="제목 또는 내용을 입력해 주세요"
+            v-model="query"
+            @keydown.enter="change_query"
           ></v-text-field>
-        </div> -->
+        </div>
 
         <div v-if="status === 'success'" class="board">
           <div class="board_list">
@@ -127,13 +135,13 @@ watch(source_name, (newValue) => {
               />
             </template>
           </div>
-          <Paging
-            :paging="filter"
-            :status="status"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
         </div>
+        <Paging
+          :paging="filter"
+          :status="status"
+          :total_row="total_cnt"
+          @changePage="changePage"
+        />
         <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
           {{ snackbar.message }}
         </v-snackbar>
