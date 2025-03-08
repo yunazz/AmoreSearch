@@ -13,7 +13,7 @@ const filter = ref({
   category_1: "",
   brand_ids: selected_brand_id.value,
   current_page: 1,
-  item_per_page: 16,
+  item_per_page: 12,
 });
 
 const filter_query = computed(() => ({

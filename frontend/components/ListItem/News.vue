@@ -41,13 +41,12 @@ async function toggleFavorites(item) {
   <ClientOnly>
     <div external class="list-item">
       <div class="list-left">
-        <div class="">
+        <div @click="openLink(item.source_url)" class="cur-p">
           <v-img
             width="180px"
             height="110px"
             :src="item.thumbnail_image_url"
             cover
-            @click="openLink"
           ></v-img>
         </div>
         <div>
@@ -103,7 +102,7 @@ async function toggleFavorites(item) {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 .list-item .list-title {
   font-weight: 500;
@@ -124,8 +123,7 @@ async function toggleFavorites(item) {
   margin-bottom: 4px;
   font-size: 0.8125rem;
 }
-
-.list-item:last-of-type {
-  border-bottom: 1px solid var(--border-color);
+.list-item:first-child {
+  border-top: 1px solid var(--border-color) !important;
 }
 </style>

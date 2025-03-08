@@ -92,7 +92,7 @@ async function toggleFavorites(item) {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 .list-item .list-title {
   font-weight: 500;
@@ -112,7 +112,7 @@ async function toggleFavorites(item) {
   font-size: 0.8125rem;
 }
 
-.list-item:last-of-type {
-  border-bottom: 1px solid var(--border-color);
+.list-item:first-child {
+  border-top: 1px solid var(--border-color);
 }
 </style>

@@ -36,7 +36,7 @@ const {
   query: filter_query,
 });
 
-const total_cnt = computed(() => board.value.paging.total_rows);
+const total_cnt = computed(() => board.value?.paging.total_rows);
 
 function changePage(current_page) {
   if (current_page === filter.value.current_page) {
@@ -175,9 +175,7 @@ watch(employment_status, (newValue) => {
               <v-icon icon="mdi-magnify" color="grey-lighten-2" />
               <p class="text-gray-02">조회된 결과가 없습니다</p>
             </div>
-
             <Paging
-              v-if="total_cnt"
               :paging="filter"
               :status="status"
               :total_row="total_cnt"
