@@ -40,7 +40,6 @@ async function updateMyInfo() {
 
 const { data: mypage } = useApi("/member/me", {
   key: "mypage-board",
-  transform: ({ result }) => result,
 });
 </script>
 
@@ -51,17 +50,17 @@ const { data: mypage } = useApi("/member/me", {
         <h2 class="page_title">마이페이지</h2>
       </div>
       <div id="myInfo" class="flex">
-        <section class="info_detail">
+        <section class="info_detail" v-if="mypage?.result">
           <article>
             <h5>
               <v-icon
-                v-if="mypage.role > 1"
+                v-if="mypage?.role > 1"
                 icon="mdi-shield-account"
                 color="primary"
                 class="mr-1"
               />
-              {{ mypage.name }}
-              <span class="fw-500 ml-2">{{ mypage.position }}</span>
+              {{ mypage.result?.name }}
+              <span class="fw-500 ml-2">{{ mypage.result?.position }}</span>
             </h5>
 
             <v-divider class="mt-2 mb-2" thickness="2" opacity=".8" />
@@ -74,19 +73,20 @@ const { data: mypage } = useApi("/member/me", {
             <div class="grid-cols-2 ml-4 mb-3">
               <p>
                 <b class="mr-6">소속 / 근무부서</b>
-                {{ mypage.company_affiliation }} / {{ mypage.department }}
+                {{ mypage.result?.company_affiliation }} /
+                {{ mypage.result?.department }}
               </p>
               <p>
                 <b class="mr-6">사원번호</b>
-                {{ mypage.emp_no }}
+                {{ mypage.result?.emp_no }}
               </p>
               <p>
                 <b class="mr-6">근무상태</b>
-                {{ mypage.employment_status }}
+                {{ mypage.result?.employment_status }}
               </p>
               <p>
                 <b class="mr-6">입사일</b>
-                {{ mypage.hire_date }}
+                {{ mypage.result?.hire_date }}
               </p>
             </div>
           </article>
@@ -100,7 +100,7 @@ const { data: mypage } = useApi("/member/me", {
             <div class="grid-cols-2 ml-4 mb-3">
               <p>
                 <b class="mr-6">생년월일</b>
-                <span>{{ mypage.birth_date }}</span>
+                <span>{{ mypage.result?.birth_date }}</span>
               </p>
               <div class="input_cont">
                 <b class="pr-7"> 휴대폰번호 </b>
