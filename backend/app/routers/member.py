@@ -15,7 +15,7 @@ router = APIRouter()
 
 # 내 정보 조회
 @router.get("/me")
-def update_me(token: str= Depends(oauth2_scheme)):
+def get_me(token: str= Depends(oauth2_scheme)):
     member = decode_access_token(token)
     
     try:
