@@ -105,6 +105,7 @@ watch(source_name, (newValue) => {
             placeholder="제목 또는 내용을 입력해 주세요"
           ></v-text-field>
         </div> -->
+
         <div v-if="status === 'success'" class="board">
           <div class="board_list">
             <template v-if="filter.post_type == 'NEWS'">
