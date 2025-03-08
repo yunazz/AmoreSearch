@@ -4,7 +4,7 @@ const emit = defineEmits(["success", "notify"]);
 
 const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
 
-function linkFnc(url) {
+function openLink(url) {
   window.open(url);
 }
 function downloadFnc(item) {
@@ -47,6 +47,7 @@ async function toggleFavorites(item) {
             height="110px"
             :src="item.thumbnail_image_url"
             cover
+            @click="openLink"
           ></v-img>
         </div>
         <div>
@@ -76,7 +77,7 @@ async function toggleFavorites(item) {
             color="sub"
             icon="mdi-link"
             variant="text"
-            @click="linkFnc(item.source_url)"
+            @click="openLink(item.source_url)"
           />
         </template>
 
