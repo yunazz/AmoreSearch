@@ -555,3 +555,20 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   color: var(--color-gray-03) !important;
   transform: translateY(-1px);
 }
+
+.no-result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  row-gap: 12px;
+  margin-top: 2rem;
+}
+
+.no-result i {
+  font-size: 36px;
+}
+.no-result p {
+  font-size: 0.8125rem;
+}

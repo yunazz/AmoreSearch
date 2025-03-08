@@ -114,7 +114,10 @@ watch(source_name, (newValue) => {
           ></v-text-field>
         </div>
 
-        <div v-if="status === 'success'" class="board">
+        <div
+          v-if="status === 'success' && board?.result && total_cnt > 0"
+          class="board"
+        >
           <div class="board_list">
             <template v-if="filter.post_type == 'NEWS'">
               <ListItemNews
@@ -135,13 +138,24 @@ watch(source_name, (newValue) => {
               />
             </template>
           </div>
+          <Paging
+            :paging="filter"
+            :status="status"
+            :total_row="total_cnt"
+            @changePage="changePage"
+          />
         </div>
-        <Paging
-          :paging="filter"
-          :status="status"
-          :total_row="total_cnt"
-          @changePage="changePage"
-        />
+        <div v-else class="no-result">
+          <template v-if="status === 'pending'">
+            <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+            <p class="text-gray-02">조회중입니다. 잠시만 기다려주세요</p>
+          </template>
+
+          <template v-else>
+            <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+            <p class="text-gray-02">조회된 결과가 없습니다</p>
+          </template>
+        </div>
         <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
           {{ snackbar.message }}
         </v-snackbar>

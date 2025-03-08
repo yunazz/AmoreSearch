@@ -79,7 +79,10 @@ watch(favorite_type, (newValue) => {
           </div>
         </div>
         <div class="board">
-          <div class="board_list">
+          <div
+            class="board_list"
+            v-if="status === 'success' && board?.result && total_cnt > 0"
+          >
             <template v-if="filter.favorite_type == 'EXTERNAL_NEWS'">
               <ListItemNews
                 v-for="item in board?.result"
@@ -137,16 +140,24 @@ watch(favorite_type, (newValue) => {
                 @success="refresh"
               />
             </template>
+            <Paging
+              :paging="filter"
+              :status="status"
+              :total_row="total_cnt"
+              @changePage="changePage"
+            />
           </div>
+          <div v-else class="no-result">
+            <template v-if="status === 'pending'">
+              <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+              <p class="text-gray-02">조회중입니다. 잠시만 기다려주세요</p>
+            </template>
 
-          <Paging
-            no-content-text="등록된 즐겨찾기가 없습니다."
-            no-content-icon="mdi-star-off"
-            :paging="filter"
-            :status="status"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
+            <template v-else>
+              <v-icon icon="mdi-star-off" color="grey-lighten-2" />
+              <p class="text-gray-02">등록된 즐겨찾기가 없습니다</p>
+            </template>
+          </div>
         </div>
         <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
           {{ snackbar.message }}

@@ -27,7 +27,6 @@ export default defineNuxtConfig({
         transformAssetUrls,
       },
     },
-
     server: {
       proxy: {
         "/api": {

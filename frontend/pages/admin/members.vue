@@ -134,10 +134,8 @@ watch(employment_status, (newValue) => {
                   <th class="text-center" style="width: 70px">수정</th>
                 </tr>
               </thead>
-              <tbody v-if="status != 'pending'">
+              <tbody v-if="board?.result && total_cnt > 0">
                 <tr v-for="(item, index) in board?.result" :key="item.name">
-                  <!-- @click="openDialog('info', item)"
-              class="cur-p" -->
                   <td class="text-center">{{ total_cnt - index }}</td>
                   <td>
                     <v-icon
@@ -173,14 +171,18 @@ watch(employment_status, (newValue) => {
                 </tr>
               </tbody>
             </v-table>
-          </div>
+            <div v-if="total_cnt == 0" class="no-result">
+              <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+              <p class="text-gray-02">조회된 결과가 없습니다</p>
+            </div>
 
-          <Paging
-            :paging="filter"
-            :status="status"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
+            <Paging
+              :paging="filter"
+              :status="status"
+              :total_row="total_cnt"
+              @changePage="changePage"
+            />
+          </div>
         </div>
       </div>
       <PopupMember

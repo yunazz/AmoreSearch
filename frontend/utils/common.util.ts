@@ -3,7 +3,7 @@ export function $http(url: string, options?: any) {
   const login_token = useCookie("login_token");
 
   const settings = {
-    baseURL: config.public.SERVER_HOST + "/api",
+    baseURL: config.public.CDN_HOST + "/api",
     headers: { Authorization: `Bearer ${login_token.value ?? ""}` },
     ...options,
   };

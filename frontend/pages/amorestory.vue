@@ -98,61 +98,61 @@ watch(post_ctgry, (newValue) => {
             </v-btn-toggle>
           </div>
         </div>
-        <template v-if="status === 'success'">
-          <div class="board">
-            <div class="board_content">
-              <!-- 회사뉴스 -->
-              <template v-if="post_type.value === 'NEWS'">
-                <div v-if="board?.result" class="board_cards grid-cols-4">
-                  <ListItemCardNews
-                    v-for="(item, i) in board?.result"
-                    :key="i"
-                    :item="item"
-                    scope="INTERNAL"
-                    @notify="notify"
-                  />
-                </div>
-              </template>
-
-              <!-- 보고서 -->
-              <template v-else-if="post_type.value === 'REPORT'">
-                <ListItemLink
-                  v-for="(item, index) in board?.result"
-                  :key="index"
-                  scope="INTERNAL"
+        <div class="board">
+          <div
+            class="board_content"
+            v-if="status === 'success' && board?.result"
+          >
+            <!-- 회사뉴스 -->
+            <template v-if="post_type.value === 'NEWS'">
+              <div v-if="board?.result" class="board_cards grid-cols-4">
+                <ListItemCardNews
+                  v-for="(item, i) in board?.result"
+                  :key="i"
                   :item="item"
+                  scope="INTERNAL"
+                  @notify="notify"
                 />
-              </template>
+              </div>
+            </template>
 
-              <!-- 브랜드 -->
-              <template v-else-if="post_type.value === 'BRAND'">
-                <div class="card--brand grid-cols-5">
-                  <v-card v-for="(item, i) in board?.result" :key="i">
-                    <NuxtImg
-                      :src="(config.CDN_HOST, item.image_url)"
-                      class="align-end"
-                      height="82"
-                      cover
-                    />
-                    <div class="brand_info">
-                      <v-chip
-                        size="small"
-                        color="sub"
-                        variant="flat"
-                        class="mr-1"
-                        density="comfortable"
-                      >
-                        {{ enums.brand_ctgry[item.brand_ctgry] }}
-                      </v-chip>
-                      <p class="text-white">
-                        {{ item.brand_kor }}
-                      </p>
-                    </div>
-                  </v-card>
-                </div>
-              </template>
-            </div>
+            <!-- 보고서 -->
+            <template v-else-if="post_type.value === 'REPORT'">
+              <ListItemLink
+                v-for="(item, index) in board?.result"
+                :key="index"
+                scope="INTERNAL"
+                :item="item"
+              />
+            </template>
 
+            <!-- 브랜드 -->
+            <template v-else-if="post_type.value === 'BRAND'">
+              <div class="card--brand grid-cols-5">
+                <v-card v-for="(item, i) in board?.result" :key="i">
+                  <NuxtImg
+                    :src="(config.CDN_HOST, item.image_url)"
+                    class="align-end"
+                    height="82"
+                    cover
+                  />
+                  <div class="brand_info">
+                    <v-chip
+                      size="small"
+                      color="sub"
+                      variant="flat"
+                      class="mr-1"
+                      density="comfortable"
+                    >
+                      {{ enums.brand_ctgry[item.brand_ctgry] }}
+                    </v-chip>
+                    <p class="text-white">
+                      {{ item.brand_kor }}
+                    </p>
+                  </div>
+                </v-card>
+              </div>
+            </template>
             <Paging
               v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
               :paging="filter"
@@ -161,7 +161,19 @@ watch(post_ctgry, (newValue) => {
               @changePage="changePage"
             />
           </div>
-        </template>
+          <div v-else class="no-result">
+            <template v-if="status === 'pending'">
+              <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+              <p class="text-gray-02">조회중입니다. 잠시만 기다려주세요</p>
+            </template>
+
+            <template v-else>
+              <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+              <p class="text-gray-02">조회된 결과가 없습니다</p>
+            </template>
+          </div>
+        </div>
+
         <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
           {{ snackbar.message }}
         </v-snackbar>

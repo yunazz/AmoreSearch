@@ -87,79 +87,56 @@ const changePage = (page) => {
 };
 </script>
 <template>
-  <div class="paging">
+  <div v-if="total_row > 0" class="paging">
     <!-- list 조회중 / 결과없음 -->
-    <template v-if="total_row === 0 || status === 'pending'">
-      <div class="no-result">
-        <template v-if="status === 'pending'">
-          <v-icon icon="mdi-magnify" color="grey-lighten-2" />
-          <p class="text-gray-02">조회중입니다. 잠시만 기다려주세요.</p>
-        </template>
-
-        <template v-else>
-          <v-icon
-            :icon="noContentIcon || ' mdi-magnify'"
-            color="grey-lighten-2"
-          />
-          <p class="text-gray-02">
-            {{ noContentText || "조회된 결과가 없습니다." }}
-          </p>
-        </template>
-      </div>
-    </template>
-
-    <template v-else>
+    <button
+      @click="changePage(1)"
+      :class="{
+        hide:
+          paging?.current_page === 1 || paging?.current_page <= page_per_group,
+      }"
+    >
+      <v-icon icon="mdi-page-first" />
+    </button>
+    <button
+      @click="changePage(paging?.groupStartPage - page_per_group)"
+      :class="{
+        hide:
+          paging?.current_page === 1 || paging?.groupStartPage < page_per_group,
+      }"
+    >
+      <v-icon icon="mdi-chevron-left" />
+    </button>
+    <div class="paging_num">
       <button
-        @click="changePage(1)"
-        :class="{
-          hide:
-            paging?.current_page === 1 ||
-            paging?.current_page <= page_per_group,
-        }"
+        v-for="item in paging?.pageList"
+        :key="item"
+        :class="{ active: paging?.current_page === item }"
+        @click="changePage(item)"
       >
-        <v-icon icon="mdi-page-first" />
+        {{ item }}
       </button>
-      <button
-        @click="changePage(paging?.groupStartPage - page_per_group)"
-        :class="{
-          hide:
-            paging?.current_page === 1 ||
-            paging?.groupStartPage < page_per_group,
-        }"
-      >
-        <v-icon icon="mdi-chevron-left" />
-      </button>
-      <div class="paging_num">
-        <button
-          v-for="item in paging?.pageList"
-          :key="item"
-          :class="{ active: paging?.current_page === item }"
-          @click="changePage(item)"
-        >
-          {{ item }}
-        </button>
-      </div>
-      <button
-        :class="{
-          hide:
-            paging?.current_page === paging?.lastPage ||
-            paging?.groupStartPage + 9 >= paging?.lastPage,
-        }"
-        @click="changePage(paging?.groupEndPage + 1)"
-      >
-        <v-icon icon="mdi-chevron-right" />
-      </button>
-      <button
-        :class="{
-          hide:
-            paging?.lastPage <= paging?.groupStartPage + page_per_group ||
-            paging?.groupEndPage - paging?.groupStartPage + 1 < page_per_group,
-        }"
-        @click="changePage(paging?.lastPage)"
-      >
-        <v-icon icon="mdi-page-last" />
-      </button>
-    </template>
+    </div>
+    <button
+      :class="{
+        hide:
+          paging?.current_page === paging?.lastPage ||
+          paging?.groupStartPage + 9 >= paging?.lastPage,
+      }"
+      @click="changePage(paging?.groupEndPage + 1)"
+    >
+      <v-icon icon="mdi-chevron-right" />
+    </button>
+    <button
+      :class="{
+        hide:
+          paging?.lastPage <= paging?.groupStartPage + page_per_group ||
+          paging?.groupEndPage - paging?.groupStartPage + 1 < page_per_group,
+      }"
+      @click="changePage(paging?.lastPage)"
+    >
+      <v-icon icon="mdi-page-last" />
+    </button>
   </div>
 </template>
 <style scoped>
@@ -187,21 +164,5 @@ const changePage = (page) => {
 .paging .hide {
   opacity: 0;
   pointer-events: none;
-}
-
-.no-result {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  row-gap: 12px;
-}
-
-.no-result i {
-  font-size: 36px;
-}
-.no-result p {
-  font-size: 0.8125rem;
 }
 </style>

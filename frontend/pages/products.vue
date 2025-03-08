@@ -148,24 +148,36 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
             </v-btn>
           </v-btn-toggle>
         </div>
-        <div class="board" v-if="status === 'success'">
+        <div
+          class="board"
+          v-if="status === 'success' && board?.result && total_cnt > 0"
+        >
           <div class="board_list">
-            <template v-if="status === 'success'">
-              <ListProduct
-                :list="board?.result"
-                :scope="filter.scope"
-                :is_favorite="false"
-                @notify="notify"
-              />
-            </template>
-          </div>
+            <ListProduct
+              :list="board?.result"
+              :scope="filter.scope"
+              :is_favorite="false"
+              @notify="notify"
+            />
 
-          <Paging
-            :paging="filter"
-            :status="status"
-            :total_row="total_cnt"
-            @changePage="changePage"
-          />
+            <Paging
+              :paging="filter"
+              :status="status"
+              :total_row="total_cnt"
+              @changePage="changePage"
+            />
+          </div>
+        </div>
+        <div v-else class="no-result">
+          <template v-if="status === 'pending'">
+            <v-icon icon="mdi-magnify" color="grey-lighten-2" />
+            <p class="text-gray-02">조회중입니다. 잠시만 기다려주세요</p>
+          </template>
+
+          <template v-else-if="total_cnt == 0">
+            <v-icon :icon="' mdi-magnify'" color="grey-lighten-2" />
+            <p class="text-gray-02">조회된 결과가 없습니다</p>
+          </template>
         </div>
         <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
           {{ snackbar.message }}
