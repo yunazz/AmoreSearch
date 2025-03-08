@@ -108,16 +108,17 @@ const changePage = (page) => {
       </div>
     </template>
 
-    <!--  -->
     <template v-else>
-      <!-- <button
-      @click="changePage(1)"
-      :class="{
-        hide: paging?.current_page === 1 || paging?.current_page <= page_per_group,
-      }"
-    >
-      <v-icon icon="mdi-page-first" />
-    </button> -->
+      <button
+        @click="changePage(1)"
+        :class="{
+          hide:
+            paging?.current_page === 1 ||
+            paging?.current_page <= page_per_group,
+        }"
+      >
+        <v-icon icon="mdi-page-first" />
+      </button>
       <button
         @click="changePage(paging?.groupStartPage - page_per_group)"
         :class="{
@@ -148,16 +149,16 @@ const changePage = (page) => {
       >
         <v-icon icon="mdi-chevron-right" />
       </button>
-      <!-- <button
-      :class="{
-        hide:
-          paging?.lastPage === paging?.current_page ||
-          paging?.groupEndPage - paging?.groupStartPage < page_per_group,
-      }"
-      @click="changePage(paging?.lastPage)"
-    >
-      <v-icon icon="mdi-page-last" />
-    </button> -->
+      <button
+        :class="{
+          hide:
+            paging?.lastPage <= paging?.groupStartPage + page_per_group ||
+            paging?.groupEndPage - paging?.groupStartPage + 1 < page_per_group,
+        }"
+        @click="changePage(paging?.lastPage)"
+      >
+        <v-icon icon="mdi-page-last" />
+      </button>
     </template>
   </div>
 </template>

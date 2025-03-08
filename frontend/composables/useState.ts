@@ -19,7 +19,7 @@ export function useLoginHandler() {
       const response: any = await $http("/auth/me", {
         headers: { Authorization: `Bearer ${str_login_token}` },
       });
-      if (response.detail === "성공") {
+      if (response.code === 0) {
         member.value = response.result;
       }
     },
