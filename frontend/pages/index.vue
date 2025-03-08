@@ -39,7 +39,7 @@ async function login() {
 
 async function loginSuccess(access_token) {
   await useLoginHandler().refresh(access_token);
-  await navigateTo("/dashboard");
+  await navigateTo("/ai-search");
 }
 
 function notify(msg) {
