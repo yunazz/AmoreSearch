@@ -14,7 +14,7 @@ const filter = ref({
   post_type: "NEWS",
   source_name: "코스인코리아닷컴",
   current_page: 1,
-  item_per_page: 20,
+  item_per_page: 10,
 });
 
 const filter_query = computed(() => ({
@@ -94,6 +94,17 @@ watch(source_name, (newValue) => {
             </v-btn-toggle>
           </div>
         </div>
+        <!-- <div class="search_input_cont mb-5">
+          <v-text-field
+            variant="underlined"
+            prepend-inner-icon="mdi-magnify"
+            hide-details
+            single-line
+            rounded="lg"
+            density="compact"
+            placeholder="제목 또는 내용을 입력해 주세요"
+          ></v-text-field>
+        </div> -->
         <div v-if="status === 'success'" class="board">
           <div class="board_list">
             <template v-if="filter.post_type == 'NEWS'">

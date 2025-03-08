@@ -37,7 +37,7 @@ async function toggleFavorites(item) {
         height="180px"
         :src="item.image_url"
         cover
-        style="border: 1px solid #f1f1f1"
+        style="border-radius: 12px"
       ></v-img>
     </div>
     <v-card-text class="mt-4 text-clamp-2" style="min-height: 40px">

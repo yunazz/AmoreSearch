@@ -13,8 +13,8 @@ def get_boards(
     post_type: str = Query(None), 
     post_ctgry: Optional[str] = Query(None), 
     query: Optional[str] = Query(None), 
-    current_page: int = Query(1), 
-    page_per_group: int = Query(12)
+    current_page: Optional[int] = Query(1), 
+    item_per_page: Optional[int] = Query(8)
 ):
     try:
         conn = get_connection()
@@ -89,9 +89,9 @@ def get_boards(
                 sql += " ORDER BY p.created_at DESC"
                 
                 # 페이징 적용
-                offset = (current_page - 1) * page_per_group
+                offset = (current_page - 1) * item_per_page
                 sql += " LIMIT %s OFFSET %s"
-                params.extend([page_per_group, offset])
+                params.extend([item_per_page, offset])
 
                 # 데이터 조회
                 cursor.execute(sql, params)
@@ -120,7 +120,7 @@ def get_external_boards(
     source_name: Optional[str] = Query(None), 
     query: Optional[str] = Query(None), 
     current_page: int = Query(1), 
-    item_per_page: int = Query(12)
+    item_per_page: int = Query(10)
 ):
     try:
         conn = get_connection()

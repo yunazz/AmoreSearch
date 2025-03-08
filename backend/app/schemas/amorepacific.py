@@ -4,7 +4,7 @@ from datetime import date, datetime
 
 class PagingModel(BaseModel):
     current_page: Optional[int] = None
-    page_per_group: Optional[int] = None
+    item_per_page: Optional[int] = None
 
 class BrandRequest(PagingModel):
     brand_ctgry: Optional[str] = None

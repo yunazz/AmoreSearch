@@ -15,14 +15,11 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 @router.post("/login")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_session)):
     member = db.query(Member).filter(Member.emp_no == form_data.username).first()
-    print(member)
-    print(member)
     if not member:
         return BaseResponse(
             code=1,
             msg="아이디 또는 비밀번호를 확인해 주세요."
         )
-
 
     if not verify_password(form_data.password, member.password):
         return BaseResponse(code=1, msg="아이디 또는 비밀번호를 확인해 주세요.")

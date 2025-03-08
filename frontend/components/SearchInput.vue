@@ -68,7 +68,6 @@ onUnmounted(() => {
         v-model="inputValue"
         @focus="handleFocus"
         @blur="handleBlur"
-        placeholder=""
         class="custom-input"
       />
       <span v-if="!isUserTyping && !inputValue" class="typing-effect">

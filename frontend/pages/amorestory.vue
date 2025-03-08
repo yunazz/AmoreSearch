@@ -49,7 +49,7 @@ watch(post_type, (newValue) => {
   post_ctgry.value = { name: "전체", value: "" };
   filter.value.current_page = 1;
   if (newValue.value === "NEWS") filter.value.item_per_page = 8;
-  else if (newValue.value === "REPORT") filter.value.item_per_page = 20;
+  else if (newValue.value === "REPORT") filter.value.item_per_page = 10;
   else if (newValue.value === "BRAND") filter.value.item_per_page = 100;
 });
 
