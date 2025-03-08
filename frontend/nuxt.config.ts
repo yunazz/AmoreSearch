@@ -30,7 +30,7 @@ export default defineNuxtConfig({
     server: {
       proxy: {
         "/api": {
-          target: "http://localhost:8000",
+          target: process.env.CDN_HOST,
           changeOrigin: true,
         },
       },
