@@ -81,19 +81,15 @@ def get_boards(
                     count_sql += " AND (title LIKE %s OR content LIKE %s)"
                     params.extend([f"%{query}%", f"%{query}%"])
                 
-                # 총 개수 조회
                 cursor.execute(count_sql, params) 
                 total_count = cursor.fetchone()["COUNT(*)"]
 
-                # ORDER BY
                 sql += " ORDER BY p.created_at DESC"
                 
-                # 페이징 적용
                 offset = (current_page - 1) * item_per_page
                 sql += " LIMIT %s OFFSET %s"
                 params.extend([item_per_page, offset])
 
-                # 데이터 조회
                 cursor.execute(sql, params)
                 result = cursor.fetchall()
 

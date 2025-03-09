@@ -42,7 +42,19 @@ async function toggleFavorites(item) {
     <div external class="list-item">
       <div class="list-left">
         <p class="list-title">{{ item.title }}</p>
-        <p class="list-text text-clamp-2">{{ item.content }}</p>
+        <!-- document 있을 때 -->
+        <template v-if="item.summary">
+          <p class="list-text text-clamp-2">
+            <b class="text-primary mr-1">AI 요약🔎</b>
+            {{ item.summary }}
+          </p>
+        </template>
+        <template v-else>
+          <p class="list-text text-clamp-2">
+            <b class="text-primary mr-1">본문 내용</b>
+            {{ item.content }}
+          </p>
+        </template>
         <p>
           <span class="text-gray-04 mr-2">{{
             formatDate(item.published_at || item.created_at)

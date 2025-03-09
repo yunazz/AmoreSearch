@@ -71,9 +71,9 @@ function success() {
               </div>
 
               <v-card-item class="pt-1">
-                <p class="card_title fw-600">
+                <h3 class="card_title fw-600">
                   {{ targetItem.product_name }}
-                </p>
+                </h3>
                 <v-card-subtitle>
                   <div class="flex px-3 gap-1"></div>
                   <p class="flex gap-2 mt-1">
@@ -84,22 +84,14 @@ function success() {
                     <span class="body--s">
                       {{ formatNumber(targetItem.price) }}원
                     </span>
+                    <small>|</small>
+
+                    <span class="body--s">
+                      {{ targetItem.capacity }}
+                    </span>
                   </p>
                 </v-card-subtitle>
               </v-card-item>
-              <v-card-text>
-                <h4 class="mb-1 fw-600 flex align-center gap-1 word-space--1">
-                  <v-icon
-                    icon="mdi-information"
-                    size="small"
-                    color="grey-lighten-1"
-                  />
-                  ｢화장품법｣에 따라 기재ㆍ표시하여야 하는 모든 성분
-                </h4>
-                <p>
-                  {{ targetItem.ingredients }}
-                </p>
-              </v-card-text>
               <v-card-text>
                 <div>
                   <h4 class="mb-1 fw-600 flex align-center gap-1 word-space--1">
@@ -108,10 +100,13 @@ function success() {
                       size="small"
                       color="grey-lighten-1"
                     />
-                    ｢화장품법｣에 따른 기능성 화장품 심사(보고) 여부
+                    ｢화장품법｣에 따라 기재ㆍ표시하여야 하는 모든 성분
                   </h4>
-                  <p>화장품법에 따른 기능성 화장품 심사를 필함</p>
+                  <p>
+                    {{ targetItem.ingredients }}
+                  </p>
                 </div>
+
                 <div>
                   <h4
                     class="mt-5 mb-1 fw-600 flex align-center gap-1 word-space--1"
@@ -123,7 +118,7 @@ function success() {
                     />
                     제품 주요 사양
                   </h4>
-                  <p>제품 주요 사양 안내입니다.</p>
+                  <p>{{ targetItem.specification }}</p>
                 </div>
                 <div>
                   <h4
@@ -136,7 +131,20 @@ function success() {
                     />
                     사용방법
                   </h4>
-                  <p>사용방법 안내입니다.</p>
+                  <p>{{ targetItem.use_period }}</p>
+                </div>
+                <div v-if="targetItem.mfds">
+                  <h4
+                    class="mt-5 mb-1 fw-600 flex align-center gap-1 word-space--1"
+                  >
+                    <v-icon
+                      icon="mdi-information"
+                      size="small"
+                      color="grey-lighten-1"
+                    />
+                    ｢화장품법｣에 따른 기능성 화장품 심사(보고) 여부
+                  </h4>
+                  <p>{{ targetItem.mfds }}</p>
                 </div>
                 <div>
                   <h4
@@ -149,29 +157,9 @@ function success() {
                     />
                     사용할 때의 주의사항
                   </h4>
-                  <p>사용할 때의 주의사항</p>
+                  <p>{{ targetItem.precaution }}</p>
                 </div>
-                <div>
-                  <h4
-                    class="mt-5 mb-1 fw-600 flex align-center gap-1 word-space--1"
-                  >
-                    <v-icon
-                      icon="mdi-information"
-                      size="small"
-                      color="grey-lighten-1"
-                    />
-                    사용할 때의 주의사항
-                  </h4>
-                  <p>
-                    1) 화장품 사용 시 또는 사용 후 직사광선에 의하여 사용 부위가
-                    붉은 반점, 부어오름 또는 가려움증 등의 이상 증상이나
-                    부작용이 있는 경우에는 전문의 등과 상담할 것. 2) 상처가 있는
-                    부위 등에는 사용을 자제할 것. 3) 보관 및 취급 시 주의 사항.
-                    가) 어린이의 손이 닿지 않는 곳에 보관할 것. 나) 직사광선을
-                    피해서 보관할 것
-                  </p>
-                </div>
-                <div>
+                <div v-if="targetItem.manufacture">
                   <h4
                     class="mt-5 mb-1 fw-600 flex align-center gap-1 word-space--1"
                   >
@@ -182,7 +170,7 @@ function success() {
                     />
                     소비자상담 전화번호
                   </h4>
-                  <p>1577-4887</p>
+                  <p>{{ targetItem.manufacture }}</p>
                 </div>
               </v-card-text>
             </div>
@@ -194,7 +182,11 @@ function success() {
 </template>
 <style scoped>
 h4 {
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
+}
+.rnb_wrap p {
+  font-size: 13px;
+  line-height: 1.4;
 }
 .position-absolute {
   position: absolute;
