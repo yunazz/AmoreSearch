@@ -52,12 +52,15 @@ watch(post_type, (newValue) => {
   source_name.value = externalCategory[newValue.value][0];
   filter.value.source_name = source_name.value.value;
   filter.value.current_page = 1;
+  filter.value.query = "";
   query.value = "";
   change_query();
 });
 watch(source_name, (newValue) => {
   filter.value.source_name = newValue.value;
   filter.value.current_page = 1;
+  filter.value.query = "";
+  query.value = "";
 });
 </script>
 
