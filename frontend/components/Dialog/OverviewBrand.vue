@@ -1,18 +1,53 @@
 <script setup>
+const config = useRuntimeConfig().public;
 const props = defineProps({
   is_active: { type: Boolean, required: true },
   item: {
     type: Object,
   },
 });
-
+const pending = ref(false);
+const questions = computed(() => [
+  `${[props.item?.brand_kor]}의 핵심 가치에 대해서 알려주세요.`,
+  `${[props.item?.brand_kor]}의 주요 제품에 대해서 알려주세요`,
+]);
 const emit = defineEmits(["update:is_active", "close"]);
 
-const form = ref({});
+const search_input = ref("");
+const search_query = ref("");
+const search_result = ref("");
+
+function search(query) {
+  if (pending.value) return;
+  initSearch();
+  search_query.value = query;
+  pending.value = true;
+
+  const param = {
+    query: search_query.value,
+    brand_kor: props.item?.brand_kor,
+  };
+  setTimeout(() => {
+    pending.value = false;
+  }, 3000);
+}
+
+function initSearch() {
+  search_input.value = "";
+  search_query.value = "";
+  search_result.value = "";
+}
 
 function onDialogChange(val) {
   emit("update:is_active", val);
 }
+
+watch(
+  () => props.is_active,
+  () => {
+    initSearch();
+  }
+);
 </script>
 
 <template>
@@ -20,19 +55,133 @@ function onDialogChange(val) {
     <v-dialog
       :model-value="is_active"
       scrollable
-      width="800"
+      width="700"
       @update:model-value="onDialogChange"
-      persistent
     >
       <v-card>
-        <button
-          class="icon--dialog-close"
-          variant="text"
-          @click="onDialogChange(false)"
-        >
-          <v-icon icon="mdi-close" size="large" />
-        </button>
+        <v-card>
+          <div class="dialog-top">
+            <button
+              class="icon--dialog-close"
+              variant="text"
+              @click="onDialogChange(false)"
+            >
+              <v-icon icon="mdi-close" size="large" />
+            </button>
+          </div>
+          <div class="px-8 pt-8 pb-12">
+            <p class="text-primary text-center mb-1 fw-500">
+              <v-chip size="small">
+                {{ enums.brand_ctgry[item.brand_ctgry] }}
+              </v-chip>
+            </p>
+
+            <h4 class="flex align-center justify-center col-gap-3">
+              <NuxtImg
+                :src="(config.CDN_HOST, item.image_url)"
+                class="align-end"
+                height="50"
+                width="50"
+                cover
+              />
+              {{ item.brand_kor }}
+            </h4>
+            <p
+              class="text-center text-gray-03 fw-300 body--m"
+              style="line-height: 1.3"
+              v-html="item.brand_description"
+            />
+            <div class="flex justify-center align-center col-gap-4">
+              <div class="flex mt-2">
+                <span class="mr-5">
+                  <b class="mr-2 text-primary fw-500">CEO</b> {{ item.ceo }}
+                </span>
+                <span>
+                  <b class="mr-2 text-primary fw-500">설립연도</b>
+                  {{ item.founded_year }}
+                </span>
+              </div>
+            </div>
+            <div ref="draggable_text" class="news_content" />
+            <!-- v-html="processedTexts" -->
+
+            <div class="related_question_list">
+              <h5>관련 질문</h5>
+              <ol>
+                <li v-for="(item, index) in questions" :key="index">
+                  <span
+                    @click="search(item)"
+                    :class="{ 'text-underline': !pending }"
+                  >
+                    {{ item }}</span
+                  >
+                </li>
+              </ol>
+            </div>
+
+            <v-divider thickness="2" class="mb-4" />
+            <div class="search_reply">
+              <div class="search_q">{{ search_query }}</div>
+            </div>
+            <div class="search_input_cont">
+              <label for="search_input">
+                <v-icon icon="mdi-magnify" color="primary" />
+              </label>
+              <input
+                id="search_input"
+                type="text"
+                v-model="search_input"
+                @keydown.enter="search"
+                placeholder=""
+                :disabled="pending"
+                style="outline: none"
+              />
+            </div>
+          </div>
+        </v-card>
       </v-card>
     </v-dialog>
   </ClientOnly>
 </template>
+<style scoped>
+h4 {
+  text-align: center;
+  font-size: 1.5rem;
+}
+h5 {
+  font-size: 14px;
+  margin-top: 1rem;
+  margin-bottom: 4px;
+}
+.search_reply {
+  margin: 1rem 0;
+}
+.search_reply .search_q {
+  color: var(--main-color);
+  font-weight: 600;
+}
+.related_question_list {
+  margin-bottom: 1rem;
+}
+.related_question_list ol {
+  list-style: disc;
+  padding-left: 18px;
+}
+.related_question_list ol li {
+  font-size: 14px;
+  font-weight: 500;
+  height: 22px;
+  cursor: default !important;
+}
+.related_question_list ol li span {
+  text-decoration: none !important;
+  cursor: default !important;
+}
+.related_question_list ol li span.text-underline:hover {
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+.related_question_list ol li:hover {
+  cursor: pointer;
+}
+</style>

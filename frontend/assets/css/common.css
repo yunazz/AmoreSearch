@@ -32,6 +32,7 @@
 
   --main-color: #784aab;
   --sub-color: #a28dd4;
+  --sub-light-color: rgba(162, 141, 212, 0.25);
 
   --color-gray-01: #e0d6e6;
   --color-gray-02: #c1b9c7;
@@ -522,10 +523,18 @@ body .text-grey-lighten-2 {
 .col-gap-2 {
   column-gap: 0.5rem;
 }
+.col-gap-3 {
+  column-gap: 0.75rem;
+}
 .col-gap-4 {
   column-gap: 1rem;
 }
-
+.col-gap-8 {
+  column-gap: 2rem;
+}
+.col-gap-12 {
+  column-gap: 3rem;
+}
 .row-gap-2 {
   row-gap: 0.5rem;
 }

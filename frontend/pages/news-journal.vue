@@ -104,19 +104,19 @@ watch(source_name, (newValue) => {
           </div>
         </div>
         <div class="search_input_cont mb-5">
-          <v-text-field
-            variant="underlined"
-            prepend-inner-icon="mdi-magnify"
-            hide-details
-            single-line
-            rounded="lg"
-            density="compact"
-            placeholder="제목 또는 내용을 입력해 주세요"
+          <label for="search_input">
+            <v-icon icon="mdi-magnify" color="primary" />
+          </label>
+          <input
+            id="search_input"
+            type="text"
             v-model="query"
             @keydown.enter="change_query"
-          ></v-text-field>
+            placeholder="제목 또는 내용을 입력해 주세요"
+            :disabled="status === 'pending'"
+            style="outline: none"
+          />
         </div>
-
         <div
           v-if="status === 'success' && board?.result && total_cnt > 0"
           class="board"
@@ -167,4 +167,9 @@ watch(source_name, (newValue) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.search_input_cont {
+  min-width: 1100px;
+  max-width: 1400px;
+}
+</style>
