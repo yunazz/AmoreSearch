@@ -108,7 +108,6 @@ ul,
 ol {
   list-style: none;
 }
-
 select,
 input,
 textarea {
@@ -281,6 +280,12 @@ main.main {
 
 .board_cards .card-img {
   padding: 16px 14px 0;
+}
+.board_cards .card-img img {
+  transition: 0.5s ease-out;
+}
+.board_cards .card-img:hover img {
+  transform: scale(1.07);
 }
 .rnb .rnb_content {
   position: sticky;
@@ -565,10 +570,38 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   row-gap: 12px;
   margin-top: 2rem;
 }
-
 .no-result i {
   font-size: 36px;
 }
 .no-result p {
   font-size: 0.8125rem;
+}
+.news_content img {
+  max-width: 600px;
+  max-height: 260px;
+  margin-bottom: 0.75rem;
+}
+.news_content .news_img_cont {
+  display: flex;
+  justify-content: center;
+}
+.dialog-top {
+  height: 30px;
+  position: relative;
+}
+.dialog-top button.icon--dialog-close {
+  position: absolute;
+  right: 20px;
+  top: 16px;
+}
+.tooltip {
+  position: absolute;
+  background-color: black;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  /* display: none; */
+  z-index: 1000;
+  white-space: nowrap;
 }

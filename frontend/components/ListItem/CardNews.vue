@@ -43,8 +43,9 @@ function overview() {
         style="border-radius: 12px"
       ></v-img>
     </div>
-    <v-card-text class="mt-4 text-clamp-2" style="min-height: 40px">
-      <b class="fw-500">{{ item.title }}</b>
+    <v-card-text class="mt-4" style="min-height: 60px">
+      <p class="mr-1 text-primary">{{ item.post_ctgry }}</p>
+      <b class="fw-500 text-clamp-2">{{ item.title }}</b>
     </v-card-text>
     <div class="v-card-custom-action pr-1 pb-1">
       <span class="v-card-date">{{ formatDate(item.created_at) }}</span>
