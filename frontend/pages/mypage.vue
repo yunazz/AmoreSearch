@@ -157,20 +157,20 @@ const { data: mypage } = useApi("/member/me", {
     <v-snackbar v-model="snackbar.active" :timeout="3000" color="primary">
       {{ snackbar.message }}
     </v-snackbar>
+
     <!-- DIALOG -->
-    <PopupPasswordChange
+    <DialogManagePassword
       v-model="dialogPwdChange"
       @notify="notify"
       @close="dialogPwdChange = false"
-    ></PopupPasswordChange>
-
-    <PopupConfirm
+    />
+    <DialogConfirm
       v-model="dialogConfirm.active"
       :title="dialogConfirm.title"
       :text="dialogConfirm.text"
       @submit="updateMyInfo"
       @close="dialogConfirm.active = false"
-    ></PopupConfirm>
+    />
   </div>
 </template>
 

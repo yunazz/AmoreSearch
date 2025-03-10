@@ -1,6 +1,4 @@
 <script setup>
-import { ClientOnly } from "#components";
-
 const member = useMember();
 const props = defineProps({
   is_active: { type: Boolean, required: true },

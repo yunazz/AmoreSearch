@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps(["item", "scope", "is_favorite"]);
-const emit = defineEmits(["success", "notify"]);
+const emit = defineEmits(["success", "notify", "overview"]);
 
 const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
 
@@ -28,11 +28,14 @@ async function toggleFavorites(item) {
     emit("notify", "서버 오류 발생");
   }
 }
+function overview() {
+  emit("overview", "internal_news", props.item);
+}
 </script>
 
 <template>
   <v-card class="board_card">
-    <div class="card-img">
+    <div class="card-img cur-p" @click="overview">
       <v-img
         height="180px"
         :src="item.image_url"

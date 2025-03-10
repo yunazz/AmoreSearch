@@ -5,6 +5,12 @@ const tabs = [
   { text: "사내문서", value: "REPORT" },
   { text: "브랜드", value: "BRAND" },
 ];
+const dialog = ref({
+  brand: false,
+  internal_news: false,
+});
+const propsItem = ref(null);
+
 const snackbar = ref({ active: false, message: "" });
 
 const post_type = ref({ text: "회사뉴스", value: "NEWS" });
@@ -41,6 +47,10 @@ const total_cnt = computed(() => board.value.paging.total_rows);
 function notify(msg) {
   snackbar.value.active = true;
   snackbar.value.message = msg;
+}
+function openDialog(type, item) {
+  propsItem.value = item;
+  dialog.value[type] = true;
 }
 
 watch(post_type, (newValue) => {
@@ -112,6 +122,7 @@ watch(post_ctgry, (newValue) => {
                   :item="item"
                   scope="INTERNAL"
                   @notify="notify"
+                  @overview="openDialog"
                 />
               </div>
             </template>
@@ -129,7 +140,11 @@ watch(post_ctgry, (newValue) => {
             <!-- 브랜드 -->
             <template v-else-if="post_type.value === 'BRAND'">
               <div class="card--brand grid-cols-5">
-                <v-card v-for="(item, i) in board?.result" :key="i">
+                <v-card
+                  v-for="(item, i) in board?.result"
+                  :key="i"
+                  @click="openDialog('brand', item)"
+                >
                   <NuxtImg
                     :src="(config.CDN_HOST, item.image_url)"
                     class="align-end"
@@ -153,6 +168,8 @@ watch(post_ctgry, (newValue) => {
                 </v-card>
               </div>
             </template>
+
+            <!-- paging -->
             <Paging
               v-if="post_type.value === 'NEWS' || post_type.value === 'REPORT'"
               :paging="filter"
@@ -174,6 +191,17 @@ watch(post_ctgry, (newValue) => {
           </div>
         </div>
 
+        <!-- dialog -->
+        <DialogOverviewNews
+          :is_active="dialog.internal_news"
+          :item="propsItem"
+          @update:is_active="dialog.internal_news = $event"
+        />
+        <DialogOverviewBrand
+          :is_active="dialog.brand"
+          :item="propsItem"
+          @update:is_active="dialog.brand = $event"
+        />
         <v-snackbar v-model="snackbar.active" :timeout="1000" color="primary">
           {{ snackbar.message }}
         </v-snackbar>

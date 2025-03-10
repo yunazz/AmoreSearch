@@ -62,6 +62,7 @@ async function toggleFavorites(item) {
           </p>
         </div>
       </div>
+
       <div>
         <template v-if="item?.original_file_url">
           <v-btn
@@ -122,7 +123,7 @@ async function toggleFavorites(item) {
 .list-item p.list-text {
   margin-bottom: 4px;
   font-size: 0.8125rem;
-  min-height: 50px;
+  /* min-height: 50px; */
 }
 .list-item:first-child {
   border-top: 1px solid var(--border-color) !important;

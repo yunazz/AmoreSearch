@@ -184,7 +184,7 @@ watch(employment_status, (newValue) => {
           </div>
         </div>
       </div>
-      <PopupMember
+      <DialogManageMember
         :mode="dialogMode"
         :is_active="dialog"
         :item="propItem"
