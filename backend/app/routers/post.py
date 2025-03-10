@@ -50,7 +50,8 @@ def get_boards(
                     """
                 elif post_type=='REPORT':
                     sql += """
-                    SELECT p.*, d.original_file_url, d.summary,
+                    SELECT p.post_ctgry, p.post_id, p.post_type, p.title, p.created_at, company_id,
+                        d.original_file_url, d.summary as summary,
                         CASE 
                             WHEN f.target_id IS NOT NULL THEN 1 
                             ELSE 0 

@@ -41,7 +41,8 @@ async function toggleFavorites(item) {
   <ClientOnly>
     <div external class="list-item">
       <div class="list-left">
-        <div @click="openLink(item.source_url)" class="cur-p">
+        <!-- @click="openLink(item.source_url)" class="cur-p"x -->
+        <div>
           <v-img
             width="180px"
             height="110px"
@@ -53,9 +54,9 @@ async function toggleFavorites(item) {
           <p class="list-title">{{ item.title }}</p>
           <p class="list-text text-clamp-4">{{ item.content }}</p>
           <p>
-            <span class="text-gray-04 mr-2">{{
-              formatDate(item.published_at || item.created_at)
-            }}</span>
+            <span class="text-gray-04 mr-2">
+              {{ formatDate(item.published_at || item.created_at) }}
+            </span>
             <span class="text-gray-04" v-if="item.source_name">
               {{ item.source_name }}
             </span>
