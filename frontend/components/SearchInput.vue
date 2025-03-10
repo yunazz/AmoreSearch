@@ -3,10 +3,11 @@ const props = defineProps({
   texts: { required: true },
   maxWidth: { type: Number, default: 900 },
 });
+const emit = defineEmits(["search"]);
 
 const texts = props.texts;
-const displayText = ref(""); // 타이핑 효과를 위한 span 텍스트
-const inputValue = ref(""); // 사용자가 직접 입력하는 값
+const displayText = ref("");
+const inputValue = ref("");
 const currentIndex = ref(0);
 const typingIndex = ref(0);
 const isUserTyping = ref(false);
@@ -15,13 +16,13 @@ let timeoutId = null;
 const resetTyping = () => {
   displayText.value = "";
   typingIndex.value = 0;
-  currentIndex.value = 0; // 항상 처음 문장부터 시작
+  currentIndex.value = 0;
   clearTimeout(timeoutId);
-  timeoutId = setTimeout(() => typeText(), 1500); // 500ms 대기 후 다시 시작
+  timeoutId = setTimeout(() => typeText(), 1500);
 };
 
 const typeText = () => {
-  if (isUserTyping.value) return; // 사용자가 입력 중이면 효과 중단
+  if (isUserTyping.value) return;
 
   const fullText = texts[currentIndex.value];
 
@@ -34,7 +35,7 @@ const typeText = () => {
       displayText.value = "";
       typingIndex.value = 0;
       currentIndex.value = (currentIndex.value + 1) % texts.length;
-      timeoutId = setTimeout(() => typeText(), 500); // 다음 문장 500ms 후 시작
+      timeoutId = setTimeout(() => typeText(), 500);
     }, 1000);
   }
 };
@@ -48,12 +49,15 @@ const handleFocus = () => {
 const handleBlur = () => {
   if (!inputValue.value) {
     isUserTyping.value = false;
-    resetTyping(); // 처음부터 다시 시작
+    resetTyping();
   }
 };
 
+function SearchInput() {
+  emit("search", inputValue.value);
+}
 onMounted(() => {
-  timeoutId = setTimeout(() => typeText(), 500); // 초기 500ms 대기 후 시작
+  timeoutId = setTimeout(() => typeText(), 500);
 });
 
 onUnmounted(() => {
@@ -65,10 +69,11 @@ onUnmounted(() => {
   <div class="input--search m-auto" :style="`max-width: ${maxWidth}px`">
     <div class="input-wrapper">
       <input
+        class="custom-input"
         v-model="inputValue"
         @focus="handleFocus"
         @blur="handleBlur"
-        class="custom-input"
+        @keydown.enter="SearchInput"
       />
       <span v-if="!isUserTyping && !inputValue" class="typing-effect">
         {{ displayText }}
@@ -80,6 +85,7 @@ onUnmounted(() => {
       variant="flat"
       color="primary"
       density="comfortable"
+      @click="SearchInput"
     ></v-btn>
   </div>
 </template>

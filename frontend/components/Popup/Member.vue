@@ -125,7 +125,6 @@ function validateForm() {
     return emit("notify", "근무상태를 입력해주세요.");
 
   // 퇴직 validation
-  console.log(form.value?.resign_date);
   if (form.value.employment_status === "퇴직") {
     if (isEmpty(form.value.resign_date))
       return emit("notify", "퇴직일을 입력해주세요.");

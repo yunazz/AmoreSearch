@@ -134,7 +134,7 @@ def get_favorites(
                     favorites.scope,
                     favorites.favorite_type,
                     favorites.target_id,
-                    cosmetic_external.cosmetic_id AS external_cosmetic_id,
+                    cosmetic_external.cosmetic_id AS cosmetic_id,
                     cosmetic_external.category_1 AS external_category_1,
                     cosmetic_external.category_2 AS external_category_2,
                     cosmetic_external.product_name AS external_product_name,

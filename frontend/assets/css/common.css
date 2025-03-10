@@ -658,3 +658,9 @@ body .text-grey-lighten-2 {
   font-weight: bold;
   font-size: 2rem;
 }
+.no-scroll {
+  -ms-overflow-style: none;
+}
+.no-scroll::-webkit-scrollbar {
+  display: none;
+}

@@ -50,7 +50,7 @@ def get_boards(
                     """
                 elif post_type=='REPORT':
                     sql += """
-                    SELECT p.*, d.original_file_url,
+                    SELECT p.*, d.original_file_url, d.summary,
                         CASE 
                             WHEN f.target_id IS NOT NULL THEN 1 
                             ELSE 0 
@@ -134,7 +134,7 @@ def get_external_boards(
             """
             count_sql = "SELECT COUNT(*) FROM post_external WHERE 1=1"
             params = []
-        
+
             if post_type:
                 sql += " AND post_type = %s"
                 count_sql += " AND post_type = %s"

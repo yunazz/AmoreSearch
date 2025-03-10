@@ -7,6 +7,8 @@ const snackbar = ref({ active: false, message: "" });
 const scope = ref({ text: "자사제품", value: "INTERNAL" });
 const selected_brand_id = ref(null);
 const category_1 = ref({ name: "전체", value: "" });
+const dialog = ref(false);
+const targetItem = ref(null);
 
 const filter = ref({
   scope: "INTERNAL",
@@ -48,6 +50,11 @@ const {
 function notify(msg) {
   snackbar.value.active = true;
   snackbar.value.message = msg;
+}
+
+function openRnb(item) {
+  dialog.value = true;
+  targetItem.value = item;
 }
 
 watch(scope, (newValue) => {
@@ -153,12 +160,22 @@ const total_cnt = computed(() => board.value.paging?.total_rows || 0);
           v-if="status === 'success' && board?.result && total_cnt > 0"
         >
           <div class="board_list">
-            <ListProduct
-              :list="board?.result"
-              :scope="filter.scope"
-              :is_favorite="false"
-              @notify="notify"
-            />
+            <div class="board_cards product_card grid-cols-4">
+              <ListItemProduct
+                v-for="item in board?.result"
+                :key="item?.cosmetic_id"
+                :item="item"
+                :scope="filter.scope"
+                :is_favorite="false"
+                @notify="notify"
+                @showDetail="openRnb"
+              />
+              <RnbProduct
+                :is_active="dialog"
+                :item="targetItem"
+                @update:is_active="dialog = $event"
+              />
+            </div>
 
             <Paging
               :paging="filter"

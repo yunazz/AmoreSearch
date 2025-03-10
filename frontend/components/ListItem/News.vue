@@ -49,7 +49,7 @@ async function toggleFavorites(item) {
             cover
           ></v-img>
         </div>
-        <div>
+        <div class="flex-column justify-center">
           <p class="list-title">{{ item.title }}</p>
           <p class="list-text text-clamp-4">{{ item.content }}</p>
           <p>
@@ -122,6 +122,7 @@ async function toggleFavorites(item) {
 .list-item p.list-text {
   margin-bottom: 4px;
   font-size: 0.8125rem;
+  min-height: 50px;
 }
 .list-item:first-child {
   border-top: 1px solid var(--border-color) !important;

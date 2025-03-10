@@ -10,9 +10,11 @@ const props = defineProps({
 });
 const emit = defineEmits(["showDetail", "notify", "success"]);
 
+const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
+
 const product = ref({
   scope: props.scope || props.item.scope,
-  cosmetic_id: props.item.cosmetic_id || props.item.external_cosmetic_id,
+  cosmetic_id: props.item.cosmetic_id,
   category_1: props.item.category_1 || props.item.external_category_1,
   category_2: props.item.category_2 || props.item.external_category_2,
   product_name: props.item.product_name || props.item.external_product_name,
@@ -31,16 +33,15 @@ const product = ref({
   mfds: props.item.mfds || props.item.external_mfds,
   image_url: props.item.image_url || props.item.external_image_url,
   brand_kor: props.item.brand_kor || props.item.external_brand_kor,
+  is_favorite: is_favorite.value,
 });
-
-const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
 
 function openRnb(item) {
   emit("showDetail", item);
 }
 async function toggleFavorites() {
   const body = {
-    favorite_type: props.favorite_type,
+    favorite_type: "COSMETIC",
     target_id: product.value.cosmetic_id,
     scope: props.scope || product.value.scope,
   };
@@ -57,7 +58,10 @@ async function toggleFavorites() {
 
     emit("notify", msg);
     emit("success");
-    if (code == 0) is_favorite.value = !is_favorite.value;
+    if (code == 0) {
+      is_favorite.value = !is_favorite.value;
+      product.value.is_favorite = !product.value.is_favorite;
+    }
   } catch (e) {
     emit("notify", "서버 오류 발생");
   }

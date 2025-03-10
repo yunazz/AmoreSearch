@@ -8,8 +8,8 @@ const tabs = ref([
 ]);
 const snackbar = ref({ active: false, message: "" });
 const favorite_type = ref({ text: "뉴스/저널", value: "NEWS_JOURNAL" });
-
 const dialog = ref(false);
+const targetItem = ref(null);
 
 const filter = ref({
   favorite_type: "EXTERNAL_NEWS",
@@ -46,6 +46,11 @@ function changePage(current_page) {
 function notify(msg) {
   snackbar.value.active = true;
   snackbar.value.message = msg;
+}
+
+function openRnb(item) {
+  dialog.value = true;
+  targetItem.value = item;
 }
 
 watch(favorite_type, (newValue) => {
@@ -107,12 +112,22 @@ watch(favorite_type, (newValue) => {
             </template>
 
             <template v-else-if="filter.favorite_type == 'COSMETIC'">
-              <ListProduct
-                :list="board?.result"
-                :is_favorite="true"
-                @notify="notify"
-                @success="refresh"
-              />
+              <div class="board_cards product_card grid-cols-4">
+                <ListItemProduct
+                  v-for="item in board?.result"
+                  :key="item?.cosmetic_id"
+                  :item="item"
+                  :scope="filter.scope"
+                  :is_favorite="false"
+                  @notify="notify"
+                  @showDetail="openRnb"
+                />
+                <RnbProduct
+                  :is_active="dialog"
+                  :item="targetItem"
+                  @update:is_active="dialog = $event"
+                />
+              </div>
             </template>
 
             <template v-else-if="filter.favorite_type == 'INTERNAL_NEWS'">
