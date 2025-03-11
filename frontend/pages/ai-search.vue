@@ -3,17 +3,20 @@ const member = useMember();
 const resultMode = ref(false);
 const pending = ref(false);
 const filter = ref({
+  query: "미백 기능을 가진 화장품을 소개해줘",
   tag: "",
 });
 const tags = ref(["검색태그 1", "검색태그 2", "검색태그 3", "검색태그 4"]);
 
 async function search(query) {
+  if (query.length === 0) return;
+  filter.value.query = query;
   resultMode.value = true;
   pending.value = true;
 
   setTimeout(() => {
     pending.value = false;
-  }, 10000);
+  }, 3000);
 
   // body = {
   // query: query,
@@ -24,60 +27,122 @@ async function search(query) {
   // });
   // pending.value = false;
 }
+function initSearch() {
+  resultMode.value = false;
+  filter.value.query = "";
+}
 </script>
 
 <template>
   <div id="AiSearch" class="content">
-    <ClientOnly>
-      <template v-if="!resultMode">
-        <div class="content_inner">
-          <div class="content_center">
-            <h2 class="fw-700 gradient-text mb-6">
-              안녕하세요,
-              <span class="ml-1">
-                {{ member.name }} {{ member.position }}님
-              </span>
-              <br />
-              무엇을 도와드릴까요?
-            </h2>
+    <div class="content_inner">
+      <ClientOnly>
+        <template v-if="resultMode">
+          <div class="content_inner">
+            <div class="content_center">
+              <h2 class="fw-700 gradient-text mb-6">
+                안녕하세요,
+                <span class="ml-1">
+                  {{ member.name }} {{ member.position }}님
+                </span>
+                <br />
+                무엇을 도와드릴까요?
+              </h2>
 
-            <div>
-              <SearchInput
-                :texts="[
-                  '최근에 출시한 우리회사 제품들을 소개해줘',
-                  '선크림에 주요한 성분들에 대해서 알려줘',
-                ]"
-                @search="search"
-              />
-            </div>
-            <div class="flex justify-center mt-6">
-              <v-chip-group
-                v-model="filter.tag"
-                selected-class="text-primary"
-                mandatory
-              >
-                <v-chip
-                  filter
-                  v-for="tag in tags"
-                  :key="tag"
-                  :text="tag"
-                  :value="tag"
-                  style="font-size: 15px; font-weight: 500; padding: 20px 22px"
+              <div>
+                <SearchInput
+                  :texts="[
+                    '최근에 출시한 우리회사 제품들을 소개해줘',
+                    '선크림에 주요한 성분들에 대해서 알려줘',
+                  ]"
+                  @search="search"
                 />
-              </v-chip-group>
+              </div>
+              <div class="flex justify-center mt-6">
+                <v-chip-group
+                  v-model="filter.tag"
+                  selected-class="text-primary"
+                  mandatory
+                >
+                  <v-chip
+                    filter
+                    v-for="tag in tags"
+                    :key="tag"
+                    :text="tag"
+                    :value="tag"
+                    style="
+                      font-size: 15px;
+                      font-weight: 500;
+                      padding: 20px 22px;
+                    "
+                  />
+                </v-chip-group>
+              </div>
             </div>
           </div>
-        </div>
-      </template>
-      <template v-else>
-        <template v-if="pending">
-          <div>결과 출력중</div>
         </template>
         <template v-else>
-          <div>출력완료</div>
+          <div class="search_result">
+            <h3 class="flex align-center col-gap-2 mt-4">
+              <v-icon icon="mdi-magnify" color="primary" />
+              {{ filter.query }}
+              <button v-if="!pending" class="flex" @click="initSearch">
+                <v-icon icon="mdi-close" size="x-small" color="primary" />
+              </button>
+            </h3>
+
+            <div class="search_result_cont">
+              <div class="search_result_left">
+                <template v-if="pending">
+                  <div>
+                    <v-progress-linear
+                      style="width: 60%"
+                      class="progress_linear_primary mb-3"
+                      indeterminate
+                      rounded
+                      height="15"
+                    />
+                    <v-progress-linear
+                      style="width: 50%"
+                      class="progress_linear_primary mb-3"
+                      indeterminate
+                      rounded
+                      height="15"
+                    />
+                    <v-progress-linear
+                      style="width: 40%"
+                      class="progress_linear_primary mb-3"
+                      indeterminate
+                      rounded
+                      height="15"
+                    />
+                  </div>
+                </template>
+                <template v-else>
+                  <div>출력결과</div>
+                </template>
+              </div>
+              <div class="search_result_right">기사</div>
+            </div>
+
+            <div class="search_input_cont">
+              <label for="search_input">
+                <v-icon icon="mdi-magnify" color="primary" />
+              </label>
+              <input
+                id="search_input"
+                type="text"
+                v-model="search_input"
+                @keydown.enter="search"
+                placeholder=""
+                :disabled="pending"
+                style="outline: none"
+              />
+            </div>
+          </div>
         </template>
-      </template>
-    </ClientOnly>
+      </ClientOnly>
+    </div>
   </div>
 </template>
 
@@ -97,7 +162,6 @@ async function search(query) {
 }
 .content_center {
   width: 100%;
-  min-width: 1000px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -125,5 +189,36 @@ async function search(query) {
 }
 .group_card_item .card_img {
   border-radius: var(--radius-3);
+}
+
+.search_result {
+  display: flex;
+  flex-direction: column;
+}
+.search_result > .search_result_cont {
+  display: flex;
+  min-height: calc(100vh - 86px);
+}
+.search_result h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+.search_result .search_result_left {
+  /* padding-left: 2rem; */
+  margin-bottom: 3rem;
+  flex: 1;
+}
+.search_result .search_result_right {
+  width: 300px;
+  margin-bottom: 3rem;
+
+  border-left: 1px solid var(--border-color);
+}
+.search_input_cont {
+  position: fixed;
+  bottom: 8px;
+  left: 210px;
+  width: calc(100% - 220px);
 }
 </style>
