@@ -37,7 +37,7 @@ function initSearch() {
   <div id="AiSearch" class="content">
     <div class="content_inner">
       <ClientOnly>
-        <template v-if="resultMode">
+        <template v-if="!resultMode">
           <div class="content_inner">
             <div class="content_center">
               <h2 class="fw-700 gradient-text mb-6">
