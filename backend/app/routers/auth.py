@@ -27,7 +27,9 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     me_data = MyPageResponse.model_validate(member, from_attributes=True)
 
     access_token = create_access_token(data=me_data.model_dump())
-
+    
+    db.commit()
+    
     return BaseResponse(code=0, msg="로그인되었습니다.", result={"access_token": access_token, "token_type": "bearer"})
 
 @router.get("/me")

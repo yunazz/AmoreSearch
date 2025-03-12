@@ -2,12 +2,10 @@
 import os
 import jwt
 
-from fastapi import Depends
-from sqlalchemy.orm import Session
 
 from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
-from passlib.context import CryptContext
+from passlib.hash import pbkdf2_sha256
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -17,13 +15,13 @@ ALGORITHM ="HS256"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return pbkdf2_sha256.hash(password)
 
 def verify_password(plain_password, password):
-    return pwd_context.verify(plain_password, password)
+    return pbkdf2_sha256.verify(plain_password, password)
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
