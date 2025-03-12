@@ -25,8 +25,6 @@ class Member(Base):
     resign_reason = mapped_column(String(100), nullable=True, comment='퇴직사유')
     created_at = mapped_column(TIMESTAMP, nullable=False,  server_default=func.current_timestamp(), comment='등록일시')
 
- 
-    
 class Brand(Base):
     __tablename__ = "brand"
 

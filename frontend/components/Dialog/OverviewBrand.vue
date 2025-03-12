@@ -6,6 +6,7 @@ const props = defineProps({
     type: Object,
   },
 });
+
 const pending = ref(false);
 const questions = computed(() => [
   `${[props.item?.brand_kor]}의 핵심 가치에 대해서 알려주세요.`,
@@ -17,8 +18,9 @@ const search_input = ref("");
 const search_query = ref("");
 const search_result = ref("");
 
-function search(query) {
+async function search(query) {
   if (pending.value) return;
+
   initSearch();
   search_query.value = query;
   pending.value = true;
@@ -27,9 +29,13 @@ function search(query) {
     query: search_query.value,
     brand_kor: props.item?.brand_kor,
   };
-  setTimeout(() => {
-    pending.value = false;
-  }, 3000);
+
+  const { code, result } = await $http("/search/brand", {
+    query: param,
+  });
+
+  if (code === 0) search_result.value = result;
+  pending.value = false;
 }
 
 function initSearch() {
@@ -48,6 +54,13 @@ watch(
     initSearch();
   }
 );
+
+watch(
+  () => props.brand_info,
+  (newValue) => {
+    brand_info.value = newValue;
+  }
+);
 </script>
 
 <template>
@@ -59,7 +72,7 @@ watch(
       @update:model-value="onDialogChange"
     >
       <v-card>
-        <v-card>
+        <v-card-text>
           <div class="dialog-top">
             <button
               class="icon--dialog-close"
@@ -69,7 +82,7 @@ watch(
               <v-icon icon="mdi-close" size="large" />
             </button>
           </div>
-          <div class="px-8 pt-8 pb-12">
+          <div class="px-4">
             <p class="text-primary text-center mb-1 fw-500">
               <v-chip size="small">
                 {{ enums.brand_ctgry[item.brand_ctgry] }}
@@ -102,7 +115,8 @@ watch(
                 </span>
               </div>
             </div>
-            <div ref="draggable_text" class="news_content" />
+            <p class="mt-4">{{ item.brand_info }}</p>
+            <div class="mb-8" />
             <!-- v-html="processedTexts" -->
 
             <div class="related_question_list">
@@ -113,16 +127,39 @@ watch(
                     @click="search(item)"
                     :class="{ 'text-underline': !pending }"
                   >
-                    {{ item }}</span
-                  >
+                    {{ item }}
+                  </span>
                 </li>
               </ol>
             </div>
 
             <v-divider thickness="2" class="mb-4" />
-            <div class="search_reply">
-              <div class="search_q">{{ search_query }}</div>
+
+            <div class="search_reply mb-6">
+              <template v-if="search_query">
+                <div class="search_q">{{ search_query }}</div>
+                <div class="search_a" v-html="search_result"></div>
+              </template>
+              <template v-if="pending">
+                <div>
+                  <v-progress-linear
+                    style="width: 95%"
+                    class="progress_linear_primary mb-2"
+                    indeterminate
+                    rounded
+                    height="10"
+                  />
+                  <v-progress-linear
+                    style="width: 85%"
+                    class="progress_linear_primary"
+                    indeterminate
+                    rounded
+                    height="10"
+                  />
+                </div>
+              </template>
             </div>
+
             <div class="search_input_cont">
               <label for="search_input">
                 <v-icon icon="mdi-magnify" color="primary" />
@@ -131,14 +168,14 @@ watch(
                 id="search_input"
                 type="text"
                 v-model="search_input"
-                @keydown.enter="search"
+                @keydown.enter="search(search_input)"
                 placeholder=""
                 :disabled="pending"
                 style="outline: none"
               />
             </div>
           </div>
-        </v-card>
+        </v-card-text>
       </v-card>
     </v-dialog>
   </ClientOnly>
@@ -158,7 +195,13 @@ h5 {
 }
 .search_reply .search_q {
   color: var(--main-color);
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.search_reply .search_a {
+  padding: 0 12px;
+  font-size: 14px;
 }
 .related_question_list {
   margin-bottom: 1rem;

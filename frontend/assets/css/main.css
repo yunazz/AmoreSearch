@@ -620,9 +620,9 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 .progress_linear_primary .v-progress-linear__indeterminate {
   background: linear-gradient(
     90deg,
-    rgba(18, 4, 34, 0.8) 0%,
-    rgba(15, 3, 29, 0.8) 0%,
-    rgba(120, 74, 171, 0.8) 63%,
-    rgba(81, 153, 171, 0.8) 100%
+    rgba(18, 4, 34, 0.75) 0%,
+    rgba(15, 3, 29, 0.75) 0%,
+    rgba(120, 74, 171, 0.75) 63%,
+    rgba(81, 153, 171, 0.75) 100%
   );
 }

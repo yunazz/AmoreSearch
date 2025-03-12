@@ -10,12 +10,9 @@ const dialog = ref({
   internal_news: false,
 });
 const propsItem = ref(null);
-
 const snackbar = ref({ active: false, message: "" });
-
 const post_type = ref({ text: "회사뉴스", value: "NEWS" });
 const post_ctgry = ref({ name: "전체", value: "" });
-
 const filter = ref({
   post_type: "NEWS",
   post_ctgry: "",
@@ -48,7 +45,8 @@ function notify(msg) {
   snackbar.value.active = true;
   snackbar.value.message = msg;
 }
-function openDialog(type, item) {
+
+async function openDialog(type, item) {
   propsItem.value = item;
   dialog.value[type] = true;
 }
