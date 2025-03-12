@@ -83,7 +83,7 @@ function initSearch() {
         </template>
         <template v-else>
           <div class="search_result">
-            <h3 class="flex align-center col-gap-2 mt-4">
+            <h3 class="flex align-center col-gap-2 my-5">
               <v-icon icon="mdi-magnify" color="primary" />
               {{ filter.query }}
               <button v-if="!pending" class="flex" @click="initSearch">
@@ -97,21 +97,21 @@ function initSearch() {
                   <div>
                     <v-progress-linear
                       style="width: 60%"
-                      class="progress_linear_primary mb-3"
+                      class="progress_linear_primary mb-4"
                       indeterminate
                       rounded
                       height="15"
                     />
                     <v-progress-linear
                       style="width: 50%"
-                      class="progress_linear_primary mb-3"
+                      class="progress_linear_primary mb-4"
                       indeterminate
                       rounded
                       height="15"
                     />
                     <v-progress-linear
                       style="width: 40%"
-                      class="progress_linear_primary mb-3"
+                      class="progress_linear_primary mb-4"
                       indeterminate
                       rounded
                       height="15"
@@ -197,7 +197,7 @@ function initSearch() {
 }
 .search_result > .search_result_cont {
   display: flex;
-  min-height: calc(100vh - 86px);
+  min-height: calc(100vh - 100px);
 }
 .search_result h3 {
   font-size: 1.5rem;
