@@ -1,6 +1,6 @@
 <script setup>
 const tabs = ref([
-  { text: "뉴스", value: "EXTERNAL_NEWS" },
+  { text: "외부뉴스", value: "EXTERNAL_NEWS" },
   { text: "저널", value: "EXTERNAL_JOURNAL" },
   { text: "화장품", value: "COSMETIC" },
   { text: "회사뉴스", value: "INTERNAL_NEWS" },
@@ -118,8 +118,9 @@ watch(favorite_type, (newValue) => {
                   :key="item?.cosmetic_id"
                   :item="item"
                   :scope="filter.scope"
-                  :is_favorite="false"
+                  :is_favorite="true"
                   @notify="notify"
+                  @success="refresh"
                   @showDetail="openRnb"
                 />
                 <RnbProduct

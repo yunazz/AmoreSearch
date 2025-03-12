@@ -2,7 +2,6 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Query, HTTPException, status
 from db.connection import get_connection 
 from schemas.response import BaseResponse, ListResponse
-# from schemas.amorepacific import BrandRequest
 from fastapi.security import  OAuth2PasswordBearer
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -122,20 +121,35 @@ def get_external_boards(
     try:
         conn = get_connection()
         with conn.cursor() as cursor:
-            sql = """
-                SELECT post_external.*,
-                    CASE 
-                        WHEN f.target_id IS NOT NULL THEN 1 
-                        ELSE 0 
-                    END AS is_favorite
-                FROM post_external
-                LEFT JOIN document ON post_external.document_id = document.document_id 
-                LEFT JOIN (SELECT target_id FROM favorites WHERE scope = 'EXTERNAL' AND favorite_type = 'NEWS') f ON post_external.post_external_id = f.target_id 
-                WHERE 1=1
-            """
-            count_sql = "SELECT COUNT(*) FROM post_external WHERE 1=1"
+            
+            sql=''
             params = []
-
+            count_sql = "SELECT COUNT(*) FROM post_external WHERE 1=1"
+            
+            if post_type =='JOURNAL':
+                sql = """
+                    SELECT post_external.*,
+                        CASE 
+                            WHEN f.target_id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS is_favorite
+                    FROM post_external
+                    LEFT JOIN document ON post_external.document_id = document.document_id 
+                    LEFT JOIN (SELECT target_id FROM favorites WHERE scope = 'EXTERNAL' AND favorite_type = 'JOURNAL') f ON post_external.post_external_id = f.target_id 
+                    WHERE 1=1
+                """
+            elif post_type == 'NEWS':
+                sql = """
+                    SELECT post_external.*,
+                        CASE 
+                            WHEN f.target_id IS NOT NULL THEN 1 
+                            ELSE 0 
+                        END AS is_favorite
+                    FROM post_external
+                    LEFT JOIN (SELECT target_id FROM favorites WHERE scope = 'EXTERNAL' AND favorite_type = 'NEWS') f ON post_external.post_external_id = f.target_id 
+                    WHERE 1=1
+                """
+                
             if post_type:
                 sql += " AND post_type = %s"
                 count_sql += " AND post_type = %s"

@@ -14,7 +14,7 @@ const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
 
 const product = ref({
   scope: props.scope || props.item.scope,
-  cosmetic_id: props.item.cosmetic_id,
+  cosmetic_id: props.item.cosmetic_id || props.item.external_cosmetic_id,
   category_1: props.item.category_1 || props.item.external_category_1,
   category_2: props.item.category_2 || props.item.external_category_2,
   product_name: props.item.product_name || props.item.external_product_name,
