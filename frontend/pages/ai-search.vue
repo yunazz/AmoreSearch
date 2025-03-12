@@ -97,21 +97,21 @@ function initSearch() {
                   <div>
                     <v-progress-linear
                       style="width: 60%"
-                      class="progress_linear_primary mb-4"
+                      class="progress_linear_primary mb-3"
                       indeterminate
                       rounded
                       height="15"
                     />
                     <v-progress-linear
                       style="width: 50%"
-                      class="progress_linear_primary mb-4"
+                      class="progress_linear_primary mb-3"
                       indeterminate
                       rounded
                       height="15"
                     />
                     <v-progress-linear
                       style="width: 40%"
-                      class="progress_linear_primary mb-4"
+                      class="progress_linear_primary mb-3"
                       indeterminate
                       rounded
                       height="15"
@@ -205,7 +205,6 @@ function initSearch() {
   margin-bottom: 1rem;
 }
 .search_result .search_result_left {
-  /* padding-left: 2rem; */
   margin-bottom: 3rem;
   flex: 1;
 }
@@ -217,7 +216,7 @@ function initSearch() {
 }
 .search_input_cont {
   position: fixed;
-  bottom: 8px;
+  bottom: 10px;
   left: 210px;
   width: calc(100% - 220px);
 }
