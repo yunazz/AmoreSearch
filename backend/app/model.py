@@ -32,7 +32,7 @@ class Brand(Base):
     brand_ctgry = mapped_column(String(20), nullable=False)
     brand_kor = mapped_column(String(50), nullable=False, comment="브랜드명(한글)")
     brand_eng = mapped_column(String(50), nullable=False, comment="브랜드명(영어)")
-    brand_description = mapped_column(String(100), nullable=True, comment="한줄 설명")
+    brand_subtitle = mapped_column(String(100), nullable=True, comment="한줄 설명")
     image_url = mapped_column(String(100), nullable=True)
     ceo = mapped_column(String(20), nullable=True, comment="대표이사")
     company_id = mapped_column(Integer, nullable=True, comment="1.아모레퍼시픽그룹, 2.아모레퍼시픽")

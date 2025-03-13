@@ -7,9 +7,6 @@ const is_favorite = ref(props.is_favorite || !isEmpty(props.item?.is_favorite));
 function openLink(url) {
   window.open(url);
 }
-function downloadFnc(item) {
-  window.open(item.original_file_url);
-}
 
 async function toggleFavorites(item) {
   const body = {
@@ -56,9 +53,9 @@ async function toggleFavorites(item) {
           </p>
         </template>
         <p>
-          <span class="text-gray-04 mr-2">{{
-            formatDate(item.published_at || item.created_at)
-          }}</span>
+          <span class="text-gray-04 mr-2">
+            {{ formatDate(item.created_at) }}
+          </span>
           <span class="text-gray-04" v-if="item.source_name">
             {{ item.source_name }}
           </span>
@@ -70,7 +67,7 @@ async function toggleFavorites(item) {
             color="sub"
             icon="mdi-folder"
             variant="text"
-            @click="downloadFnc(item)"
+            @click="openLink(item.original_file_url)"
           />
         </template>
         <template v-else>

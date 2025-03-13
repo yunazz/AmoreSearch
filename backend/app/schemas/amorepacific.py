@@ -14,7 +14,7 @@ class BrandResponse(BaseModel):
     brand_ctgry: str
     brand_kor: str
     brand_eng: str
-    brand_description: Optional[str] = None
+    brand_subtitle: Optional[str] = None
     image_url: Optional[str] = None
     ceo: Optional[str] = None
     company_id: Optional[int] = None

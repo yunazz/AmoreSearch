@@ -126,7 +126,7 @@ watch(
             <p
               class="text-center text-gray-03 fw-300 body--m"
               style="line-height: 1.3"
-              v-html="item.brand_description"
+              v-html="item.brand_subtitle"
             />
             <div class="flex justify-center align-center col-gap-4">
               <div class="flex mt-2">

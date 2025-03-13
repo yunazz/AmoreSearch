@@ -571,7 +571,12 @@ body .text-grey-lighten-2 {
 .cur-p {
   cursor: pointer;
 }
-
+.pos-r {
+  position: relative;
+}
+.pos-a {
+  position: absolute;
+}
 .word-space--1 {
   word-spacing: -1px;
 }

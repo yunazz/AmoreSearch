@@ -11,6 +11,12 @@ export const enums = {
     ORAL_CARE: "덴탈",
     TEA_CULTURE: "티컬처",
   },
+  post_type: {
+    NEWS: "뉴스",
+    REPORT: "보고서",
+    JOURNAL: "저널",
+    DOCS: "문서",
+  },
 };
 
 export const select_items = {

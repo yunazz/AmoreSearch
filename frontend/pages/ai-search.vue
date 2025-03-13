@@ -1,13 +1,51 @@
 <script setup>
 const member = useMember();
-const resultMode = ref(false);
+const resultMode = ref(true);
 const pending = ref(false);
+const search_input = ref("");
+
 const filter = ref({
-  query: "미백 기능을 가진 화장품을 소개해줘",
+  query: "미백 기능을 가진 화장품을 소개해줘 ",
   tag: "",
 });
 const tags = ref(["검색태그 1", "검색태그 2", "검색태그 3", "검색태그 4"]);
-
+const items = [
+  {
+    title: "일리윤, 세라마이드 아토 라인 3세대 출시",
+    content:
+      "Trevor Hansen CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
+    post_type: "NEWS",
+    created_at: new Date(),
+    source_name: "코스메틱리포트",
+    source_url: "",
+  },
+  {
+    title: "아모레퍼시픽, CDP 평가에서 2개 부문 모두 최고 등급 획득",
+    content: `to Ale Jennifer 아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
+    post_type: "JOURNAL",
+    created_at: new Date(),
+    source_name: "코스메틱리포트",
+    source_url: "",
+  },
+  {
+    title: "설화수, 노스텔지어와 함께 한국 고가구 전시 진행",
+    content:
+      "Sandra Adams &mdash;아모레퍼시픽은 자사 사업장 내에서 발생하는 온실가스 직접배출량(Scope1)과 전기 등을 구매하면서 발생하는 간접배출량(Scope2)의 총량을 2020년 대비 2050년까지 90% 감축하여 넷제로를 달성하려는 목표를 수립했다. 그 계획의 일환으로 아모레퍼시픽은 적극적인 전사 재생에너지 전환을 추진하고 있으며, 그 결과 2024년 기준 설화수, 라네즈, 해피바스를 비롯한 아모레퍼시픽의 주요 제품을 생산하는 오산, 대전, 안성, 상해 사업장 및 물류 사업장의 재생 전력 100%를 달성했다. 2025년은 아모레퍼시픽 전사 단위의 RE100 달성을 목표로 하고 있다.",
+    post_type: "REPORT",
+    post_ctgry: "경영성과",
+    created_at: new Date(),
+    original_file_url: "/",
+  },
+  {
+    title: "일리윤, 세라마이드 아토 라인 3세대 출시",
+    content:
+      "Trevor Hansen CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
+    post_type: "REPORT",
+    post_ctgry: "사업보고서",
+    created_at: new Date(),
+    original_file_url: "/",
+  },
+];
 async function search(query) {
   if (query.length === 0) return;
   filter.value.query = query;
@@ -27,6 +65,7 @@ async function search(query) {
   // });
   // pending.value = false;
 }
+const reveal = ref(false);
 function initSearch() {
   resultMode.value = false;
   filter.value.query = "";
@@ -38,59 +77,60 @@ function initSearch() {
     <div class="content_inner">
       <ClientOnly>
         <template v-if="!resultMode">
-          <div class="content_inner">
-            <div class="content_center">
-              <h2 class="fw-700 gradient-text mb-6">
-                안녕하세요,
-                <span class="ml-1">
-                  {{ member.name }} {{ member.position }}님
-                </span>
-                <br />
-                무엇을 도와드릴까요?
-              </h2>
+          <div class="content_center">
+            <h2 class="fw-700 gradient-text mb-6">
+              안녕하세요,
+              <span class="ml-1">
+                {{ member.name }} {{ member.position }}님
+              </span>
+              <br />
+              무엇을 도와드릴까요?
+            </h2>
 
-              <div>
-                <SearchInput
-                  :texts="[
-                    '최근에 출시한 우리회사 제품들을 소개해줘',
-                    '선크림에 주요한 성분들에 대해서 알려줘',
-                  ]"
-                  @search="search"
+            <div>
+              <SearchInput
+                :texts="[
+                  '최근에 출시한 우리회사 제품들을 소개해줘',
+                  '선크림에 주요한 성분들에 대해서 알려줘',
+                ]"
+                @search="search"
+              />
+            </div>
+            <div class="flex justify-center mt-6">
+              <v-chip-group
+                v-model="filter.tag"
+                selected-class="text-primary"
+                mandatory
+              >
+                <v-chip
+                  filter
+                  v-for="tag in tags"
+                  :key="tag"
+                  :text="tag"
+                  :value="tag"
+                  style="font-size: 15px; font-weight: 500; padding: 20px 22px"
                 />
-              </div>
-              <div class="flex justify-center mt-6">
-                <v-chip-group
-                  v-model="filter.tag"
-                  selected-class="text-primary"
-                  mandatory
-                >
-                  <v-chip
-                    filter
-                    v-for="tag in tags"
-                    :key="tag"
-                    :text="tag"
-                    :value="tag"
-                    style="
-                      font-size: 15px;
-                      font-weight: 500;
-                      padding: 20px 22px;
-                    "
-                  />
-                </v-chip-group>
-              </div>
+              </v-chip-group>
             </div>
           </div>
         </template>
         <template v-else>
+          <div class="block_bg_box"></div>
           <div class="search_result">
-            <h3 class="flex align-center col-gap-2 my-5">
-              <v-icon icon="mdi-magnify" color="primary" />
-              {{ filter.query }}
-              <button v-if="!pending" class="flex" @click="initSearch">
-                <v-icon icon="mdi-close" size="x-small" color="primary" />
-              </button>
+            <h3 class="flex align-start col-gap-2 my-5">
+              <v-icon icon="mdi-magnify" color="primary" size="30" />
+              <p>
+                {{ filter.query }}
+                <button v-if="!pending" @click="initSearch">
+                  <v-icon
+                    style="margin-bottom: 2px"
+                    icon="mdi-close"
+                    size="x-small"
+                    color="primary"
+                  />
+                </button>
+              </p>
             </h3>
-
             <div class="search_result_cont">
               <div class="search_result_left">
                 <template v-if="pending">
@@ -122,7 +162,13 @@ function initSearch() {
                   <div>출력결과</div>
                 </template>
               </div>
-              <div class="search_result_right">기사</div>
+              <div class="search_result_right">
+                <ListItemReference
+                  v-for="(item, index) in items"
+                  :key="index"
+                  :item="item"
+                />
+              </div>
             </div>
 
             <div class="search_input_cont">
@@ -147,6 +193,11 @@ function initSearch() {
 </template>
 
 <style scoped>
+.content_inner {
+  position: relative;
+  padding-right: 12px;
+  margin-bottom: 28px;
+}
 #AiSearch h2 {
   display: inline-block;
   font-size: 38px;
@@ -203,21 +254,46 @@ function initSearch() {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
+  line-height: 1.2;
 }
 .search_result .search_result_left {
   margin-bottom: 3rem;
   flex: 1;
 }
 .search_result .search_result_right {
-  width: 300px;
+  width: 340px;
   margin-bottom: 3rem;
-
-  border-left: 1px solid var(--border-color);
+  /* border-left: 1px solid var(--border-color); */
 }
 .search_input_cont {
   position: fixed;
-  bottom: 10px;
-  left: 210px;
-  width: calc(100% - 220px);
+  z-index: 2;
+  bottom: 16px;
+  left: 216px;
+  width: calc(100% - 230px);
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+/* .card_article {
+  display: flex;
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+} */
+.block_bg_box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 84px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 1) 35%
+  );
+  z-index: 1;
+}
+.search_result_right {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
 }
 </style>

@@ -168,7 +168,7 @@ def get_external_boards(
             cursor.execute(count_sql, params) 
             total_count = cursor.fetchone()["COUNT(*)"]
 
-            sql += " ORDER BY published_at DESC"
+            sql += " ORDER BY post_external.created_at DESC"
             
             offset = (current_page - 1) * item_per_page
             sql += " LIMIT %s OFFSET %s"

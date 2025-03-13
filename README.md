@@ -16,6 +16,8 @@ sudo lsof -i :8000
 배포: 
 nohup uvicorn main:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
 
+ps aux | grep uvicorn
 
+tail -f fastapi.log
 
-sudo fuser -k 3000/tcp
+sudo fuser -k 8000/tcp
