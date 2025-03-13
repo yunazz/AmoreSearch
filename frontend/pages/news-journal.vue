@@ -126,7 +126,7 @@ watch(source_name, (newValue) => {
               <ListItemNews
                 v-for="item in board?.result"
                 scope="EXTERNAL"
-                :key="item.post_external_id"
+                :key="item.post_id"
                 :item="item"
                 @notify="notify"
               />
@@ -135,7 +135,7 @@ watch(source_name, (newValue) => {
               <ListItemLink
                 v-for="item in board?.result"
                 scope="EXTERNAL"
-                :key="item.post_external_id"
+                :key="item.post_id"
                 :item="item"
                 @notify="notify"
               />

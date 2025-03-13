@@ -14,7 +14,7 @@ function downloadFnc(item) {
 async function toggleFavorites(item) {
   const body = {
     favorite_type: item.post_type,
-    target_id: item.post_id || item.post_external_id,
+    target_id: item.post_id,
     scope: props.scope,
   };
 

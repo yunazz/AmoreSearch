@@ -14,7 +14,7 @@ sudo fuser -k 8000/tcp
 sudo lsof -i :8000
 
 배포: 
-nohup uvicorn main:app --host 0.0.0.0 --port 8000 --reload > fastapi.log 2>&1 &
+nohup uvicorn main:app --host 0.0.0.0 --port 8000 > fastapi.log 2>&1 &
 
 
 
