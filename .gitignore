@@ -201,3 +201,4 @@ Thumbs.db
 # Optional: If using VSCode Extensions
 .vscode/extensions.json
 notebook
+/backend/app/core/multilingual-e5-large
