@@ -150,7 +150,7 @@ watch(employment_status, (newValue) => {
                   <td>{{ item.department }}</td>
                   <td>{{ item.position }}</td>
                   <td>{{ item.birth_date }}</td>
-                  <td>{{ item.phone }}</td>
+                  <td>{{ formatPhone(item.phone) }}</td>
                   <td>{{ item.hire_date }}</td>
                   <td>{{ item.employment_status }}</td>
                   <td class="text-center">

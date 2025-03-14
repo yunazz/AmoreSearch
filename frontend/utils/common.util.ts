@@ -21,6 +21,16 @@ export function formatNumber(num: number, digit = 0) {
   return number === "-0" ? "0" : number;
 }
 
+export function formatPhone(phoneNumber: string) {
+  const match = phoneNumber.match(/^(\d{3})(\d{4})(\d{4})$/);
+
+  if (match) {
+    return `${match[1]}-${match[2]}-${match[3]}`;
+  } else {
+    return phoneNumber;
+  }
+}
+
 export function formatDate(dateStr: Date) {
   const date = new Date(dateStr);
   const year = date.getFullYear();

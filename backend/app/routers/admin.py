@@ -71,7 +71,10 @@ def update_member(
 
     update_data = member.model_dump(exclude_unset=True)
     for key, value in update_data.items():
-        setattr(db_member, key, value)
+        if(key =='password'):
+            setattr(db_member, key, hash_password(value))
+        else:
+            setattr(db_member, key, value)
     
     try:
         db.commit()

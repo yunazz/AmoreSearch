@@ -68,22 +68,21 @@ function logout() {
             </NuxtLink>
           </li>
         </ul>
-        <template
-          v-if="member.role > 2 || member.department === 'HR'"
-        ></template>
-        <small class="text-gray-01">ADMIN</small>
-        <ul class="lnb_list">
-          <li
-            v-for="item in admin_items"
-            :key="item.label"
-            :class="{ active: active_menu(item.path) }"
-          >
-            <NuxtLink :to="item.path">
-              <NuxtImg class="ml-1 mr-3" :src="item.img_path" width="20" />
-              <span>{{ item.name }}</span>
-            </NuxtLink>
-          </li>
-        </ul>
+        <template v-if="member.role > 2 || member.department === 'HR'">
+          <small class="text-gray-01">ADMIN</small>
+          <ul class="lnb_list">
+            <li
+              v-for="item in admin_items"
+              :key="item.label"
+              :class="{ active: active_menu(item.path) }"
+            >
+              <NuxtLink :to="item.path">
+                <NuxtImg class="ml-1 mr-3" :src="item.img_path" width="20" />
+                <span>{{ item.name }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </template>
       </div>
     </div>
     <div class="lnb_bottom">
