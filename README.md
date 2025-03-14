@@ -21,3 +21,5 @@ ps aux | grep uvicorn
 tail -f fastapi.log
 
 sudo fuser -k 8000/tcp
+
+nohup chroma run --path db_data --host 0.0.0.0 --port 10090 --log-path /var/log/chromadb/chroma.log > /var/log/chromadb/chroma.out 2>&1 &

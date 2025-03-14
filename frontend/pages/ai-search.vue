@@ -1,6 +1,6 @@
 <script setup>
 const member = useMember();
-const resultMode = ref(true);
+const resultMode = ref(false);
 const pending = ref(false);
 const search_input = ref("");
 
@@ -117,22 +117,22 @@ function initSearch() {
         <template v-else>
           <div class="block_bg_box"></div>
           <div class="search_result">
-            <h3 class="flex align-start col-gap-2 my-5">
-              <v-icon icon="mdi-magnify" color="primary" size="30" />
-              <p>
-                {{ filter.query }}
-                <button v-if="!pending" @click="initSearch">
-                  <v-icon
-                    style="margin-bottom: 2px"
-                    icon="mdi-close"
-                    size="x-small"
-                    color="primary"
-                  />
-                </button>
-              </p>
-            </h3>
             <div class="search_result_cont">
               <div class="search_result_left">
+                <h3 class="flex align-start col-gap-2 my-5">
+                  <v-icon icon="mdi-magnify" color="primary" size="30" />
+                  <p>
+                    {{ filter.query }}
+                    <button v-if="!pending" @click="initSearch">
+                      <v-icon
+                        style="margin-bottom: 2px"
+                        icon="mdi-close"
+                        size="x-small"
+                        color="primary"
+                      />
+                    </button>
+                  </p>
+                </h3>
                 <template v-if="pending">
                   <div>
                     <v-progress-linear
@@ -162,7 +162,10 @@ function initSearch() {
                   <div>출력결과</div>
                 </template>
               </div>
-              <div class="search_result_right">
+              <div v-if="!pending" class="search_result_right">
+                <p class="body--l mt-5 fw-600">
+                  {{ item?.length || 0 }}개의 출처
+                </p>
                 <ListItemReference
                   v-for="(item, index) in items"
                   :key="index"
@@ -196,6 +199,7 @@ function initSearch() {
 .content_inner {
   position: relative;
   padding-right: 12px;
+  padding-left: 28px;
   margin-bottom: 28px;
 }
 #AiSearch h2 {
@@ -231,7 +235,6 @@ function initSearch() {
   min-width: 295px;
   width: calc((100vw - 360px) / 5);
   border-radius: var(--radius-3);
-  /* border: 1px solid var(--border-color); */
   background: #e5e5e5;
   margin-right: 16px;
 }
@@ -257,13 +260,16 @@ function initSearch() {
   line-height: 1.2;
 }
 .search_result .search_result_left {
-  margin-bottom: 3rem;
   flex: 1;
+  margin-bottom: 3rem;
+  margin-right: 1rem;
 }
 .search_result .search_result_right {
   width: 340px;
   margin-bottom: 3rem;
-  /* border-left: 1px solid var(--border-color); */
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
 }
 .search_input_cont {
   position: fixed;
@@ -273,11 +279,7 @@ function initSearch() {
   width: calc(100% - 230px);
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
-/* .card_article {
-  display: flex;
-  border: 1px solid var(--border-color);
-  padding: 8px 12px;
-} */
+
 .block_bg_box {
   position: fixed;
   bottom: 0;
@@ -290,10 +292,5 @@ function initSearch() {
     rgba(255, 255, 255, 1) 35%
   );
   z-index: 1;
-}
-.search_result_right {
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
 }
 </style>

@@ -111,7 +111,7 @@ function notify(msg) {
               single-line
               v-model="form.emp_no"
               oninput="javascript: this.value = this.value.replace(/[^0-9]/g, '');"
-              maxLength="8"
+              maxLength="10"
               autocomplete="off"
             />
             <v-text-field
