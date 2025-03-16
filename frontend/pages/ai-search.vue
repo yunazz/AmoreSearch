@@ -82,7 +82,7 @@ async function search(query) {
   // body = {
   // query: query,
   // tag:};
-  // const result = $http("/ai-search", {
+  // const result = $http("/ai", {
   //   key: "ai-search",
   //   body,
   // });
@@ -192,7 +192,8 @@ function initSearch() {
               </div>
               <div v-if="!pending" class="search_result_right">
                 <p class="body--l mt-5 fw-600">
-                  {{ items?.length || 0 }}개의 출처
+                  <!-- {{ items?.length || 0 }}개의 출처 -->
+                  NEWS / JOURNAL
                 </p>
                 <ListItemReference
                   v-for="(item, index) in paginatedItems"

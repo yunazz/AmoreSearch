@@ -1,9 +1,7 @@
-from fastapi import APIRouter, Query
-from typing import Optional
-from db.connection import get_connection 
+from fastapi import APIRouter
 from schemas.response import BaseResponse
 from fastapi.responses import StreamingResponse
-from core.llm import AISearch
+from core.llm import AISearch, IntegrationSearch
 import re
 
 router = APIRouter()
@@ -28,55 +26,16 @@ async def search_brand( brand_kor:str, query: str ):
         
         return StreamingResponse(AISearch.search(question), media_type="text/plain")
 
-    #     openai = AISearch()
-            
-    #     # response = openai.search(question)
-        
-    #     # content = convert_markdown_bold_to_html(response.content)
-    #     # content = convert_linebreak_to_html(content)
-        
-    #     return StreamingResponse(openai.generate_response(question), media_type="text/plain")
-    #     # return BaseResponse(code=0, msg="조회 성공", result=content)
-    
-    #     # conn = get_connection()
-    #     # with conn.cursor() as cursor:
-    #     #     sql = """
-    #     #     """
-    #     #     cursor.execute(sql )
-    #     #     result = cursor.fetchall()
-
-    #     #     return BaseResponse(
-    #     #         code=0,
-    #     #         msg="조회 성공",
-    #     #         result=result,
-    #     #     )
     except:
         return BaseResponse(code=1, msg="조회 실패")
-    # # finally:
-    # #     # conn.close()
 
 @router.get("/ai")
 def search_ai(query: str):
     try:
-        openai = AISearch()
+        openai = IntegrationSearch()
         response = openai.invoke(query)
         
-        return BaseResponse(code=1, msg="조회 실패", result=response)
-        # conn = get_connection()
-        # with conn.cursor() as cursor:
-        #     sql = """
-        #     """
-        #     cursor.execute(sql )
-        #     result = cursor.fetchall()
-
-        #     return BaseResponse(
-        #         code=0,
-        #         msg="조회 성공",
-        #         result=result,
-        #     )
-        pass
+        return StreamingResponse(AISearch.search(query), media_type="text/plain")
+    
     finally:
-        # conn.close()
-        pass
-
-    return BaseResponse(code=1, msg="조회 실패")
+        return BaseResponse(code=1, msg="조회 실패")
