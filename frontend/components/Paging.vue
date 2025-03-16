@@ -7,6 +7,8 @@ const props = defineProps({
   boardType: { type: String, default: "" },
   noContentText: { type: String, default: "" },
   noContentIcon: { type: String, default: "" },
+  firstPage: { type: Boolean, default: true },
+  lastPage: { type: Boolean, default: true },
 });
 
 const emit = defineEmits(["changePage"]);
@@ -90,6 +92,7 @@ const changePage = (page) => {
   <div v-if="total_row > 0" class="paging">
     <!-- list 조회중 / 결과없음 -->
     <button
+      v-if="firstPage"
       @click="changePage(1)"
       :class="{
         hide:
@@ -128,6 +131,7 @@ const changePage = (page) => {
       <v-icon icon="mdi-chevron-right" />
     </button>
     <button
+      v-if="lastPage"
       :class="{
         hide:
           paging?.lastPage <= paging?.groupStartPage + page_per_group ||
