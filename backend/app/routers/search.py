@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
+from typing import Optional
+from db.connection import get_connection 
 from schemas.response import BaseResponse
 from fastapi.responses import StreamingResponse
 from core.llm import AISearch, IntegrationSearch

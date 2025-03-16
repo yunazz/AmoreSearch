@@ -1,6 +1,6 @@
 <script setup>
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["check-admin"],
 });
 
 const member = useMember();
