@@ -3,12 +3,14 @@ import asyncio
 import chromadb
 import json
 from langchain_openai import ChatOpenAI
-from langchain.agents import AgentType, initialize_agent
+from langgraph.graph import MessageGraph
+from langgraph.prebuilt import create_react_agent
+from langchain_core.tools import Tool
 from langchain.tools import tool
 from langchain.schema import SystemMessage
 from langchain.prompts import PromptTemplate
-from langchain.vectorstores import Chroma
-from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain_openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -176,7 +178,12 @@ def generate_response(input_data: str) -> str:
     검색된 데이터를 바탕으로 LLM이 최종 응답을 생성합니다.
     input_data는 JSON 형식으로 전달되며, 'question'과 'retrieved_docs'를 포함합니다.
     """
-    llm = get_fresh_llm() 
+    tools = [classify_question, multi_collection_retriever, generate_response]
+    
+    agent = create_react_agent(tools=tools,llm=get_fresh_llm())
+
+    graph = MessageGraph(agent)
+
     data = json.loads(input_data)
     question = data["question"]
     retrieved_docs = data["retrieved_docs"]
@@ -188,22 +195,17 @@ def generate_response(input_data: str) -> str:
             context_sections.append(f"### {collection_name.upper()} 관련 정보 ###\n{doc_texts}")
 
     context = "\n\n".join(context_sections)[:7000]
+    
+    output = graph.invoke({"input": response_prompt.format(question=question, context=context)})
 
-    response = llm.invoke(response_prompt.format(question=question, context=context))
-    return response.content.strip()
+    return output()
 
-tools = [classify_question, multi_collection_retriever, generate_response]
 
-agent = initialize_agent(
-    tools=tools,
-    llm=get_fresh_llm(), 
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
-    verbose=True
-)
 
 def agentic_rag_chain(question: str):
     category = classify_question(question) 
     retrieved_docs = multi_collection_retriever(json.dumps({"query": question, "category": category}, ensure_ascii=False)) 
+    
     response = generate_response(json.dumps({"question": question, "retrieved_docs": json.loads(retrieved_docs)}, ensure_ascii=False))
 
     return {
