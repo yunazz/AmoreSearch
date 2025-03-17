@@ -79,14 +79,13 @@ async function search(query) {
     pending.value = false;
   }, 3000);
 
-  // body = {
-  // query: query,
-  // tag:};
-  // const result = $http("/ai", {
-  //   key: "ai-search",
-  //   body,
-  // });
-  // pending.value = false;
+  const result = await $http("/search/ai", {
+    query: { query },
+  });
+
+  console.log(result);
+
+  pending.value = false;
 }
 
 function changePage(page) {
