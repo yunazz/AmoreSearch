@@ -1,30 +1,33 @@
 import os
-import asyncio
 import chromadb
+import numpy as np
+import aiomysql
+import asyncio
 import json
-from langchain_openai import ChatOpenAI
-from langgraph.graph import MessageGraph
-from langgraph.prebuilt import create_react_agent
-from langchain_core.tools import Tool
+from langchain_core.messages import HumanMessage
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.tools import tool
-from langchain.schema import SystemMessage
-from langchain.prompts import PromptTemplate
-from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain_core.messages import SystemMessage
+from collections import defaultdict
+
 from dotenv import load_dotenv
 load_dotenv()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-LLM_MODEL = "gpt-4"
-COLLECTION_NAME_POST = "posts"
-COLLECTION_NAME_BRAND = "brand"
-COLLECTION_NAME_COSMETIC = "cosmetic"
-COLLECTION_NAME_INGREDIENT = "ingredient"
-COLLECTION_NAME_LAW = "law"
+from pprint import pprint
 
-def get_fresh_llm():
-    """매번 새로운 LLM 인스턴스를 생성하여 초기화"""
-    return ChatOpenAI(model_name=LLM_MODEL, openai_api_key=OPENAI_API_KEY, temperature=0, cache=False)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+LLM_MODEL = "gpt-4-turbo"
+
+DB_CONFIG = {
+    "host": os.getenv("DB_HOST"),
+    "port": os.getenv("DB_PORT"),
+    "user": os.getenv("DB_USER"),  
+    "password": os.getenv("DB_PASSWD"),
+    "db": os.getenv("DB_NAME"),
+    "autocommit": True,
+}
+
+client = chromadb.HttpClient(host="3.35.104.197", port=10090)
 
 embedding_function = OpenAIEmbeddings(
     base_url="https://76mqtyy2wie64y-10050.proxy.runpod.net/v1",
@@ -34,188 +37,303 @@ embedding_function = OpenAIEmbeddings(
     embedding_ctx_length=502
 )
 
-client = chromadb.HttpClient(host="3.35.104.197", port=10090)
+ingredient_store = client.get_collection('ingredient')
+cosmetic_store = client.get_collection('cosmetic')
+brand_store = client.get_collection('brand')
+post_store = client.get_collection('posts')
 
-collections = {
-    "post": client.get_collection(COLLECTION_NAME_POST),
-    "brand": client.get_collection(COLLECTION_NAME_BRAND),
-    "cosmetic": client.get_collection(COLLECTION_NAME_COSMETIC),
-    "ingredient": client.get_collection(COLLECTION_NAME_INGREDIENT),
-    # "law": client.get_collection(COLLECTION_NAME_LAW),
-}
-
-classification_prompt = PromptTemplate(
-    template="""당신은 아모레퍼시픽 전문가입니다. 다음 질문을 적절한 카테고리로 분류하세요.
-    
-    아모레퍼시픽의 자사브랜드: 
-    카테고리: BEAUTY_CARE, 브랜드명(한글):설화수, 브랜드명(영어) sulwhasoo
-    카테고리: BEAUTY_CARE, 브랜드명(한글):라네즈, 브랜드명(영어) laneige
-    카테고리: BEAUTY_CARE, 브랜드명(한글):이니스프리, 브랜드명(영어) innisfree
-    카테고리: BEAUTY_CARE, 브랜드명(한글):에이피뷰티, 브랜드명(영어) ap
-    카테고리: BEAUTY_CARE, 브랜드명(한글):헤라, 브랜드명(영어) hera
-    카테고리: BEAUTY_CARE, 브랜드명(한글):프리메라, 브랜드명(영어) primera
-    카테고리: BEAUTY_CARE, 브랜드명(한글):아이오페, 브랜드명(영어) iope
-    카테고리: BEAUTY_CARE, 브랜드명(한글):마몽드, 브랜드명(영어) mamonde
-    카테고리: BEAUTY_CARE, 브랜드명(한글):한율, 브랜드명(영어) hanyul
-    카테고리: MEDICAL_BEAUTY, 브랜드명(한글):에스트라, 브랜드명(영어) aestura
-    카테고리: BEAUTY_CARE, 브랜드명(한글):에스쁘아, 브랜드명(영어) espoir
-    카테고리: BEAUTY_CARE, 브랜드명(한글):에뛰드, 브랜드명(영어) etude
-    카테고리: HAIR, 브랜드명(한글):려, 브랜드명(영어) ryo
-    카테고리: HAIR, 브랜드명(한글):미쟝센, 브랜드명(영어) mise en scene
-    카테고리: HAIR, 브랜드명(한글):라보에이치, 브랜드명(영어) laboh
-    카테고리: HAIR, 브랜드명(한글):아윤채, 브랜드명(영어) ayunche
-    카테고리: HAIR, 브랜드명(한글):아모스프로페셔널, 브랜드명(영어) amos professional
-    카테고리: HAIR, 브랜드명(한글):롱테이크, 브랜드명(영어) longtake
-    카테고리: BODY, 브랜드명(한글):일리윤, 브랜드명(영어) illiyoon
-    카테고리: BODY, 브랜드명(한글):해피바스, 브랜드명(영어) happybath
-    카테고리: BODY, 브랜드명(한글):스킨유, 브랜드명(영어) skin u
-    카테고리: ORAL_CARE, 브랜드명(한글):메디안, 브랜드명(영어) median
-    카테고리: ORAL_CARE, 브랜드명(한글):젠티스트, 브랜드명(영어) gentist
-    카테고리: PERFUME, 브랜드명(한글):구딸, 브랜드명(영어) goutal
-    카테고리: INNER_BEAUTY, 브랜드명(한글):바이탈뷰티, 브랜드명(영어) vital beauty
-    카테고리: TEA_CULTURE, 브랜드명(한글):오설록, 브랜드명(영어) osulloc
-    카테고리: BEAUTY_DEVICE, 브랜드명(한글):메이크온, 브랜드명(영어) makeon
-    카테고리: BEAUTY_CARE, 브랜드명(한글):오딧세이, 브랜드명(영어) odyssey
-    카테고리: BEAUTY_CARE, 브랜드명(한글):비레디, 브랜드명(영어) bready
-    카테고리: BEAUTY_CARE, 브랜드명(한글):홀리추얼, 브랜드명(영어) holitual
-
-    질문: "{question}"
-    
-    가능한 카테고리:
-    - "ingredient" (성분, 화장품 기능 관련 질문)
-    - "amore_cosmetic" (자사 화장품 검색 질문)
-    - "other_cosmetic" (타사 화장품 검색 질문)
-    - "cosmetic" (브랜드 구별 없이 화장품에 관한 질문질문)
-    - "company" (회사 전반적인 질문)
-    - "news" (최신 뉴스나 기사 관련 질문)
-
-    반드시 위의 카테고리 중 하나만 출력하세요.
-    
-    자사 
-    카테고리:""",
-    input_variables=["question"],
-)
+def get_fresh_llm():   # gpt-4-turbo 써야 함! gpt-4 쓰니깐 multi로 tool을 쓰지 못함!
+    return ChatOpenAI(model_name=LLM_MODEL,  openai_api_key=OPENAI_API_KEY, temperature=0, cache=False)
 
 @tool
-def classify_question(question: str) -> str:
-    """질문을 적절한 카테고리로 분류합니다."""
-    llm = get_fresh_llm() 
-    response = llm.invoke(classification_prompt.format(question=question))
-    return response.content.strip().replace('"', '')
+def retrieve_ingredient(query: str, k: int = 5):
+    """
+    화장품 성분 정보를 검색하는 도구. 특정 성분의 효능, 사용 가능 여부, 피부 타입에 따른 추천 정보를 제공합니다.
+    "예: '미백 효과가 있는 성분은?', '지성 피부에 좋은 성분 추천해줘', '자외선 차단 성분 알려줘'
+    """
+    try:
+        query_embedding = embedding_function.embed_query(query)
+        
+        results = ingredient_store.query(query_embeddings=query_embedding, n_results=k)
+        return results if results['documents'] else "관련 정보를 찾을 수 없습니다."
+    except Exception as e:
+        return f"Error retrieving ingredients: {str(e)}"
 
 @tool
-def multi_collection_retriever(input_data: str) -> str:
+def retrieve_cosmetic(query: str, k: int = 3):
     """
-    사용자의 질문을 기반으로 적절한 ChromaDB 컬렉션에서 검색 후 JSON 형식의 결과를 반환합니다.
-    input_data는 JSON 문자열이며, 'query'와 'category'를 포함해야 합니다.
+    화장품 제품 정보를 검색하는 도구. 특정 기능, 브랜드, 피부 타입에 따라 적절한 화장품을 추천합니다. 
+    예: '미백 효과가 있는 화장품 추천해줘', '여드름 피부에 좋은 제품 3개 알려줘', '자사 브랜드 제품 소개해줘'
     """
-    data = json.loads(input_data) 
-    query = data["query"]
-    category = data["category"]  
-
-    retrieved_docs = {} 
-    query_embedding = embedding_function.embed_query(query)
-
-    print(f"검색할 카테고리: {category}")
-
-    search_collections = []
-    metadata_filter = None 
-
-    if category == "ingredient":
-        search_collections = ["ingredient", "cosmetic"]
-    elif category == "amore_cosmetic":
-        search_collections = ["cosmetic"]
-        metadata_filter = {"scope": "자사"}
-    elif category == "other_cosmetic":
-        search_collections = ["cosmetic"]
-        metadata_filter = {"scope": "타사"} 
-    elif category == "cosmetic":
-        search_collections = ["cosmetic", "ingredient"] 
-    elif category == "company":
-        search_collections = ["brand", "posts"]
-    elif category == "news":
-        search_collections = ["posts"]
-
-    print(f"검색할 컬렉션: {search_collections}")
-    print(f"적용할 메타데이터 필터: {metadata_filter}")
-
-    for collection_name in search_collections:
-        if metadata_filter:
-            results = collections[collection_name].query(
-                query_embeddings=[query_embedding], 
-                n_results=5,
-                where=metadata_filter 
-            )
-        else:
-            results = collections[collection_name].query(
-                query_embeddings=[query_embedding], 
-                n_results=5
-            )
-
-        retrieved_docs[collection_name] = [
-            {"content": results['documents'][0][i], "metadata": results['metadatas'][0][i]}
-            for i in range(len(results['ids'][0]))
-        ]
-
-    return json.dumps(retrieved_docs, ensure_ascii=False)
-
-response_prompt = PromptTemplate(
-    template="""당신은 아모레퍼시픽 전문가입니다.
-
-    질문: {question}
-
-    아래 정보를 참고하여 답변을 생성하세요.
-
-    {context}
-
-    답변:""",
-    input_variables=["question", "context"],
-)
+    try:
+        query_embedding = embedding_function.embed_query(query)
+        
+        results = cosmetic_store.query(query_embeddings=query_embedding, n_results=k)
+        return results if results['documents'] else "관련 정보를 찾을 수 없습니다."
+    except Exception as e:
+        return f"Error retrieving products: {str(e)}"
 
 @tool
-def generate_response(input_data: str) -> str:
+def retrieve_brand(query: str, k: int = 5):
     """
-    검색된 데이터를 바탕으로 LLM이 최종 응답을 생성합니다.
-    input_data는 JSON 형식으로 전달되며, 'question'과 'retrieved_docs'를 포함합니다.
+    화장품 브랜드 정보를 검색하는 도구. 브랜드의 특징, 주요 제품, 철학(예: 비건, 유기농 등)을 제공합니다.
+    예: '이니스프리 브랜드 스토리 알려줘', '비건 화장품 브랜드 추천해줘', '헤어 관련 자사 브랜드 알려줘'
     """
-    tools = [classify_question, multi_collection_retriever, generate_response]
+    try:
+        query_embedding = embedding_function.embed_query(query)
+        
+        results = brand_store.query(query_embeddings=query_embedding, n_results=k)
+        return results if results['documents'] else "관련 정보를 찾을 수 없습니다."
+    except Exception as e:
+        return f"Error retrieving brands: {str(e)}"
+
+@tool
+def retrieve_posts(query: str, k: int = 5):
+    """
+    최근 화장품 관련 뉴스, 트렌드, 연구 논문을 검색하는 도구. 뷰티 업계 최신 소식을 제공합니다. 
+    예: '최근 트렌드인 화장품 성분이 뭐야?', '화장품 관련 연구 논문 2개 찾아줘', '친환경 화장품 트렌드 기사 알려줘'
+    """
+    try:
+        query_embedding = embedding_function.embed_query(query)
+        
+        results = post_store.query(query_embeddings=query_embedding, n_results=k)
+        return results if results['documents'] else "관련 정보를 찾을 수 없습니다."
+    except Exception as e:
+        return f"Error retrieving posts: {str(e)}"
+
+tool_list = [retrieve_ingredient, retrieve_cosmetic, retrieve_brand, retrieve_posts] 
+
+def get_retrieved_documnets(query: str):
+    """LLM과 도구 호출을 처리하는 함수"""
+
+    messages = [    # 영어로 쓰니깐 더 잘 이해하는 경향을 보임!
+        SystemMessage(content="Analyze the user's query and call **all relevant tools** simultaneously. "
+                        "For example, if the user asks for cosmetic, ingredients and research papers, "
+                        "you must invoke all the tools at once."),
+        HumanMessage(query)
+    ]
     
-    agent = create_react_agent(tools=tools,llm=get_fresh_llm())
-
-    graph = MessageGraph(agent)
-
-    data = json.loads(input_data)
-    question = data["question"]
-    retrieved_docs = data["retrieved_docs"]
-
-    context_sections = []
-    for collection_name, docs in retrieved_docs.items():
-        if docs:
-            doc_texts = "\n".join([doc["content"] for doc in docs])
-            context_sections.append(f"### {collection_name.upper()} 관련 정보 ###\n{doc_texts}")
-
-    context = "\n\n".join(context_sections)[:7000]
+    llm = get_fresh_llm()
+    llm_with_tools = llm.bind_tools(tools=tool_list, tool_choice="required")
     
-    output = graph.invoke({"input": response_prompt.format(question=question, context=context)})
+    ai_msg = llm_with_tools.invoke(messages)
 
-    return output()
-
-
-
-def agentic_rag_chain(question: str):
-    category = classify_question(question) 
-    retrieved_docs = multi_collection_retriever(json.dumps({"query": question, "category": category}, ensure_ascii=False)) 
-    
-    response = generate_response(json.dumps({"question": question, "retrieved_docs": json.loads(retrieved_docs)}, ensure_ascii=False))
-
-    return {
-        "question": question,
-        "category": category,
-        "response": response,
-        "retrieved_docs": json.loads(retrieved_docs)
+    tool_outputs = []
+    tool_dict = {
+        "retrieve_ingredient": retrieve_ingredient,
+        "retrieve_cosmetic": retrieve_cosmetic,
+        "retrieve_brand": retrieve_brand,
+        "retrieve_posts": retrieve_posts
     }
 
+    if hasattr(ai_msg, "tool_calls") and ai_msg.tool_calls:
+        for tool_call in ai_msg.tool_calls:
+            tool_name = tool_call["name"]
+            tool_args = tool_call["args"]
 
+            if tool_name in tool_dict:
+                selected_tool = tool_dict[tool_name]
+                tool_output = selected_tool.invoke(input=tool_args)  
+                
+                tool_outputs.append({"tool_name": tool_name, "output": tool_output})
+
+
+    return tool_outputs
+
+def generate_context(doc_datas, max_tokens=500):
+    """
+    검색된 데이터를 정리하여 LLM이 사용할 수 있도록 컨텍스트를 생성하는 함수.
+
+    Parameters:
+    - doc_datas (list of dict): (각 항목에 'distance'와 'document' 포함)
+    - max_tokens (int): 최대 허용 토큰 수 (기본값 500)
+
+    Returns:
+    - final_context (str): 정제된 컨텍스트 문자열
+    """
+    # 1. 거리값 기준으로 정렬 (작을수록 중요!)
+    sorted_data = sorted(doc_datas, key=lambda x: x['distance'])
+    
+    # 2. 문서를 하나로 합치기 (각 문서를 \n으로 연결)
+    all_texts = [item['document'] for item in sorted_data]
+    full_context = "\n\n".join(all_texts)
+
+    # 3. 토큰 제한 내에서 문서 자르기
+    words = full_context.split() 
+    if len(words) > max_tokens:
+        trimmed_context = " ".join(words[:max_tokens])  # max_tokens 만큼만 유지하고
+    else:
+        trimmed_context = full_context # 제한보다 적으면 그대로 반환
+
+    return trimmed_context
+
+def create_prompt(context, question):
+    """
+    LLM을 위한 프롬프트를 생성하는 함수.
+    
+    Parameters:
+    - context (str): 정제된 데이터 컨텍스트
+    - question (str): 사용자가 물어보는 질문
+    
+    Returns:
+    - prompt (str): LLM을 호출할 최적의 프롬프트
+    """
+    prompt_template = f"""너는 아모레퍼시픽 회사 전문 비서야. 아래 제공된 성분 정보를 참고하여 질문에 답해줘.
+    
+    --- [성분 정보] ---
+    {context}
+    --------------------
+    
+    사용자의 질문:
+    {question}
+    
+    위 정보를 기반으로 전문가처럼 정확하고 상세하게 답변해줘.
+    """
+    
+    return prompt_template
+
+async def query_mariadb(query, params=None):
+    """
+    비동기적으로 MariaDB 쿼리를 실행하고 결과를 반환하는 함수
+    
+    Parameters:
+    - query: 실행할 SQL 쿼리 (문자열)
+    - params: SQL에 바인딩할 파라미터 (튜플 또는 리스트)
+    
+    Returns:
+    - 조회된 결과 (list)
+    """
+    conn = None
+    result = []
+    
+    try:
+        conn = await aiomysql.connect(**DB_CONFIG)
+        async with conn.cursor(aiomysql.DictCursor) as cur:
+            await cur.execute(query, params)
+            result = await cur.fetchall()
+
+        conn.close()
+        return result
+
+    except aiomysql.Error as e:
+        print(f"[MariaDB 에러]: {e}")
+        return None
+
+
+async def generate_llm_response(query, retrieved_collections_docs):
+    """
+    LLM을 호출하여 응답을 생성하는 함수 (비동기)
+    """
+    flatten_docs = []
+    for collection in retrieved_collections_docs:
+        for index in range(len(collection.get('output').get('distances')[0])):
+            doc = {
+                'distance': collection.get('output').get('distances')[0][index],
+                'document': collection.get('output').get('documents')[0][index]
+            }
+            flatten_docs.append(doc)
+
+    context = generate_context(flatten_docs, 7000)
+
+    prompt = create_prompt(context, query)
+
+    llm_init = get_fresh_llm()
+    response = llm_init.invoke(prompt)
+    
+    print("[LLM 응답]:")
+    pprint(response.content)
+    
+    return response.content
+
+
+async def fetch_mariadb_data(retrieved_collections_docs):
+    ingredient_ids = []
+    cosmetic_queries = defaultdict(list)  # scope별로 묶기
+    post_queries = defaultdict(list)  # scope별로 묶기
+
+    for collection in retrieved_collections_docs:
+        tool_name = collection.get('tool_name')
+        metadatas = collection.get('output').get('metadatas')[0]
+
+        if tool_name == "retrieve_ingredient":
+            for meta in metadatas:
+                ingredient_ids.append(meta.get('ingred_id'))
+        
+        elif tool_name == "retrieve_cosmetic":
+            for meta in metadatas:
+                scope = meta.get('scope')
+                cosmetic_queries[scope].append(meta.get('cosmetic_id'))
+        
+        elif tool_name == "retrieve_posts":
+            for meta in metadatas:
+                scope = meta.get('scope')
+                post_queries[scope].append(meta.get('post_id'))
+                
+    ingredient_results = None
+    if ingredient_ids:
+        ingredient_placeholders = ",".join(["%s"] * len(ingredient_ids))
+        ingredient_results = await query_mariadb(
+            f"SELECT * FROM ingredient WHERE id IN ({ingredient_placeholders})",
+            tuple(ingredient_ids) 
+        )
+
+    cosmetic_results = {}
+    for scope, cosmetic_ids in cosmetic_queries.items():
+        if not cosmetic_ids:
+            continue
+
+        table_name = "cosmetic" if scope == '자사' else "cosmetic_external"
+        cosmetic_placeholders = ",".join(["%s"] * len(cosmetic_ids))
+        cosmetic_results[scope] = await query_mariadb(
+            f"SELECT * FROM {table_name} WHERE cosmetic_id IN ({cosmetic_placeholders})",
+            tuple(cosmetic_ids) 
+        )
+
+    post_results = {}
+    for scope, post_ids in post_queries.items():
+        if not post_ids:
+            continue
+
+        table_name = "post" if scope == 'INTERNAL' else "cosmetic_external"
+        post_placeholders = ",".join(["%s"] * len(post_ids)) 
+        post_results[scope] = await query_mariadb(
+            f"SELECT * FROM {table_name} WHERE post_id IN ({post_placeholders})",
+            tuple(post_ids) 
+        )
+
+    print("📌 [MariaDB 조회 결과]:")
+    pprint({
+        "ingredient": ingredient_results,
+        "cosmetic": cosmetic_results,
+        "post": post_results
+    })
+
+    return {
+        "ingredient": ingredient_results,
+        "cosmetic": cosmetic_results,
+        "post": post_results
+    }
+    
+async def get_ai_search_response(query):
+    retrieved_collections_docs = get_retrieved_documnets(query)
+
+    llm_task = asyncio.create_task(generate_llm_response(query, retrieved_collections_docs))
+    db_task = asyncio.create_task(fetch_mariadb_data(retrieved_collections_docs))
+
+    llm_response, db_response = await asyncio.gather(llm_task, db_task)
+
+    return {"llm_response": llm_response, "db_response": db_response}
+
+
+class IntegrationSearch:
+    @staticmethod
+    async def search(question: str):
+        """AI 검색 기능을 실행하는 메서드 (비동기)"""
+        try:
+            return get_ai_search_response(question)
+        except Exception as e:
+            print(e)
+            
 class AISearch:
     @staticmethod
     async def search(question: str):
@@ -226,12 +344,3 @@ class AISearch:
                 yield chunk.content  
             await asyncio.sleep(0.1)
     
-
-class IntegrationSearch:
-    @staticmethod
-    async def search(question: str):
-        response = agentic_rag_chain(question)
-
-        for chunk in response.split(" "):  # 🔹 단어 단위 스트리밍 전송
-            yield chunk + " "
-            await asyncio.sleep(0.1)
