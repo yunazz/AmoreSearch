@@ -1,11 +1,14 @@
 <script setup>
 const member = useMember();
-const resultMode = ref(false);
-const pending = ref(false);
+const config = useRuntimeConfig().public;
+
+const resultMode = ref(true);
+const requesting = ref(false);
+const streaming = ref(false);
 const search_input = ref("");
 
 const filter = ref({
-  query: "미백 기능을 가진 화장품을 소개해줘 ",
+  query: " ",
   tag: "",
 });
 
@@ -14,7 +17,7 @@ const paging = ref({
   item_per_page: 4,
 });
 
-const tags = ref(["검색태그 1", "검색태그 2", "검색태그 3", "검색태그 4"]);
+const tags = ref(["화장품", "성분", "사내문서", ""]);
 const items = [
   {
     title: "일리윤, 세라마이드 아토 라인 3세대 출시",
@@ -69,23 +72,60 @@ const paginatedItems = computed(() => {
   return items.slice(startIndex, endIndex);
 });
 
+let controller = new AbortController();
+
+const search_repsonse_parsed = ref({ llm_response: "", db_response: {} });
+const search_repsonse_string = ref("");
+
+const search_response_llm = computed(() => {
+  let response_str = search_repsonse_string.value;
+
+  if (!search_repsonse_string.value.includes('{"llm_response": "')) return "";
+
+  response_str = response_str.replace(/^{"llm_response":\s*"/, "");
+  response_str = response_str.split('", "db')[0];
+
+  return response_str.replace(/"$/, "");
+});
+
 async function search(query) {
   if (query.length === 0) return;
+
   filter.value.query = query;
   resultMode.value = true;
-  pending.value = true;
+  requesting.value = true;
 
-  setTimeout(() => {
-    pending.value = false;
-  }, 3000);
+  controller = new AbortController();
 
-  const result = await $http("/search/ai", {
-    query: { query },
-  });
+  const response = await fetch(
+    `${config.SERVER_HOST}/api/search/ai?query=${query}`,
+    {
+      signal: controller.signal,
+    }
+  );
 
-  console.log(result);
+  if (!response.body) {
+    console.error("스트리밍 응답을 받을 수 없습니다.");
+    requesting.value = false;
+    streaming.value = false;
+    return;
+  }
 
-  pending.value = false;
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      requesting.value = false;
+      streaming.value = false;
+      break;
+    }
+    if (requesting.value) requesting.value = false;
+    search_repsonse_string.value += decoder.decode(value, { stream: true });
+  }
+
+  search_repsonse_parsed.value = JSON.parse(search_repsonse_string.value);
 }
 
 function changePage(page) {
@@ -97,6 +137,21 @@ function initSearch() {
   filter.value.query = "";
   paging.value.current_page = 1;
 }
+
+// watch(
+//   () => resultMode,
+//   (newValue) => {
+//     if (!newValue) {
+//       console.log("요청 중단");
+//       controller.abort();
+//     }
+//   }
+// );
+
+// onUnmounted(() => {
+//   console.log("요청 중단 필요");
+//   controller.abort();
+// });
 </script>
 
 <template>
@@ -150,7 +205,7 @@ function initSearch() {
                   <v-icon icon="mdi-magnify" color="primary" size="30" />
                   <p>
                     {{ filter.query }}
-                    <button v-if="!pending" @click="initSearch">
+                    <button v-if="!requesting" @click="initSearch">
                       <v-icon
                         style="margin-bottom: 2px"
                         icon="mdi-close"
@@ -160,7 +215,7 @@ function initSearch() {
                     </button>
                   </p>
                 </h3>
-                <template v-if="pending">
+                <template v-if="requesting">
                   <div>
                     <v-progress-linear
                       style="width: 60%"
@@ -186,10 +241,10 @@ function initSearch() {
                   </div>
                 </template>
                 <template v-else>
-                  <div>출력결과</div>
+                  <div v-html="search_response_llm"></div>
                 </template>
               </div>
-              <div v-if="!pending" class="search_result_right">
+              <div v-if="!requesting" class="search_result_right">
                 <p class="body--l mt-5 fw-600">
                   <!-- {{ items?.length || 0 }}개의 출처 -->
                   NEWS / JOURNAL
@@ -202,7 +257,6 @@ function initSearch() {
                 <!-- paging -->
                 <Paging
                   :paging="paging"
-                  :status="status"
                   :total_row="items.length"
                   :first-page="false"
                   :last-page="false"
@@ -219,9 +273,9 @@ function initSearch() {
                 id="search_input"
                 type="text"
                 v-model="search_input"
-                @keydown.enter="search"
+                @keydown.enter="search(search_input)"
                 placeholder=""
-                :disabled="pending"
+                :disabled="requesting"
                 style="outline: none"
               />
             </div>

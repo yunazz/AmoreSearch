@@ -3,18 +3,14 @@ from typing import Optional
 from db.connection import get_connection 
 from schemas.response import BaseResponse
 from fastapi.responses import StreamingResponse
-from core.llm import AISearch, IntegrationSearch
+from core.llm import AISearch, IntegrationSearch, RagSearch
+
 import asyncio
 router = APIRouter()
 
-async def ai_response_generator(query: str):
-    """AI 응답을 실시간으로 스트리밍하는 제너레이터"""
-    async for chunk in IntegrationSearch.search(query):  
-        yield chunk + "\n"  # 줄바꿈 추가하여 스트리밍 효과 극대화
-        await asyncio.sleep(0.1)  # 🔥 너무 빠른 스트리밍을 방지
-        
+    
 @router.get("/brand")
-async def search_brand( brand_kor:str, query: str ):
+async def search_brand(brand_kor:str, query: str ):
     try:
         question = f"""
             너는 아모레퍼시픽의 전문 AI 컨설턴트입니다. 나는 아모레퍼시픽 직원입니다.
@@ -32,10 +28,36 @@ async def search_brand( brand_kor:str, query: str ):
 async def search_ai(query: str):
     """FastAPI 엔드포인트: AI 검색 실행"""
     try:
-        response = await IntegrationSearch.search(query)
-        # return StreamingResponse(ai_response_generator(query), media_type="text/plain")
-        return BaseResponse(code=0, msg="조회 성공", result=response)
+        return StreamingResponse(IntegrationSearch.search(query), media_type="application/json")
+
     except Exception as e:
-        print(f"❌ 오류 발생: {e}")
-       
         return BaseResponse(code=1, msg="조회 실패")
+    
+@router.get("/references")
+def search_ai(query: str):
+    """검색창 우측에 연관된 문서를 띄우기 위해 조회하는 API"""
+    try:
+        result =  RagSearch.search(query, tag)
+
+        if result is None:
+            return BaseResponse(code=1, msg="조회 실패")
+        
+        return BaseResponse(code=0, msg="조회 성공", result=result)
+
+    except Exception as e:
+        return BaseResponse(code=1, msg="조회 실패")
+    
+@router.get("/category")
+def search_ai(query: str):
+    """검색시 선택한 태그와 관련된 내용을 보여주기 위해 조회하는 API"""
+    try:
+        result =  RagSearch.search(query, tag)
+
+        if result is None:
+            return BaseResponse(code=1, msg="조회 실패")
+        
+        return BaseResponse(code=0, msg="조회 성공", result=result)
+
+    except Exception as e:
+        return BaseResponse(code=1, msg="조회 실패")
+    

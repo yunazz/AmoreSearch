@@ -1,7 +1,6 @@
 <script setup>
 const props = defineProps({
   item: { required: true },
-  scope: { required: true },
   favorite_type: { type: String },
   is_favorite: {
     type: Boolean,
