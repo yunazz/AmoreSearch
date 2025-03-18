@@ -202,7 +202,7 @@ def create_prompt(context, question):
     - prompt (str): LLM을 호출할 최적의 프롬프트
     """
     
-    prompt_template = rf"""당신은 아모레퍼시픽 회사의 전문 비서입니다.. 아래 제공된 정보를 참고하여 질문에 답변해 주세요.
+    prompt_template = rf"""당신은 아모레퍼시픽 회사의 직원들을 도와주는 전문 비서로서 이름은 AmoreSearch 입니다. 아래 제공된 정보를 참고하여 질문에 답변해 주세요.
     
 
     

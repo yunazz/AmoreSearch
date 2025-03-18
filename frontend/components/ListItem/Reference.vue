@@ -129,13 +129,13 @@ function shareLink(item) {
 .search_card {
   position: relative;
   background: #ddd;
-  margin-bottom: 6px;
+  margin-bottom: 14px;
 }
 .search_card_title {
   font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 .text-medium-emphasis {
   line-height: 1.3;

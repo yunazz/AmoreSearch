@@ -4,18 +4,19 @@ const config = useRuntimeConfig().public;
 
 let controller = new AbortController();
 
+// 요청 상태 관련
+const searchMode = ref(false);
+const waiting = ref(false);
+const streaming = ref(false);
+
+// 검색 관련
 const tags = ref(["화장품", "성분", "사내문서"]);
 const filter = ref({ query: " ", tag: "" });
 const inputValue = ref("");
+const sideTab = ref(1);
 const tabPaging = ref({ current_page: 1, item_per_page: 4 });
 
-const requesting = ref(false);
-const streaming = ref(false);
-
-const searchMode = ref(false);
-const referenceTab = ref(1);
-
-const llm_response = ref("");
+const llm_response = ref("1");
 const llm_question = ref([
   "관련 질문 내용입니다. 무엇이 궁금할까요?",
   "관련 질문 내용입니다. 무엇이 궁금할까요?",
@@ -69,7 +70,10 @@ const llm_docs = ref([
   },
 ]);
 
-const showReference = computed(() => llm_response.value.length > 0);
+const isResultReady = computed(
+  () => !waiting.value && llm_response.value.length > 0
+);
+
 const paginatedDocs = computed(() => {
   const startIndex =
     (tabPaging.value.current_page - 1) * tabPaging.value.item_per_page;
@@ -79,12 +83,12 @@ const paginatedDocs = computed(() => {
 
 async function searchFnc(query) {
   if (query.length === 0) return;
-  if (streaming.value || requesting.value) return;
+  if (streaming.value || waiting.value) return;
 
   initResponse();
 
   searchMode.value = true;
-  requesting.value = true;
+  waiting.value = true;
 
   filter.value.query = query;
 
@@ -99,7 +103,7 @@ async function searchFnc(query) {
 
     if (!response.body) {
       console.error("스트리밍 응답을 받을 수 없습니다.");
-      requesting.value = false;
+      waiting.value = false;
       streaming.value = false;
       return;
     }
@@ -110,11 +114,11 @@ async function searchFnc(query) {
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
-        requesting.value = false;
+        waiting.value = false;
         streaming.value = false;
         break;
       }
-      if (requesting.value) requesting.value = false;
+      if (waiting.value) waiting.value = false;
 
       const text = decoder.decode(value, { stream: true });
       const lines = text.split("\n").filter((line) => line.trim() !== "");
@@ -142,6 +146,10 @@ function changePage(page) {
   tabPaging.value.current_page = page;
 }
 
+function changeTab(tab) {
+  if (waiting.value) return;
+  sideTab.value = tab;
+}
 function initPage() {
   searchMode.value = false;
   initResponse();
@@ -152,7 +160,7 @@ function initResponse() {
   llm_question.value = [];
   llm_docs.value = {};
   tabPaging.value.current_page = 1;
-  referenceTab.value = 1;
+  sideTab.value = 1;
 
   inputValue.value = "";
   filter.value.query = "";
@@ -214,7 +222,7 @@ onUnmounted(() => {
                   <v-icon icon="mdi-magnify" color="primary" size="30" />
                   <p class="search_query">
                     {{ filter.query }}
-                    <button v-if="!requesting" @click="initPage">
+                    <button v-if="!waiting" @click="initPage">
                       <v-icon
                         style="margin-bottom: 2px"
                         icon="mdi-close"
@@ -225,109 +233,108 @@ onUnmounted(() => {
                   </p>
                 </h3>
 
-                <!-- 검색 결과 -->
-                <template v-if="!requesting">
-                  <template v-if="showReference">
-                    <div class="llm_cont">
-                      <MDC :value="llm_response" tag="article" />
-                    </div>
-                    <div class="question_cont">
-                      <div
-                        v-for="(question, index) in llm_question"
-                        :key="index"
-                        class="question_item"
-                      >
-                        <div class="flex">
-                          <span>{{ index + 1 }}</span>
-                          <p>{{ question }}</p>
-                        </div>
-                        <div>
-                          <v-icon
-                            icon="mdi-arrow-right"
-                            class="mr-5 text-gray-02"
-                          ></v-icon>
-                        </div>
+                <!-- 왼쪽 -->
+                <v-skeleton-loader
+                  v-if="!isResultReady"
+                  type="list-item-three-line"
+                />
+                <template v-else>
+                  <div class="llm_cont">
+                    <MDC :value="llm_response" tag="article" />
+                  </div>
+
+                  <div
+                    v-if="llm_question.length > 0 && !streaming"
+                    class="question_cont"
+                  >
+                    <div
+                      v-for="(question, index) in llm_question"
+                      :key="index"
+                      class="question_item"
+                      @click="searchFnc(question)"
+                    >
+                      <div class="flex">
+                        <span>{{ index + 1 }}</span>
+                        <p>{{ question }}</p>
+                      </div>
+                      <div>
+                        <v-icon
+                          color="main"
+                          icon="mdi-arrow-right"
+                          class="mr-6"
+                        ></v-icon>
                       </div>
                     </div>
-                  </template>
-                  <div class="cosmetic_cont"></div>
-                </template>
-
-                <!-- 검색중 -->
-                <template v-else>
-                  <div>
-                    <v-progress-linear
-                      style="width: 60%"
-                      class="progress_linear_primary mb-3"
-                      indeterminate
-                      rounded
-                      height="15"
-                    />
-                    <v-progress-linear
-                      style="width: 50%"
-                      class="progress_linear_primary mb-3"
-                      indeterminate
-                      rounded
-                      height="15"
-                    />
-                    <v-progress-linear
-                      style="width: 40%"
-                      class="progress_linear_primary mb-3"
-                      indeterminate
-                      rounded
-                      height="15"
-                    />
                   </div>
                 </template>
+                <div class="cosmetic_cont"></div>
               </div>
 
-              <div
-                v-if="!requesting && showReference"
-                class="search_result_right"
-              >
+              <!-- 오른쪽 -->
+              <div class="search_result_right">
                 <p class="mt-5 fw-600">
                   <button
                     class="btn--text"
-                    :class="{ active: referenceTab == 1 }"
-                    @click="referenceTab = 1"
+                    :disabled="waiting || streaming"
+                    :class="{ active: sideTab == 1 }"
+                    @click="changeTab(1)"
                   >
                     검색 문서
                   </button>
                   <button
                     class="btn--text"
-                    :class="{ active: referenceTab == 2 }"
-                    @click="referenceTab = 2"
+                    :disabled="waiting || streaming"
+                    :class="{ active: sideTab == 2 }"
+                    @click="changeTab(2)"
                   >
                     출처 자료
                   </button>
                 </p>
-                <!-- tab 1  -->
-                <template v-if="referenceTab === 1">
-                  <ListItemReference
-                    v-for="(item, index) in paginatedDocs"
-                    :key="index"
-                    :item="item"
-                  />
-                  <Paging
-                    :paging="tabPaging"
-                    :total_row="llm_docs.length"
-                    :first-page="false"
-                    :last-page="false"
-                    @changePage="changePage"
-                  />
-                </template>
 
-                <!-- 우측 tab 1  -->
-                <template v-else-if="referenceTab === 2">
-                  출처 리스트
-                </template>
+                <div class="tab_content">
+                  <!-- Tab 1  -->
+                  <template v-if="sideTab === 1">
+                    <template v-if="!isResultReady">
+                      <v-skeleton-loader
+                        class="mx-auto border"
+                        max-width="340"
+                        type="chip, actions,article, chip, chip,"
+                      />
+                      <v-skeleton-loader
+                        class="mx-auto border"
+                        max-width="340"
+                        type="chip, actions,article, chip, chip,"
+                      />
+                    </template>
+                    <template v-else>
+                      <ListItemReference
+                        v-for="(item, index) in paginatedDocs"
+                        :key="index"
+                        :item="item"
+                      />
+                      <Paging
+                        :paging="tabPaging"
+                        :total_row="llm_docs.length"
+                        :first-page="false"
+                        :last-page="false"
+                        @changePage="changePage"
+                      />
+                    </template>
+                  </template>
+
+                  <!-- Tab2  -->
+                  <template v-else-if="sideTab === 2">출처 리스트</template>
+                </div>
               </div>
             </div>
 
             <!-- input gradient bg-->
             <div class="block_bg_box" />
             <!-- 하단 검색 Input -->
-            <div class="search_input_cont">
+            <div
+              class="search_input_cont"
+              :class="{ opacity_5: waiting || streaming }"
+            >
               <label for="search_input">
                 <v-icon icon="mdi-magnify" color="primary" />
               </label>
@@ -336,8 +343,7 @@ onUnmounted(() => {
                 type="text"
                 v-model="inputValue"
                 @keydown.enter="searchFnc(inputValue)"
-                placeholder=""
-                :disabled="requesting"
+                :disabled="waiting || streaming"
                 style="outline: none"
               />
             </div>
@@ -349,6 +355,9 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.opacity_5 {
+  opacity: 0.5;
+}
 .content_inner {
   position: relative;
   padding-right: 12px;
@@ -375,6 +384,7 @@ onUnmounted(() => {
 #AiSearch.content {
   max-width: 100%;
 }
+
 .content_center {
   width: 100%;
   height: 100vh;
@@ -459,18 +469,21 @@ onUnmounted(() => {
 
 button.btn--text {
   font-size: 1rem;
-  margin-right: 1.75rem;
+  margin-right: 1.625rem;
   transition: all 0.2s ease;
   word-spacing: -1px;
   color: var(--color-gray-03);
   font-weight: 500;
 }
 button.btn--text:hover {
-  color: var(--sub-color);
+  color: var(--main-color);
 }
 button.btn--text.active {
   color: var(--color-black);
-  font-weight: 600;
+  font-weight: 500;
+}
+button.btn--text:disabled {
+  color: var(--color-gray-01) !important;
 }
 .llm_cont {
   min-height: 100px;
@@ -496,9 +509,6 @@ button.btn--text.active {
   -moz-user-select: none;
   -ms-user-select: none;
 }
-.question_item:hover {
-  background: var(--sub-color);
-}
 .question_item:nth-child(1) {
   border-top: 1px solid var(--border-color);
 }
@@ -517,8 +527,13 @@ button.btn--text.active {
 .question_item p {
   font-size: 13px;
 }
-.question_item i {
+.question_item i,
+.question_item span {
   transition: all 0.15s ease;
+}
+
+.question_item:hover span {
+  margin-left: 16px !important;
 }
 .question_item:hover i {
   margin-right: 16px !important;
