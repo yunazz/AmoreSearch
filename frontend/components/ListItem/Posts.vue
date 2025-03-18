@@ -13,6 +13,31 @@ function openLink(url) {
   window.open(url);
 }
 
+async function toggleFavorites(item) {
+  const body = {
+    favorite_type: item.post_type,
+    target_id: item.post_id,
+    scope: item.scope,
+  };
+
+  let method = "";
+  if (is_favorite.value) method = "DELETE";
+  if (!is_favorite.value) method = "POST";
+
+  try {
+    const { code, msg } = await $http("/member/favorites", {
+      method,
+      body,
+    });
+
+    emit("notify", msg);
+    emit("success");
+    if (code == 0) is_favorite.value = !is_favorite.value;
+  } catch (e) {
+    emit("notify", "서버 오류 발생");
+  }
+}
+
 function shareLink(item) {
   console.log(item);
 }
