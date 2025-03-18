@@ -633,3 +633,48 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
     rgba(81, 153, 171, 0.75) 100%
   );
 }
+.llm_cont article {
+}
+.llm_cont article h2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.llm_cont article h3 {
+  margin-top: 1rem;
+  margin-bottom: 2px;
+}
+.llm_cont article h3 a,
+.llm_cont article h3 strong {
+  font-weight: 700;
+  color: var(--color-black);
+}
+.llm_cont article a {
+  text-decoration: none;
+  cursor: default;
+  pointer-events: none;
+  font-weight: 600;
+}
+.llm_cont article strong {
+  font-weight: 500;
+  /* display: inline-block;
+  background: var(--sub-light-color); */
+}
+.llm_cont article p {
+  line-height: 1.35;
+}
+.llm_cont article ul {
+  margin-top: 0.25rem;
+  line-height: 1.35;
+}
+.llm_cont article ul li {
+  margin: 4px 0;
+}
+.llm_cont article ul li strong {
+  font-weight: 600;
+}
+.llm_cont article ol > li {
+  list-style-type: disc;
+  margin-left: 20px;
+  font-weight: 600;
+  margin: 10px 0 5px 20px;
+}

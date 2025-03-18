@@ -132,13 +132,13 @@ function shareLink(item) {
   margin-bottom: 6px;
 }
 .search_card_title {
-  font-size: 0.9375rem;
+  font-size: 14px;
   font-weight: 500;
   line-height: 1.2;
   margin-bottom: 6px;
 }
 .text-medium-emphasis {
   line-height: 1.3;
-  font-size: 13px;
+  font-size: 12px;
 }
 </style>

@@ -15,10 +15,10 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-from pprint import pprint
+# from pprint import pprint
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-LLM_MODEL = "gpt-4-turbo"
+LLM_MODEL = "Qwen2.5-72B-Instruct"
 
 DB_CONFIG = {
     "host": os.getenv("DB_HOST"),
@@ -52,8 +52,9 @@ def convert_datetime(obj):
 
 
 def get_fresh_llm():   # gpt-4-turbo 써야 함! gpt-4 쓰니깐 multi로 tool을 쓰지 못함!
-    return ChatOpenAI(model_name=LLM_MODEL,  openai_api_key=OPENAI_API_KEY, temperature=0, cache=False)
-
+    # return ChatOpenAI(model_name=LLM_MODEL,  openai_api_key=OPENAI_API_KEY, temperature=0, cache=False)
+    return ChatOpenAI(base_url="https://huyl3xwudrm8sq-10050.proxy.runpod.net/v1", model=LLM_MODEL,api_key="team3", temperature=0, cache=False)
+                      
 @tool
 def retrieve_ingredient(query: str, k: int = 5):
     """
@@ -112,10 +113,9 @@ def retrieve_posts(query: str, k: int = 5):
 
 tool_list = [retrieve_ingredient, retrieve_cosmetic, retrieve_brand, retrieve_posts] 
 
-def get_retrieved_documnets(query: str):
-    """LLM과 도구 호출을 처리하는 함수"""
-
-    messages = [    # 영어로 쓰니깐 더 잘 이해하는 경향을 보임!
+async def get_retrieved_documnets(query: str):
+    """LLM과 도구 호출을 비동기적으로 처리하는 함수"""
+    messages = [ 
         SystemMessage(content="Analyze the user's query and call **all relevant tools** simultaneously. "
                         "For example, if the user asks for cosmetic, ingredients and research papers, "
                         "you must invoke all the tools at once."),
@@ -123,9 +123,12 @@ def get_retrieved_documnets(query: str):
     ]
     
     llm = get_fresh_llm()
-    llm_with_tools = llm.bind_tools(tools=tool_list, tool_choice="required")
+    llm_with_tools = llm.bind_tools(tools=tool_list, tool_choice="auto")
     
-    ai_msg = llm_with_tools.invoke(messages)
+    if asyncio.iscoroutinefunction(llm_with_tools.invoke):
+        ai_msg = await llm_with_tools.invoke(messages)
+    else:
+        ai_msg = llm_with_tools.invoke(messages)
 
     tool_outputs = []
     tool_dict = {
@@ -135,17 +138,32 @@ def get_retrieved_documnets(query: str):
         "retrieve_posts": retrieve_posts
     }
     
+    print('⭕ TOOL 개수:', len(ai_msg.tool_calls))
+    
     if hasattr(ai_msg, "tool_calls") and ai_msg.tool_calls:
+        tasks = []
         for tool_call in ai_msg.tool_calls:
             tool_name = tool_call["name"]
             tool_args = tool_call["args"]
 
             if tool_name in tool_dict:
                 selected_tool = tool_dict[tool_name]
-                tool_output = selected_tool.invoke(input=tool_args)  
-                
-                tool_outputs.append({"tool_name": tool_name, "output": tool_output})
 
+                if asyncio.iscoroutinefunction(selected_tool.invoke):
+                    print('비동기')
+                    tasks.append(asyncio.create_task(selected_tool.invoke(input=tool_args)))
+                else:
+                    tool_output = selected_tool.invoke(input=tool_args)
+                    tool_outputs.append({"tool_name": tool_name, "output": tool_output})
+        
+
+        if tasks:
+            results = await asyncio.gather(*tasks)
+            for idx, tool_call in enumerate(ai_msg.tool_calls):
+                tool_name = tool_call["name"]
+                tool_outputs.append({"tool_name": tool_name, "output": results[idx]})
+                
+    print('⭕ Retrieved 완료')
     return tool_outputs
 
 def generate_context(doc_datas, max_tokens=500):
@@ -159,19 +177,16 @@ def generate_context(doc_datas, max_tokens=500):
     Returns:
     - final_context (str): 정제된 컨텍스트 문자열
     """
-    # 1. 거리값 기준으로 정렬 (작을수록 중요!)
     sorted_data = sorted(doc_datas, key=lambda x: x['distance'])
     
-    # 2. 문서를 하나로 합치기 (각 문서를 \n으로 연결)
     all_texts = [item['document'] for item in sorted_data]
     full_context = "\n\n".join(all_texts)
 
-    # 3. 토큰 제한 내에서 문서 자르기
     words = full_context.split() 
     if len(words) > max_tokens:
-        trimmed_context = " ".join(words[:max_tokens])  # max_tokens 만큼만 유지하고
+        trimmed_context = " ".join(words[:max_tokens])
     else:
-        trimmed_context = full_context # 제한보다 적으면 그대로 반환
+        trimmed_context = full_context
 
     return trimmed_context
 
@@ -186,173 +201,168 @@ def create_prompt(context, question):
     Returns:
     - prompt (str): LLM을 호출할 최적의 프롬프트
     """
-    prompt_template = f"""너는 아모레퍼시픽 회사 전문 비서야. 아래 제공된 성분 정보를 참고하여 질문에 답해줘.
     
-    --- [성분 정보] ---
+    prompt_template = rf"""당신은 아모레퍼시픽 회사의 전문 비서입니다.. 아래 제공된 정보를 참고하여 질문에 답변해 주세요.
+    
+
+    
+    --- [ context ] ---
     {context}
     --------------------
-    
-    사용자의 질문:
-    {question}
-    
-    위 정보를 기반으로 전문가처럼 정확하고 상세하게 답변해줘.
-    
-    - 줄바꿈 문자 \n이 1개이면 <br/>도 1개, \n이 2개이면 <br/>도 2개,\n이 3개이면 <br/>도 3개 똑같이 2개로 똑같이 바꿔줘.
-    - 굵게 표시할 문자는 <b></b>로 감싸주었으면 좋겠습니다.
-    """
+
+    위 정보를 기반으로 전문가처럼 정확하고 상세하게 답변해 주세요.
+    한국어와 영어 외에는 사용하지 말아주세요.
+
+    question:
+    {question}    
+     """
     
     return prompt_template
 
 async def query_mariadb(query, params=None):
     """
     비동기적으로 MariaDB 쿼리를 실행하고 결과를 반환하는 함수
-    
-    Parameters:
-    - query: 실행할 SQL 쿼리 (문자열)
-    - params: SQL에 바인딩할 파라미터 (튜플 또는 리스트)
-    
-    Returns:
-    - 조회된 결과 (list)
     """
-    conn = None
     result = []
     
     try:
-        conn = await aiomysql.connect(**DB_CONFIG)
-        async with conn.cursor(aiomysql.DictCursor) as cur:
-            await cur.execute(query, params)
-            result = await cur.fetchall()
+       
+        async with aiomysql.connect(**DB_CONFIG) as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cur:
+                if params is None:
+                    params = ()
+                
+                await cur.execute(query, params)
+                result = await cur.fetchall()
 
-        conn.close()
-        return result
+        return result if result else [] 
 
     except aiomysql.Error as e:
         print(f"[MariaDB 에러]: {e}")
-        return None
-
-
-async def generate_llm_response(query, retrieved_collections_docs):
-    """
-    LLM을 호출하여 응답을 생성하는 함수 (비동기)
-    """
-    flatten_docs = []
-    for collection in retrieved_collections_docs:
-
-        for index in range(len(collection.get('output').get('distances')[0])):
-            doc = {
-                'distance': collection.get('output').get('distances')[0][index],
-                'document': collection.get('output').get('documents')[0][index]
-            }
-            flatten_docs.append(doc)
-
-    context = generate_context(flatten_docs, 7000)
-
-    prompt = create_prompt(context, query)
-
-    llm_init = get_fresh_llm()
-    response = llm_init.invoke(prompt)
+        return []
     
-    return response.content
-
 
 async def fetch_mariadb_data(retrieved_collections_docs):
     ingredient_ids = []
-    cosmetic_queries = defaultdict(list)  # scope별로 묶기
-    post_queries = defaultdict(list)  # scope별로 묶기
+    cosmetic_queries = defaultdict(list)
+    post_queries = defaultdict(list)
 
     for collection in retrieved_collections_docs:
         tool_name = collection.get('tool_name')
-        metadatas = collection.get('output').get('metadatas')[0]
+        metadatas = collection.get('output', {}).get('metadatas', [[]])[0]
 
         if tool_name == "retrieve_ingredient":
             for meta in metadatas:
-                ingredient_ids.append(int(meta.get('ingred_id')))
+                ingredient_id = meta.get('ingred_id')
+                if ingredient_id is not None:
+                    ingredient_ids.append(int(ingredient_id))
         
         elif tool_name == "retrieve_cosmetic":
             for meta in metadatas:
                 scope = meta.get('scope')
-                cosmetic_queries[scope].append(int(meta.get('cosmetic_id')))
+                cosmetic_id = meta.get('cosmetic_id')
+                if scope and cosmetic_id is not None:
+                    cosmetic_queries[scope].append(int(cosmetic_id))
         
         elif tool_name == "retrieve_posts":
             for meta in metadatas:
                 scope = meta.get('scope')
-                post_queries[scope].append(int(meta.get('post_id')))
-                
-    ingredient_results = None
-    if ingredient_ids and len(ingredient_ids) > 0:
+                post_id = meta.get('post_id')
+                if scope and post_id is not None:
+                    post_queries[scope].append(int(post_id))
+
+
+    ingredient_results = []
+    if ingredient_ids:
         ingredient_placeholders = ",".join(["%s"] * len(ingredient_ids))
         ingredient_results = await query_mariadb(
             f"SELECT * FROM ingredient WHERE ingred_id IN ({ingredient_placeholders})",
-            tuple(ingredient_ids) 
+            tuple(ingredient_ids)
         )
-
     cosmetic_results = {}
     for scope, cosmetic_ids in cosmetic_queries.items():
-        if not cosmetic_ids or len(cosmetic_ids) == 0:
+        if not cosmetic_ids:
             continue
 
         table_name = "cosmetic" if scope == '자사' else "cosmetic_external"
         cosmetic_placeholders = ",".join(["%s"] * len(cosmetic_ids))
         cosmetic_results[scope] = await query_mariadb(
             f"SELECT * FROM {table_name} WHERE cosmetic_id IN ({cosmetic_placeholders})",
-            tuple(cosmetic_ids) 
+            tuple(cosmetic_ids)
         )
 
     post_results = {}
     for scope, post_ids in post_queries.items():
-        if not post_ids or len(post_ids) == 0:
+        if not post_ids:
             continue
 
         table_name = "post" if scope == 'INTERNAL' else "post_external"
-        post_placeholders = ",".join(["%s"] * len(post_ids)) 
+        post_placeholders = ",".join(["%s"] * len(post_ids))
         post_results[scope] = await query_mariadb(
             f"SELECT * FROM {table_name} WHERE post_id IN ({post_placeholders})",
-            tuple(post_ids) 
+            tuple(post_ids)
         )
-
+        
+    print('⭕ MariaDB 조회완료')
+    
     return {
         "ingredient": ingredient_results,
         "cosmetic": cosmetic_results,
         "post": post_results
     }
     
-async def get_ai_search_response(query:str):
-    retrieved_collections_docs = get_retrieved_documnets(query)
-
-    llm_task = asyncio.create_task(generate_llm_response(query, retrieved_collections_docs))
-    db_task = asyncio.create_task(fetch_mariadb_data(retrieved_collections_docs))
-
-    llm_response, db_response = await asyncio.gather(llm_task, db_task)
-
-    return {"llm_response": llm_response, "db_response": db_response}
-
-async def ai_response_generator(query: str):
-    """AI 응답을 실시간으로 스트리밍하는 제너레이터"""
-    async for chunk in IntegrationSearch.search(query):  
-        yield chunk + "\n"
-        await asyncio.sleep(0.1)
         
+async def generate_llm_response(query, retrieved_collections_docs):
+    """
+    LLM을 호출하여 응답을 생성하는 함수 (비동기)
+    """
+    try:
+        flatten_docs = []
+        for collection in retrieved_collections_docs:
+            distances = collection.get('output', {}).get('distances', [[]])[0]
+            documents = collection.get('output', {}).get('documents', [[]])[0]
+
+            for index in range(len(distances)):
+                flatten_docs.append({
+                    'distance': distances[index],
+                    'document': documents[index]
+                })
+
+        flatten_docs = sorted(flatten_docs, key=lambda x: x["distance"])
+
+        max_token_limit = 7000
+        context = generate_context(flatten_docs, max_token_limit)
+
+        prompt = create_prompt(context, query)
+
+        llm_init = get_fresh_llm()
+        async for llm_output in llm_init.astream(prompt):
+            yield llm_output 
+
+    except Exception as e:
+        print(f"❌ LLM 응답 오류: {e}")
+        yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
+
 
 class IntegrationSearch:
     @staticmethod
-    async def search(question: str) -> AsyncGenerator[str, None]:
+    async def search(query: str) -> AsyncGenerator[str, None]:
         """AI 검색 기능을 실행하고 JSON 데이터를 스트리밍 형식으로 반환하는 비동기 제너레이터"""
         try:
-            result = await get_ai_search_response(question)
+            retrieved_collections_docs = await get_retrieved_documnets(query)
 
-            if result is None:
-                yield json.dumps({"error": "조회 실패"}, ensure_ascii=False) + "\n"
-                return
-
-            json_result = json.dumps(result, ensure_ascii=False, default=convert_datetime)
-
-            for chunk in json_result.split():
-                yield chunk + " "
+            async for llm_output in generate_llm_response(query, retrieved_collections_docs):
+                yield json.dumps({"type": "message", "data": llm_output.content}, ensure_ascii=False) + "\n"
                 await asyncio.sleep(0.05)
 
+            metadata_response = await fetch_mariadb_data(retrieved_collections_docs)
+            yield json.dumps({"type": "metadata", "data": metadata_response}, ensure_ascii=False, default=convert_datetime) + "\n"
+            
+
         except Exception as e:
-            print(f"❌ 오류 발생: {e}")
-            yield json.dumps({"error": "서버 오류 발생"}, ensure_ascii=False) + "\n"
+            print(f"전체 시스템 오류 발생: {e}")
+            yield json.dumps({"type": "error", "message": "서버 오류 발생"}, ensure_ascii=False) + "\n"
+            
             
 class AISearch:
     @staticmethod
@@ -362,8 +372,13 @@ class AISearch:
         async for chunk in llm.astream(question):
             if chunk.content:
                 yield chunk.content  
+            else:
+                break  
+
             await asyncio.sleep(0.1)
-            
+        
+        return 
+    
 class RagSearch:
     @staticmethod
     async def search(question: str):

@@ -8,21 +8,6 @@ from core.llm import AISearch, IntegrationSearch, RagSearch
 import asyncio
 router = APIRouter()
 
-    
-@router.get("/brand")
-async def search_brand(brand_kor:str, query: str ):
-    try:
-        question = f"""
-            너는 아모레퍼시픽의 전문 AI 컨설턴트입니다. 나는 아모레퍼시픽 직원입니다.
-            {brand_kor}에 대해서 질문할 내용이 있습니다. {query}. 
-            
-            대답을 할 때에는 소개는 생략했으면 좋겠습니다.
-            줄바꿈은 <br/> 로 대체해줬으면 좋겠고, 굵게 표시할 문자는 <b></b>로 감싸주었으면 좋겠습니다.
-        """
-    
-        return StreamingResponse(AISearch.search(question), media_type="text/plain")
-    except:
-        return BaseResponse(code=1, msg="조회 실패")
 
 @router.get("/ai")
 async def search_ai(query: str):
@@ -33,29 +18,49 @@ async def search_ai(query: str):
     except Exception as e:
         return BaseResponse(code=1, msg="조회 실패")
     
+    
+@router.get("/brand")
+async def search_brand(brand_kor:str, query: str ):
+    try:
+        question = rf"""
+            너는 아모레퍼시픽의 전문 AI 컨설턴트입니다. 나는 아모레퍼시픽 직원입니다.
+            {brand_kor}에 대해서 질문할 내용이 있습니다. {query}. 
+
+            대답을 할 때에는:
+            - **소개는 생략**해 주세요.
+            - **모든 줄바꿈(`\n`)을 반드시 `<br/>`로 변환**해 주세요. 
+            - `\n`이 **1개일 때는 `<br/>` 1개**,  
+            - `\n`이 **2개 연속되면 `<br/><br/>`**,  
+            - **연속된 개수만큼 `<br/>`을 삽입해야 합니다.**
+            - **굵게 강조할 부분은 `<b></b>`로 감싸 주세요.**
+            - **`"`(큰따옴표)와 `\`(백슬래시) 등의 특수 문자가 포함되지 않도록 해주세요.**
+
+            **🚨 중요: 절대 `\n`이 포함되지 않도록 하세요.** 반드시 `<br/>`만을 사용해야 합니다.
+        """
+        return StreamingResponse(AISearch.search(question), media_type="text/plain")
+    
+    except:
+        return BaseResponse(code=1, msg="조회 실패")
+    
+    
 @router.get("/references")
 def search_ai(query: str):
     """검색창 우측에 연관된 문서를 띄우기 위해 조회하는 API"""
     try:
-        result =  RagSearch.search(query, tag)
-
-        if result is None:
-            return BaseResponse(code=1, msg="조회 실패")
+        result =  RagSearch.search(query)
         
         return BaseResponse(code=0, msg="조회 성공", result=result)
 
     except Exception as e:
         return BaseResponse(code=1, msg="조회 실패")
     
+    
 @router.get("/category")
-def search_ai(query: str):
+def search_ai(query: str, tag: str):
     """검색시 선택한 태그와 관련된 내용을 보여주기 위해 조회하는 API"""
     try:
         result =  RagSearch.search(query, tag)
 
-        if result is None:
-            return BaseResponse(code=1, msg="조회 실패")
-        
         return BaseResponse(code=0, msg="조회 성공", result=result)
 
     except Exception as e:
