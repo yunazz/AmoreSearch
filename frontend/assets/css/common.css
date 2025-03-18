@@ -601,7 +601,12 @@ body .text-grey-lighten-2 {
   -ms-use-select: text;
   user-select: text;
 }
-
+.not-draggable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .grid-cols-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;

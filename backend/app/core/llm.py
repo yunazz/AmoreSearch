@@ -197,7 +197,8 @@ def create_prompt(context, question):
     
     위 정보를 기반으로 전문가처럼 정확하고 상세하게 답변해줘.
     
-    줄바꿈은 <br/> 로 대체해줬으면 좋겠고, 굵게 표시할 문자는 <b></b>로 감싸주었으면 좋겠습니다.
+    - 줄바꿈 문자 \n이 1개이면 <br/>도 1개, \n이 2개이면 <br/>도 2개,\n이 3개이면 <br/>도 3개 똑같이 2개로 똑같이 바꿔줘.
+    - 굵게 표시할 문자는 <b></b>로 감싸주었으면 좋겠습니다.
     """
     
     return prompt_template
@@ -250,8 +251,6 @@ async def generate_llm_response(query, retrieved_collections_docs):
 
     llm_init = get_fresh_llm()
     response = llm_init.invoke(prompt)
-    
-    print("📌 LLM 응답")
     
     return response.content
 
@@ -310,8 +309,6 @@ async def fetch_mariadb_data(retrieved_collections_docs):
             f"SELECT * FROM {table_name} WHERE post_id IN ({post_placeholders})",
             tuple(post_ids) 
         )
-
-    print("📌 MariaDB 조회 성공")
 
     return {
         "ingredient": ingredient_results,

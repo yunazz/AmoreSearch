@@ -129,6 +129,7 @@ function shareLink(item) {
 .search_card {
   position: relative;
   background: #ddd;
+  margin-bottom: 6px;
 }
 .search_card_title {
   font-size: 0.9375rem;

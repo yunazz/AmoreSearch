@@ -2,22 +2,41 @@
 const member = useMember();
 const config = useRuntimeConfig().public;
 
+let controller = new AbortController();
+
+const filter = ref({ query: " ", tag: "" });
+const tags = ref(["화장품", "성분", "사내문서"]);
+const paging = ref({ current_page: 1, item_per_page: 4 });
+
 const resultMode = ref(true);
+const active_tab = ref(1);
+
 const requesting = ref(false);
 const streaming = ref(false);
 const search_input = ref("");
+const search_repsonse_parsed = ref({
+  llm_response: "",
+  db_response: {},
+  questions: [
+    "관련 질문 내용입니다. 무엇이 궁금할까요?",
+    "관련 질문 내용입니다. 무엇이 궁금할까요?",
+    "관련 질문 내용입니다. 무엇이 궁금할까요?",
+    "관련 질문 내용입니다. 무엇이 궁금할까요?",
+  ],
+});
+const search_repsonse_string = ref("");
 
-const filter = ref({
-  query: " ",
-  tag: "",
+const search_response_llm = computed(() => {
+  let response_str = search_repsonse_string.value;
+
+  if (!search_repsonse_string.value.includes('{"llm_response": "')) return "";
+
+  response_str = response_str.replace(/^{"llm_response":\s*"/, "");
+  response_str = response_str.split('", "db')[0];
+
+  return response_str.replace(/"$/, "");
 });
 
-const paging = ref({
-  current_page: 1,
-  item_per_page: 4,
-});
-
-const tags = ref(["화장품", "성분", "사내문서", ""]);
 const items = [
   {
     title: "일리윤, 세라마이드 아토 라인 3세대 출시",
@@ -72,60 +91,47 @@ const paginatedItems = computed(() => {
   return items.slice(startIndex, endIndex);
 });
 
-let controller = new AbortController();
-
-const search_repsonse_parsed = ref({ llm_response: "", db_response: {} });
-const search_repsonse_string = ref("");
-
-const search_response_llm = computed(() => {
-  let response_str = search_repsonse_string.value;
-
-  if (!search_repsonse_string.value.includes('{"llm_response": "')) return "";
-
-  response_str = response_str.replace(/^{"llm_response":\s*"/, "");
-  response_str = response_str.split('", "db')[0];
-
-  return response_str.replace(/"$/, "");
-});
-
 async function search(query) {
   if (query.length === 0) return;
+  if (streaming.value || requesting.value) return;
 
   filter.value.query = query;
   resultMode.value = true;
   requesting.value = true;
 
-  controller = new AbortController();
+  search_input.value = "";
+  requesting.value = false;
+  // controller = new AbortController();
 
-  const response = await fetch(
-    `${config.SERVER_HOST}/api/search/ai?query=${query}`,
-    {
-      signal: controller.signal,
-    }
-  );
+  // const response = await fetch(
+  //   `${config.SERVER_HOST}/api/search/ai?query=${query}`,
+  //   {
+  //     signal: controller.signal,
+  //   }
+  // );
 
-  if (!response.body) {
-    console.error("스트리밍 응답을 받을 수 없습니다.");
-    requesting.value = false;
-    streaming.value = false;
-    return;
-  }
+  // if (!response.body) {
+  //   console.error("스트리밍 응답을 받을 수 없습니다.");
+  //   requesting.value = false;
+  //   streaming.value = false;
+  //   return;
+  // }
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
+  // const reader = response.body.getReader();
+  // const decoder = new TextDecoder();
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) {
-      requesting.value = false;
-      streaming.value = false;
-      break;
-    }
-    if (requesting.value) requesting.value = false;
-    search_repsonse_string.value += decoder.decode(value, { stream: true });
-  }
+  // while (true) {
+  //   const { done, value } = await reader.read();
+  //   if (done) {
+  //     requesting.value = false;
+  //     streaming.value = false;
+  //     break;
+  //   }
+  //   if (requesting.value) requesting.value = false;
+  //   search_repsonse_string.value += decoder.decode(value, { stream: true });
+  // }
 
-  search_repsonse_parsed.value = JSON.parse(search_repsonse_string.value);
+  // search_repsonse_parsed.value = JSON.parse(search_repsonse_string.value);
 }
 
 function changePage(page) {
@@ -134,8 +140,12 @@ function changePage(page) {
 
 function initSearch() {
   resultMode.value = false;
-  filter.value.query = "";
+  active_tab.value = 1;
   paging.value.current_page = 1;
+  filter.value.query = "";
+  search_input.value = "";
+  search_repsonse_parsed.value = { llm_response: "", db_response: {} };
+  search_repsonse_string.value = "";
 }
 
 // watch(
@@ -178,7 +188,7 @@ function initSearch() {
                 @search="search"
               />
             </div>
-            <!-- <div class="flex justify-center mt-6">
+            <div class="flex justify-center mt-6">
               <v-chip-group
                 v-model="filter.tag"
                 selected-class="text-primary"
@@ -193,14 +203,14 @@ function initSearch() {
                   style="font-size: 15px; font-weight: 500; padding: 20px 22px"
                 />
               </v-chip-group>
-            </div> -->
+            </div>
           </div>
         </template>
         <template v-else>
-          <div class="block_bg_box"></div>
           <div class="search_result">
             <div class="search_result_cont">
               <div class="search_result_left">
+                <!-- 검색 쿼리 -->
                 <h3 class="flex align-start col-gap-2 my-5">
                   <v-icon icon="mdi-magnify" color="primary" size="30" />
                   <p>
@@ -215,7 +225,36 @@ function initSearch() {
                     </button>
                   </p>
                 </h3>
-                <template v-if="requesting">
+
+                <!-- 검색 결과 -->
+                <template v-if="!requesting">
+                  <div class="llm_cont" v-html="search_response_llm"></div>
+
+                  <div class="question_cont">
+                    <div
+                      v-for="(
+                        question, index
+                      ) in search_repsonse_parsed.questions"
+                      :key="index"
+                      class="question_item"
+                    >
+                      <div class="flex">
+                        <span>{{ index + 1 }}</span>
+                        <p>{{ question }}</p>
+                      </div>
+                      <div>
+                        <v-icon
+                          icon="mdi-arrow-right"
+                          class="mr-5 text-gray-02"
+                        ></v-icon>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="cosmetic_cont"></div>
+                </template>
+
+                <!-- 검색중 -->
+                <template v-else>
                   <div>
                     <v-progress-linear
                       style="width: 60%"
@@ -240,31 +279,49 @@ function initSearch() {
                     />
                   </div>
                 </template>
-                <template v-else>
-                  <div v-html="search_response_llm"></div>
-                </template>
               </div>
+
               <div v-if="!requesting" class="search_result_right">
-                <p class="body--l mt-5 fw-600">
-                  <!-- {{ items?.length || 0 }}개의 출처 -->
-                  NEWS / JOURNAL
+                <p class="mt-5 fw-600">
+                  <button
+                    class="btn--text"
+                    :class="{ active: active_tab == 1 }"
+                    @click="active_tab = 1"
+                  >
+                    검색 문서
+                  </button>
+                  <button
+                    class="btn--text"
+                    :class="{ active: active_tab == 2 }"
+                    @click="active_tab = 2"
+                  >
+                    출처 자료
+                  </button>
                 </p>
-                <ListItemReference
-                  v-for="(item, index) in paginatedItems"
-                  :key="index"
-                  :item="item"
-                />
-                <!-- paging -->
-                <Paging
-                  :paging="paging"
-                  :total_row="items.length"
-                  :first-page="false"
-                  :last-page="false"
-                  @changePage="changePage"
-                />
+                <!-- tab 1  -->
+                <template v-if="active_tab === 1">
+                  <ListItemReference
+                    v-for="(item, index) in paginatedItems"
+                    :key="index"
+                    :item="item"
+                  />
+                  <Paging
+                    :paging="paging"
+                    :total_row="items.length"
+                    :first-page="false"
+                    :last-page="false"
+                    @changePage="changePage"
+                  />
+                </template>
+
+                <!-- 우측 tab 1  -->
+                <template v-else-if="active_tab === 2"> 출처 리스트 </template>
               </div>
             </div>
 
+            <!-- input gradient bg-->
+            <div class="block_bg_box" />
+            <!-- 하단 검색 Input -->
             <div class="search_input_cont">
               <label for="search_input">
                 <v-icon icon="mdi-magnify" color="primary" />
@@ -360,14 +417,14 @@ function initSearch() {
 .search_result .search_result_left {
   flex: 1;
   margin-bottom: 3rem;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
 }
 .search_result .search_result_right {
   width: 340px;
   margin-bottom: 3rem;
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: 12px;
 }
 .search_input_cont {
   position: fixed;
@@ -390,5 +447,68 @@ function initSearch() {
     rgba(255, 255, 255, 1) 35%
   );
   z-index: 1;
+}
+
+button.btn--text {
+  font-size: 1.125rem;
+  margin-right: 1.75rem;
+  transition: all 0.2s ease;
+  word-spacing: -1px;
+  color: var(--color-gray-03);
+}
+button.btn--text:hover {
+  color: var(--sub-color);
+}
+button.btn--text.active {
+  color: var(--color-black);
+}
+.llm_cont {
+  min-height: 300px;
+}
+
+.question_cont {
+  margin-top: 2rem;
+}
+.question_item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 45px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  background: #fff;
+  transition: all 0.1s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.question_item:hover {
+  background: var(--sub-light-color);
+}
+.question_item:nth-child(1) {
+  border-top: 1px solid var(--border-color);
+}
+.question_item > div {
+  display: flex;
+  align-items: center;
+}
+.question_item span {
+  margin-left: 8px;
+  margin-right: 2px;
+  font-weight: 700;
+  color: var(--main-color);
+  padding: 0 12px;
+  font-size: 15px;
+}
+.question_item p {
+  font-size: 13px;
+}
+.question_item i {
+  transition: all 0.15s ease;
+}
+.question_item:hover i {
+  margin-right: 16px !important;
 }
 </style>
