@@ -459,67 +459,67 @@ class AISearch:
 #         return llm.invoke()
     
 
-async def rerank_cosine_sim(query, retrieved_collections_docs):
-    """Cosine 유사도를 통한 답변들 rerank 및 추천질문 print"""
-    try:
-        input1 = embedding_function.embed_query(query)
-        all_questions = []
+# async def rerank_cosine_sim(query, retrieved_collections_docs):
+#     """Cosine 유사도를 통한 답변들 rerank 및 추천질문 print"""
+#     try:
+#         input1 = embedding_function.embed_query(query)
+#         all_questions = []
 
-        for collection in retrieved_collections_docs:
-            tool_name = collection.get('tool_name')
-            retrieved_ids = collection.get('output',{}).get('ids', [[]])[0]
+#         for collection in retrieved_collections_docs:
+#             tool_name = collection.get('tool_name')
+#             retrieved_ids = collection.get('output',{}).get('ids', [[]])[0]
             
-            if tool_name == "retrieve_ingredient":
-                collection = ingredient_store
-            elif tool_name == "retrieve_cosmetic":
-                collection = cosmetic_store
-            elif tool_name == "retrieve_brand":
-                collection = brand_store
-            elif tool_name == "retrieve_posts":
-                collection = post_store
+#             if tool_name == "retrieve_ingredient":
+#                 collection = ingredient_store
+#             elif tool_name == "retrieve_cosmetic":
+#                 collection = cosmetic_store
+#             elif tool_name == "retrieve_brand":
+#                 collection = brand_store
+#             elif tool_name == "retrieve_posts":
+#                 collection = post_store
 
-            embedding_result = collection.get(ids=retrieved_ids, include=['embeddings', "documents", "metadatas"])
-            questions = [doc["questions"]for doc in embedding_result["metadatas"]]
+#             embedding_result = collection.get(ids=retrieved_ids, include=['embeddings', "documents", "metadatas"])
+#             questions = [doc["questions"]for doc in embedding_result["metadatas"]]
             
-            questions_list = [q.split("\n\n") for q in questions]
+#             questions_list = [q.split("\n\n") for q in questions]
             
-            question_cnt = [len(q_list) for q_list in questions_list]  # 문서별 질문 개수 리스트
-            all_questions.extend([q for sublist in questions_list for q in sublist])
+#             question_cnt = [len(q_list) for q_list in questions_list]  # 문서별 질문 개수 리스트
+#             all_questions.extend([q for sublist in questions_list for q in sublist])
 
-        input2 = torch.tensor([embedding_function.embed_query(q) for q in all_questions])
+#         input2 = torch.tensor([embedding_function.embed_query(q) for q in all_questions])
 
-        dot_product = torch.sum(torch.tensor(input1) * input2, dim=1) 
-        norm_input1 = torch.norm(torch.tensor(input1), p=2, ) 
-        norm_input2 = torch.norm(input2, p=2, dim=1) 
+#         dot_product = torch.sum(torch.tensor(input1) * input2, dim=1) 
+#         norm_input1 = torch.norm(torch.tensor(input1), p=2, ) 
+#         norm_input2 = torch.norm(input2, p=2, dim=1) 
 
-        cosine_sim_matrix = dot_product / (norm_input1 * norm_input2 + 1e-6)
+#         cosine_sim_matrix = dot_product / (norm_input1 * norm_input2 + 1e-6)
 
-        ## 유사도를 통한 질문들 랭킹
-        sorted_indices = torch.argsort(cosine_sim_matrix, descending=True).tolist()  # 유사도 높은 순으로 정렬
-        ranked_questions = [(all_questions[i], cosine_sim_matrix[i].item()) for i in sorted_indices]
+#         ## 유사도를 통한 질문들 랭킹
+#         sorted_indices = torch.argsort(cosine_sim_matrix, descending=True).tolist()  # 유사도 높은 순으로 정렬
+#         ranked_questions = [(all_questions[i], cosine_sim_matrix[i].item()) for i in sorted_indices]
 
-        # 가장 유사도 높은 질문
-        max_index = torch.argmax(cosine_sim_matrix).item()
-        most_similar_question = all_questions[max_index]
+#         # 가장 유사도 높은 질문
+#         max_index = torch.argmax(cosine_sim_matrix).item()
+#         most_similar_question = all_questions[max_index]
 
-        cumulative_question_count = 0
-        most_similar_doc_index = None
+#         cumulative_question_count = 0
+#         most_similar_doc_index = None
 
-        # 문서별 질문 개수에 따른 인덱스 계산
-        for i, count in enumerate(question_cnt):
-            cumulative_question_count += count  # 누적 질문 개수
-            if max_index < cumulative_question_count:
-                most_similar_doc_index = i
-                break
+#         # 문서별 질문 개수에 따른 인덱스 계산
+#         for i, count in enumerate(question_cnt):
+#             cumulative_question_count += count  # 누적 질문 개수
+#             if max_index < cumulative_question_count:
+#                 most_similar_doc_index = i
+#                 break
             
-        most_similar_id = retrieved_ids[most_similar_doc_index] 
-        most_similar_document = embedding_result["documents"][most_similar_doc_index]
-        most_similar_metadatas = embedding_result["metadatas"][most_similar_doc_index]
+#         most_similar_id = retrieved_ids[most_similar_doc_index] 
+#         most_similar_document = embedding_result["documents"][most_similar_doc_index]
+#         most_similar_metadatas = embedding_result["metadatas"][most_similar_doc_index]
 
-        yield ranked_questions[:4]
+#         yield ranked_questions[:4]
     
-    except Exception as e:
-        print(f"❌ LLM 응답 오류: {e}")
-        yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
+#     except Exception as e:
+#         print(f"❌ LLM 응답 오류: {e}")
+#         yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
 
     
