@@ -11,7 +11,7 @@ from langchain_core.messages import SystemMessage
 from collections import defaultdict
 from typing import AsyncGenerator
 from datetime import datetime
-
+import torch
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -216,7 +216,7 @@ def create_prompt(context, question):
 
     question:
     {question}    
-     """
+    """
     
     return prompt_template
 
@@ -227,7 +227,6 @@ async def query_mariadb(query, params=None):
     result = []
     
     try:
-       
         async with aiomysql.connect(**DB_CONFIG) as conn:
             async with conn.cursor(aiomysql.DictCursor) as cur:
                 if params is None:
@@ -311,37 +310,6 @@ async def fetch_mariadb_data(retrieved_collections_docs):
         "cosmetic": cosmetic_results,
         "post": post_results
     }
-        
-async def generate_llm_response(query, retrieved_collections_docs):
-    """
-    LLM을 호출하여 응답을 생성하는 함수 (비동기)
-    """
-    try:
-        flatten_docs = []
-        for collection in retrieved_collections_docs:
-            distances = collection.get('output', {}).get('distances', [[]])[0]
-            documents = collection.get('output', {}).get('documents', [[]])[0]
-
-            for index in range(len(distances)):
-                flatten_docs.append({
-                    'distance': distances[index],
-                    'document': documents[index]
-                })
-
-        flatten_docs = sorted(flatten_docs, key=lambda x: x["distance"])
-
-        max_token_limit = 7000
-        context = generate_context(flatten_docs, max_token_limit)
-
-        prompt = create_prompt(context, query)
-
-        llm_init = get_fresh_llm()
-        async for llm_output in llm_init.astream(prompt):
-            yield llm_output 
-
-    except Exception as e:
-        print(f"❌ LLM 응답 오류: {e}")
-        yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
 
 def relateive_posts(query: str, k: int = 5):
     """
@@ -358,6 +326,96 @@ def relateive_posts(query: str, k: int = 5):
     except Exception as e:
         return f"Error retrieving posts: {str(e)}"
     
+async def generate_llm_response(query, retrieved_collections_docs):
+    """
+    LLM을 호출하여 응답을 생성하는 함수 (비동기)
+    """
+    try:
+        input1 = embedding_function.embed_query(query)
+        all_questions = []
+        # print(retrieved_collections_docs)
+        for collection in retrieved_collections_docs:
+            tool_name = collection.get('tool_name')
+            # metadatas = collection.get('output', {}).get('metadatas', [[]])[0]
+            retrieved_ids = collection.get('output',{}).get('ids', [[]])[0]
+            
+            if tool_name == "retrieve_ingredient":
+                collection = ingredient_store
+            elif tool_name == "retrieve_cosmetic":
+                collection = cosmetic_store
+            elif tool_name == "retrieve_brand":
+                collection = brand_store
+            elif tool_name == "retrieve_posts":
+                collection = post_store
+
+            embedding_result = collection.get(ids=retrieved_ids, include=['embeddings', "documents", "metadatas"])
+            questions = [doc["questions"]for doc in embedding_result["metadatas"]]
+            
+            questions_list = [q.split("\n\n") for q in questions]
+            
+            question_cnt = [len(q_list) for q_list in questions_list]  # 문서별 질문 개수 리스트
+            all_questions.extend([q for sublist in questions_list for q in sublist])
+                
+        input2 = torch.tensor([embedding_function.embed_query(q) for q in all_questions])
+        
+        dot_product = torch.sum(torch.tensor(input1) * input2, dim=1)
+        norm_input1 = torch.norm(torch.tensor(input1), p=2, )
+        norm_input2 = torch.norm(input2, p=2, dim=1) 
+        
+        cosine_sim_matrix = dot_product / (norm_input1 * norm_input2 + 1e-6)
+        
+        ## 유사도를 통한 질문들 랭킹
+        sorted_indices = torch.argsort(cosine_sim_matrix, descending=True).tolist()  # 유사도 높은 순으로 정렬
+        ranked_questions = [(all_questions[i], cosine_sim_matrix[i].item()) for i in sorted_indices]
+
+        # 가장 유사도 높은 질문
+        max_index = torch.argmax(cosine_sim_matrix).item()
+        most_similar_question = all_questions[max_index]
+
+        cumulative_question_count = 0
+        most_similar_doc_index = None
+
+        # 문서별 질문 개수에 따른 인덱스 계산
+        for i, count in enumerate(question_cnt):
+            cumulative_question_count += count  # 누적 질문 개수
+            if max_index < cumulative_question_count:
+                most_similar_doc_index = i
+                break
+        most_similar_doc_indices = []
+
+        most_similar_id = retrieved_ids[most_similar_doc_index] 
+        most_similar_documents = [embedding_result["documents"][i] for i in most_similar_doc_indices]
+        most_similar_metadatas = [embedding_result["metadatas"][i] for i in most_similar_doc_indices]
+        combined_document = "\n\n".join(most_similar_documents)
+
+        # return most_similar_question, most_similar_id, most_similar_metadatas, ranked_questions[:4]
+        flatten_docs = []
+        for collection in retrieved_collections_docs:
+            distances = collection.get('output', {}).get('distances', [[]])[0]
+            documents = collection.get('output', {}).get('documents', [[]])[0]
+
+            for index in range(len(distances)):
+                flatten_docs.append({
+                    'distance': distances[index],
+                    'document': documents[index]
+                })
+
+        flatten_docs = sorted(flatten_docs, key=lambda x: x["distance"])
+
+        max_token_limit = 7000
+        context = generate_context(combined_document, max_token_limit)
+
+        prompt = create_prompt(context, query)
+
+        llm_init = get_fresh_llm()
+        async for llm_output in llm_init.astream(prompt):
+            yield llm_output 
+
+    except Exception as e:
+        print(f"❌ LLM 응답 오류: {e}")
+        yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
+
+
 class IntegrationSearch:
     @staticmethod
     async def search(query: str) -> AsyncGenerator[str, None]:
@@ -376,6 +434,7 @@ class IntegrationSearch:
             print(f"전체 시스템 오류 발생: {e}")
             yield json.dumps({"type": "error", "message": "서버 오류 발생"}, ensure_ascii=False) + "\n"
             
+
             
 class AISearch:
     @staticmethod
@@ -391,4 +450,76 @@ class AISearch:
             await asyncio.sleep(0.1)
         
         return 
+    
+# class RagSearch:
+#     @staticmethod
+#     async def search(question: str):
+#         llm = ChatOpenAI(model=LLM_MODEL, openai_api_key=OPENAI_API_KEY)
+        
+#         return llm.invoke()
+    
+
+async def rerank_cosine_sim(query, retrieved_collections_docs):
+    """Cosine 유사도를 통한 답변들 rerank 및 추천질문 print"""
+    try:
+        input1 = embedding_function.embed_query(query)
+        all_questions = []
+
+        for collection in retrieved_collections_docs:
+            tool_name = collection.get('tool_name')
+            retrieved_ids = collection.get('output',{}).get('ids', [[]])[0]
+            
+            if tool_name == "retrieve_ingredient":
+                collection = ingredient_store
+            elif tool_name == "retrieve_cosmetic":
+                collection = cosmetic_store
+            elif tool_name == "retrieve_brand":
+                collection = brand_store
+            elif tool_name == "retrieve_posts":
+                collection = post_store
+
+            embedding_result = collection.get(ids=retrieved_ids, include=['embeddings', "documents", "metadatas"])
+            questions = [doc["questions"]for doc in embedding_result["metadatas"]]
+            
+            questions_list = [q.split("\n\n") for q in questions]
+            
+            question_cnt = [len(q_list) for q_list in questions_list]  # 문서별 질문 개수 리스트
+            all_questions.extend([q for sublist in questions_list for q in sublist])
+
+        input2 = torch.tensor([embedding_function.embed_query(q) for q in all_questions])
+
+        dot_product = torch.sum(torch.tensor(input1) * input2, dim=1) 
+        norm_input1 = torch.norm(torch.tensor(input1), p=2, ) 
+        norm_input2 = torch.norm(input2, p=2, dim=1) 
+
+        cosine_sim_matrix = dot_product / (norm_input1 * norm_input2 + 1e-6)
+
+        ## 유사도를 통한 질문들 랭킹
+        sorted_indices = torch.argsort(cosine_sim_matrix, descending=True).tolist()  # 유사도 높은 순으로 정렬
+        ranked_questions = [(all_questions[i], cosine_sim_matrix[i].item()) for i in sorted_indices]
+
+        # 가장 유사도 높은 질문
+        max_index = torch.argmax(cosine_sim_matrix).item()
+        most_similar_question = all_questions[max_index]
+
+        cumulative_question_count = 0
+        most_similar_doc_index = None
+
+        # 문서별 질문 개수에 따른 인덱스 계산
+        for i, count in enumerate(question_cnt):
+            cumulative_question_count += count  # 누적 질문 개수
+            if max_index < cumulative_question_count:
+                most_similar_doc_index = i
+                break
+            
+        most_similar_id = retrieved_ids[most_similar_doc_index] 
+        most_similar_document = embedding_result["documents"][most_similar_doc_index]
+        most_similar_metadatas = embedding_result["metadatas"][most_similar_doc_index]
+
+        yield ranked_questions[:4]
+    
+    except Exception as e:
+        print(f"❌ LLM 응답 오류: {e}")
+        yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
+
     
