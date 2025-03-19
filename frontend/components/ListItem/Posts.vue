@@ -10,6 +10,7 @@ const props = defineProps({
 const emit = defineEmits(["showDetail", "notify", "success"]);
 
 function openLink(url) {
+  if (isEmpty(url)) return;
   window.open(url);
 }
 
@@ -28,7 +29,7 @@ const copyToClipboard = async (text) => {
 </script>
 <template>
   <div class="search_card">
-    <v-card class="mx-auto" min-height="180">
+    <v-card class="mx-auto" min-height="120">
       <v-card-text class="pb-1">
         <div class="flex align-end justify-between">
           <div class="mb-2">
@@ -44,6 +45,9 @@ const copyToClipboard = async (text) => {
               @click="reveal = true"
             /> -->
             <v-icon
+              v-if="
+                !isEmpty(item.original_file_url) || !isEmpty(item.source_url)
+              "
               class="ml-4"
               icon="mdi-share-variant-outline"
               variant="text"
@@ -85,13 +89,19 @@ const copyToClipboard = async (text) => {
             <v-chip color="primary" size="small" class="pr-3">
               <div
                 v-if="item?.original_file_url"
-                class="cur-p"
-                @click="openLink(item.original_file_url)"
+                class="cur-d"
+                :class="{ 'cur-p': !isEmpty(item.original_file_url) }"
+                @click="openLink()"
               >
                 <v-icon class="mr-1" color="sub" icon="mdi-folder" />
                 {{ item.post_ctgry }}
               </div>
-              <div v-else class="cur-p" @click="openLink(item.source_url)">
+              <div
+                v-else
+                class="cur-d"
+                :class="{ 'cur-p': !isEmpty(item.source_url) }"
+                @click="openLink(item.source_url)"
+              >
                 <v-icon class="mr-1" color="sub" icon="mdi-link-variant" />
                 {{ item.source_name }}
               </div>
