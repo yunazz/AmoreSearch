@@ -10,76 +10,41 @@ const waiting = ref(false);
 const streaming = ref(false);
 
 // 검색 관련
-const tags = ref(["화장품", "성분", "사내문서"]);
+const tags = ref(["화장품", "성분", "뉴스/저널/문서"]);
 const filter = ref({ query: " ", tag: "" });
 const inputValue = ref("");
-const sideTab = ref(1);
-const tabPaging = ref({ current_page: 1, item_per_page: 4 });
+const resultTab = ref(1);
+const paging = ref({ current_page: 1, item_per_page: 4 });
 
-const llm_response = ref("1");
-const llm_question = ref([
-  "관련 질문 내용입니다. 무엇이 궁금할까요?",
-  "관련 질문 내용입니다. 무엇이 궁금할까요?",
-  "관련 질문 내용입니다. 무엇이 궁금할까요?",
-  "관련 질문 내용입니다. 무엇이 궁금할까요?",
-]);
-const llm_docs = ref([
-  {
-    title: "일리윤, 세라마이드 아토 라인 3세대 출시",
-    content:
-      "Trevor Hansen CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-    post_type: "NEWS",
-    created_at: new Date(),
-    source_name: "코스메틱리포트",
-    source_url: "",
-  },
-  {
-    title: "아모레퍼시픽, CDP 평가에서 2개 부문 모두 최고 등급 획득",
-    content: `to Ale Jennifer 아모레퍼시픽은 이번 평가를 포함해 3년 연속 기후변화 대응 부문 A를 획득하며 기후변화에 대한 투명성 분야의 리더십을 인정받았다. 올해 처음으로 획득한 수자원 관리 부문에서도 수자원의 효율적인 사용과 관리, 순환 사용, 수질오염 방지 등에 대한 노력을 인정받아 최고 등급인 A를 받았다.`,
-    post_type: "JOURNAL",
-    created_at: new Date(),
-    source_name: "코스메틱리포트",
-    source_url: "",
-  },
-  {
-    title: "설화수, 노스텔지어와 함께 한국 고가구 전시 진행",
-    content:
-      "Sandra Adams &mdash;아모레퍼시픽은 자사 사업장 내에서 발생하는 온실가스 직접배출량(Scope1)과 전기 등을 구매하면서 발생하는 간접배출량(Scope2)의 총량을 2020년 대비 2050년까지 90% 감축하여 넷제로를 달성하려는 목표를 수립했다. 그 계획의 일환으로 아모레퍼시픽은 적극적인 전사 재생에너지 전환을 추진하고 있으며, 그 결과 2024년 기준 설화수, 라네즈, 해피바스를 비롯한 아모레퍼시픽의 주요 제품을 생산하는 오산, 대전, 안성, 상해 사업장 및 물류 사업장의 재생 전력 100%를 달성했다. 2025년은 아모레퍼시픽 전사 단위의 RE100 달성을 목표로 하고 있다.",
-    post_type: "REPORT",
-    post_ctgry: "경영성과",
-    created_at: new Date(),
-    original_file_url: "/",
-  },
-  {
-    title: "일리윤, 세라마이드 아토 라인 3세대 출시",
-    content:
-      "Trevor Hansen CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-    post_type: "REPORT",
-    post_ctgry: "사업보고서",
-    created_at: new Date(),
-    original_file_url: "/",
-  },
-  {
-    title: "일리윤, 세라마이드 아토 라인 3세대 출시",
-    content:
-      "Trevor Hansen CDP는 전 세계 금융투자기관이 주도하여 기업에게 환경 관련 경영정보공개를 요청하는 글로벌 이니셔티브다. 매년 기업들이 공개한 정보를 바탕으로 세계 최대 규모의 환경 데이터베이스를 보유하고 있으며, 전 세계 금융기관이 기업 투자와 대출 등의 의사결정에 의미 있는 정보로 활용할 수 있게 지원하여 저탄소 사회와 지속가능한 사회를 위한 기반을 만들어가고 있다. CDP는 기후 및 물 관련 리스크에 대한 대응, 도전적인 감축 목표, 리더십과 관리체계 등을 기반으로 기업을 평가하며 매년 전 세계 23,200개 이상의 기업이 응답하고 있다.",
-    post_type: "NEWS",
-    created_at: new Date(),
-    source_name: "코스메틱리포트",
-    source_url: "",
-  },
-]);
+const llm_response = ref("");
+const question_response = ref([]);
+
+const metadata_response = ref(null);
+const ingredient_response = ref([]);
+const post_response = ref([]);
+const cosmetic_response = ref([]);
+
+const snackbar = ref({ active: false, message: "" });
+const dialog = ref(false);
+const targetItem = ref(null);
 
 const isResultReady = computed(
   () => !waiting.value && llm_response.value.length > 0
 );
 
-const paginatedDocs = computed(() => {
+const paginatedPosts = computed(() => {
+  if (post_response.length === 0) return [];
+
   const startIndex =
-    (tabPaging.value.current_page - 1) * tabPaging.value.item_per_page;
-  const endIndex = startIndex + tabPaging.value.item_per_page;
-  return llm_docs.value.slice(startIndex, endIndex);
+    (paging.value.current_page - 1) * paging.value.item_per_page;
+  const endIndex = startIndex + paging.value.item_per_page;
+  return post_response.value.slice(startIndex, endIndex);
 });
+
+function notify(msg) {
+  snackbar.value.active = true;
+  snackbar.value.message = msg;
+}
 
 async function searchFnc(query) {
   if (query.length === 0) return;
@@ -93,6 +58,7 @@ async function searchFnc(query) {
   filter.value.query = query;
 
   controller = new AbortController();
+
   try {
     const response = await fetch(
       `${config.SERVER_HOST}/api/search/ai?query=${query}`,
@@ -107,7 +73,6 @@ async function searchFnc(query) {
       streaming.value = false;
       return;
     }
-
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
 
@@ -128,7 +93,8 @@ async function searchFnc(query) {
           const json = JSON.parse(line);
 
           if (json.type === "metadata") {
-            llm_docs.value = json.data;
+            metadata_response.value = json.data;
+            setResponses(metadata_response.value);
           } else if (json.type === "message") {
             llm_response.value += json.data;
           }
@@ -142,13 +108,49 @@ async function searchFnc(query) {
   }
 }
 
+function setResponses(data) {
+  const { ingredient, cosmetic, post } = data;
+  ingredient_response.value = ingredient;
+
+  if (Object.keys(cosmetic).length > 0) {
+    cosmetic_response.value = flattenAndAddScope(cosmetic);
+  }
+  if (Object.keys(post).length > 0) {
+    post_response.value = flattenAndAddScope(post);
+  }
+  if (post_response.value.length > 0) resultTab.value = 1;
+  else if (ingredient_response.value.length > 0) resultTab.value = 2;
+  else resultTab.value = 0;
+}
+
+function openRnb(item) {
+  dialog.value = true;
+  targetItem.value = item;
+}
+
+function flattenAndAddScope(data) {
+  const scopeMapping = {
+    자사: "INTERNAL",
+    INTERNAL: "INTERNAL",
+    타사: "EXTERNAL",
+    EXTERNAL: "EXTERNAL",
+  };
+
+  return Object.entries(data).reduce((acc, [key, items]) => {
+    if (scopeMapping[key]) {
+      acc.push(...items.map((item) => ({ ...item, scope: scopeMapping[key] })));
+    }
+    return acc;
+  }, []);
+}
+
 function changePage(page) {
-  tabPaging.value.current_page = page;
+  paging.value.current_page = page;
 }
 
 function changeTab(tab) {
   if (waiting.value) return;
-  sideTab.value = tab;
+  resultTab.value = tab;
 }
 function initPage() {
   searchMode.value = false;
@@ -157,14 +159,43 @@ function initPage() {
 
 function initResponse() {
   llm_response.value = "";
-  llm_question.value = [];
-  llm_docs.value = {};
-  tabPaging.value.current_page = 1;
-  sideTab.value = 1;
+  question_response.value = [];
+  ingredient_response.value = [];
+  cosmetic_response.value = [];
+  post_response.value = [];
+  // posts.value = [];
+
+  paging.value.current_page = 1;
+  resultTab.value = 1;
 
   inputValue.value = "";
   filter.value.query = "";
 }
+
+// async function toggleFavorites(item) {
+//   const body = {
+//     favorite_type: item.post_type,
+//     target_id: item.post_id
+//     scope: props.scope,
+//   };
+
+//   let method = "";
+//   if (is_favorite.value) method = "DELETE";
+//   if (!is_favorite.value) method = "POST";
+
+//   try {
+//     const { code, msg } = await $http("/member/favorites", {
+//       method,
+//       body,
+//     });
+
+//     emit("notify", msg);
+//     emit("success");
+//     if (code == 0) is_favorite.value = !is_favorite.value;
+//   } catch (e) {
+//     emit("notify", "서버 오류 발생");
+//   }
+// }
 
 onUnmounted(() => {
   controller.abort();
@@ -174,6 +205,8 @@ onUnmounted(() => {
 <template>
   <div id="AiSearch" class="content">
     <div class="content_inner">
+      <!-- <div>{{ cosmetic_response }}</div> -->
+      <!-- <div>{{ question_response }}</div> -->
       <ClientOnly>
         <template v-if="!searchMode">
           <div class="content_center">
@@ -196,7 +229,7 @@ onUnmounted(() => {
               />
             </div>
             <div class="flex justify-center mt-6">
-              <v-chip-group
+              <!-- <v-chip-group
                 v-model="filter.tag"
                 selected-class="text-primary"
                 mandatory
@@ -209,7 +242,7 @@ onUnmounted(() => {
                   :value="tag"
                   style="font-size: 15px; font-weight: 500; padding: 20px 22px"
                 />
-              </v-chip-group>
+              </v-chip-group> -->
             </div>
           </div>
         </template>
@@ -244,11 +277,11 @@ onUnmounted(() => {
                   </div>
 
                   <div
-                    v-if="llm_question.length > 0 && !streaming"
+                    v-if="!isEmpty(question_response) && !streaming"
                     class="question_cont"
                   >
                     <div
-                      v-for="(question, index) in llm_question"
+                      v-for="(question, index) in question_response"
                       :key="index"
                       class="question_item"
                       @click="searchFnc(question)"
@@ -267,38 +300,61 @@ onUnmounted(() => {
                     </div>
                   </div>
                 </template>
-                <div class="cosmetic_cont"></div>
+                <div
+                  v-if="!streaming && cosmetic_response.length > 0"
+                  class="cosmetic_cont mt-4"
+                >
+                  <h4 class="body--l mb-2">참조 화장품</h4>
+                  <div class="board_cards product_card grid-cols-4">
+                    <ListItemProductDensed
+                      v-for="item in cosmetic_response"
+                      :key="item?.cosmetic_id"
+                      :item="item"
+                      :scope="item.scope"
+                      :is_favorite="false"
+                      @showDetail="openRnb"
+                    />
+                  </div>
+                </div>
               </div>
 
               <!-- 오른쪽 -->
               <div class="search_result_right">
                 <p class="mt-5 fw-600">
-                  <button
-                    class="btn--text"
-                    :disabled="waiting || streaming"
-                    :class="{ active: sideTab == 1 }"
-                    @click="changeTab(1)"
-                  >
-                    검색 문서
-                  </button>
-                  <button
-                    class="btn--text"
-                    :disabled="waiting || streaming"
-                    :class="{ active: sideTab == 2 }"
-                    @click="changeTab(2)"
-                  >
-                    출처 자료
-                  </button>
+                  <template v-if="resultTab != 0">
+                    <button
+                      class="btn--text"
+                      :disabled="
+                        waiting || streaming || post_response?.length === 0
+                      "
+                      :class="{ active: resultTab == 1 }"
+                      @click="changeTab(1)"
+                    >
+                      참조 문서
+                    </button>
+                    <button
+                      class="btn--text"
+                      :disabled="
+                        waiting ||
+                        streaming ||
+                        ingredient_response?.length === 0
+                      "
+                      :class="{ active: resultTab == 2 }"
+                      @click="changeTab(2)"
+                    >
+                      용어 사전
+                    </button>
+                  </template>
                 </p>
 
                 <div class="tab_content">
-                  <!-- Tab 1  -->
-                  <template v-if="sideTab === 1">
+                  <!-- Tab 1:: 참조문서 item  -->
+                  <template v-if="resultTab === 1">
                     <template v-if="!isResultReady">
                       <v-skeleton-loader
                         class="mx-auto border"
                         max-width="340"
-                        type="chip, actions,article, chip, chip,"
+                        type="chip, actions, article, chip, chip,"
                       />
                       <v-skeleton-loader
                         class="mx-auto border"
@@ -307,14 +363,15 @@ onUnmounted(() => {
                       />
                     </template>
                     <template v-else>
-                      <ListItemReference
-                        v-for="(item, index) in paginatedDocs"
-                        :key="index"
+                      <ListItemPosts
+                        v-for="item in paginatedPosts"
+                        :key="item.post_id"
                         :item="item"
+                        @notify="notify"
                       />
                       <Paging
-                        :paging="tabPaging"
-                        :total_row="llm_docs.length"
+                        :paging="paging"
+                        :total_row="post_response.length"
                         :first-page="false"
                         :last-page="false"
                         @changePage="changePage"
@@ -322,11 +379,21 @@ onUnmounted(() => {
                     </template>
                   </template>
 
-                  <!-- Tab2  -->
-                  <template v-else-if="sideTab === 2">출처 리스트</template>
+                  <!-- Tab 2:: 용어사전 -->
+                  <template v-else-if="resultTab === 2">
+                    <ListItemIngredient
+                      v-for="item in ingredient_response"
+                      :key="item.ingred_id"
+                      :item="item"
+                      @notify="notify"
+                      @search="searchFnc"
+                    />
+                  </template>
                 </div>
               </div>
             </div>
+
+            <div></div>
 
             <!-- input gradient bg-->
             <div class="block_bg_box" />
@@ -348,9 +415,17 @@ onUnmounted(() => {
               />
             </div>
           </div>
+          <v-snackbar v-model="snackbar.active" :timeout="2000" color="primary">
+            {{ snackbar.message }}
+          </v-snackbar>
         </template>
       </ClientOnly>
     </div>
+    <RnbProduct
+      :is_active="dialog"
+      :item="targetItem"
+      @update:is_active="dialog = $event"
+    />
   </div>
 </template>
 
@@ -469,9 +544,9 @@ onUnmounted(() => {
 
 button.btn--text {
   font-size: 1rem;
-  margin-right: 1.625rem;
+  margin-right: 1.45rem;
   transition: all 0.2s ease;
-  word-spacing: -1px;
+  word-spacing: -3px;
   color: var(--color-gray-03);
   font-weight: 500;
 }

@@ -15,7 +15,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv()
 
-# from pprint import pprint
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 LLM_MODEL = "Qwen2.5-72B-Instruct"
@@ -72,7 +71,8 @@ def retrieve_ingredient(query: str, k: int = 5):
 @tool
 def retrieve_cosmetic(query: str, k: int = 3):
     """
-    화장품 제품 정보를 검색하는 도구. 특정 기능, 브랜드, 피부 타입에 따라 적절한 화장품을 추천합니다. 
+    화장품 제품 정보를 검색하는 도구. 특정 기능, 브랜드, 피부 타입에 따라 적절한 화장품을 소개합니다.
+    자사 브랜드 화장품인지 타사 브랜드의 화장품인지 구분하여 요구한 것이 아니라면 아모레퍼시픽의 자사브랜드 제품을 우선적으로 소개합니다.
     예: '미백 효과가 있는 화장품 추천해줘', '여드름 피부에 좋은 제품 3개 알려줘', '자사 브랜드 제품 소개해줘'
     """
     try:
@@ -100,8 +100,8 @@ def retrieve_brand(query: str, k: int = 5):
 @tool
 def retrieve_posts(query: str, k: int = 5):
     """
-    최근 화장품 관련 뉴스, 트렌드, 연구 논문을 검색하는 도구. 뷰티 업계 최신 소식을 제공합니다. 
-    예: '최근 트렌드인 화장품 성분이 뭐야?', '화장품 관련 연구 논문 2개 찾아줘', '친환경 화장품 트렌드 기사 알려줘'
+    최근 화장품 관련 뉴스, 회사 문서, 회사 소식, 트렌드, 연구 논문을 검색하는 도구. 뷰티 업계 최신 소식을 제공합니다. 
+    예: '최근 트렌드인 화장품 성분이 뭐야?', '회사 경영실적에 대해 알려줘', '최근 회사 소식에 대해 알려줘', '화장품 관련 연구 논문 2개 찾아줘', '친환경 화장품 트렌드 기사 알려줘'
     """
     try:
         query_embedding = embedding_function.embed_query(query)
@@ -113,7 +113,7 @@ def retrieve_posts(query: str, k: int = 5):
 
 tool_list = [retrieve_ingredient, retrieve_cosmetic, retrieve_brand, retrieve_posts] 
 
-async def get_retrieved_documnets(query: str):
+async def get_retrieved_documents(query: str):
     """LLM과 도구 호출을 비동기적으로 처리하는 함수"""
     messages = [ 
         SystemMessage(content="Analyze the user's query and call **all relevant tools** simultaneously. "
@@ -202,8 +202,9 @@ def create_prompt(context, question):
     - prompt (str): LLM을 호출할 최적의 프롬프트
     """
     
-    prompt_template = rf"""당신은 아모레퍼시픽 회사의 직원들을 도와주는 전문 비서로서 이름은 AmoreSearch 입니다. 아래 제공된 정보를 참고하여 질문에 답변해 주세요.
-    
+    prompt_template = rf"""당신은 아모레퍼시픽 회사의 직원들을 도와주는 전문 비서로서 이름은 AmoreSearch 입니다. 아래 제공된 정보를 참조하여 질문에 답변해 주세요.
+
+    답변시 **절대 중국어로 답변하지 마세요. Do not answer in Chinese or Japanese**
 
     
     --- [ context ] ---
@@ -310,7 +311,6 @@ async def fetch_mariadb_data(retrieved_collections_docs):
         "cosmetic": cosmetic_results,
         "post": post_results
     }
-    
         
 async def generate_llm_response(query, retrieved_collections_docs):
     """
@@ -343,21 +343,34 @@ async def generate_llm_response(query, retrieved_collections_docs):
         print(f"❌ LLM 응답 오류: {e}")
         yield json.dumps({"error": "LLM 응답 생성 중 오류 발생"}, ensure_ascii=False) + "\n"
 
-
+def relateive_posts(query: str, k: int = 5):
+    """
+    최근 화장품 관련 뉴스, 트렌드, 연구 논문을 검색하는 도구. 뷰티 업계 최신 소식을 제공합니다. 
+    예: '최근 트렌드인 화장품 성분이 뭐야?', '화장품 관련 연구 논문 2개 찾아줘', '친환경 화장품 트렌드 기사 알려줘'
+    """
+    try:
+        query_embedding = embedding_function.embed_query(query) 
+        
+        results = post_store.query(query_embeddings=query_embedding, n_results=k) 
+        print('⭕ post 조회완료')
+        
+        return results if results['documents'] else "관련 정보를 찾을 수 없습니다."
+    except Exception as e:
+        return f"Error retrieving posts: {str(e)}"
+    
 class IntegrationSearch:
     @staticmethod
     async def search(query: str) -> AsyncGenerator[str, None]:
         """AI 검색 기능을 실행하고 JSON 데이터를 스트리밍 형식으로 반환하는 비동기 제너레이터"""
         try:
-            retrieved_collections_docs = await get_retrieved_documnets(query)
-
-            async for llm_output in generate_llm_response(query, retrieved_collections_docs):
-                yield json.dumps({"type": "message", "data": llm_output.content}, ensure_ascii=False) + "\n"
-                await asyncio.sleep(0.05)
+            retrieved_collections_docs = await get_retrieved_documents(query)
 
             metadata_response = await fetch_mariadb_data(retrieved_collections_docs)
             yield json.dumps({"type": "metadata", "data": metadata_response}, ensure_ascii=False, default=convert_datetime) + "\n"
             
+            async for llm_output in generate_llm_response(query, retrieved_collections_docs):
+                yield json.dumps({"type": "message", "data": llm_output.content}, ensure_ascii=False) + "\n"
+                await asyncio.sleep(0.05)
 
         except Exception as e:
             print(f"전체 시스템 오류 발생: {e}")
@@ -378,11 +391,4 @@ class AISearch:
             await asyncio.sleep(0.1)
         
         return 
-    
-class RagSearch:
-    @staticmethod
-    async def search(question: str):
-        llm = ChatOpenAI(model=LLM_MODEL, openai_api_key=OPENAI_API_KEY)
-        
-        return llm.invoke()
     

@@ -675,7 +675,6 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
 .llm_cont article ol > li {
   list-style-type: disc;
   margin-left: 20px;
-  font-weight: 600;
   margin: 10px 0 5px 20px;
 }
 .tab_content {
@@ -722,13 +721,8 @@ nav#lnb .lnb_bottom .v-btn--icon.v-btn--density-default {
   > div.v-skeleton-loader.v-theme--light.mx-auto.border
   > div.v-skeleton-loader__bone.v-skeleton-loader__actions
   > div:nth-child(1) {
-  margin-bottom: 0;
-  margin: 0 10px;
-  height: 34px;
-  max-width: 34px;
-  border-radius: 30px;
+  display: none;
 }
-
 #AiSearch
   > div
   > div

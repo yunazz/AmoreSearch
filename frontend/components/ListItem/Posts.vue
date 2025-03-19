@@ -13,34 +13,18 @@ function openLink(url) {
   window.open(url);
 }
 
-async function toggleFavorites(item) {
-  const body = {
-    favorite_type: item.post_type,
-    target_id: item.post_id,
-    scope: item.scope,
-  };
-
-  let method = "";
-  if (is_favorite.value) method = "DELETE";
-  if (!is_favorite.value) method = "POST";
-
+const copyToClipboard = async (text) => {
   try {
-    const { code, msg } = await $http("/member/favorites", {
-      method,
-      body,
-    });
+    await navigator.clipboard.writeText(text);
+    emit("notify", "링크가 복사되었습니다.");
 
-    emit("notify", msg);
-    emit("success");
-    if (code == 0) is_favorite.value = !is_favorite.value;
-  } catch (e) {
-    emit("notify", "서버 오류 발생");
+    setTimeout(() => {
+      copied.value = false;
+    }, 2000);
+  } catch (err) {
+    console.log(err);
   }
-}
-
-function shareLink(item) {
-  console.log(item);
-}
+};
 </script>
 <template>
   <div class="search_card">
@@ -64,14 +48,9 @@ function shareLink(item) {
               icon="mdi-share-variant-outline"
               variant="text"
               color="primary"
-              @click="shareLink(item)"
-            />
-            <v-icon
-              class="icon--toggle ml-4"
-              :class="{ active: is_favorite }"
-              icon="mdi-star"
-              variant="text"
-              @click="toggleFavorites(item)"
+              @click="
+                copyToClipboard(item.original_file_url || item.source_url)
+              "
             />
           </div>
         </div>
