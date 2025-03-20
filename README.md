@@ -155,16 +155,19 @@ uvicorn main:app --reload
 
 <br/>
 
-### 🪛 AI
+### 🪛  sLLM 모델링 과정에서 했던 실험
 - **Embedding 모델 성능 평가** 
     - bge-m3
     - multilingual-e5-large (✅)
-    <br/> 
-     benchmark dataset 1000개 생성(conetext - question) 후 question을 통해 각 {question별 context} - {retrieve한 context} 간의 hitrate 비교.
 - **HyQE**
-- **HyQE 질문을 위한 LLM 모델 미세조정**
+- **HyQE 질문을 위한 sLLM 모델 미세조정**
 
-### 📢 Tool Calling
+### 📌 이번 프로젝트를 마치며 새롭게 알게된 부분
+- CI/CD
+- Vuetify3
+- Fast Api
+- Fine Tuning
+- Tool Calling 
 https://python.langchain.com/docs/concepts/tool_calling/
 
 <br/>
