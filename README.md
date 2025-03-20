@@ -12,8 +12,6 @@ AmoreSearch는 sLLM을 기반으로 아모레퍼시픽에서 사용할 수 있�
 
 <br/>
 
-<br/>
-
 ### 🛠️ 기술스텍
 - **프론트엔드**: `Nuxt.js` → NuxtImg, Vuetify ···
 - **백엔드**: `FastAPI` → Langchain, Chromadb, PyMySQL, Pydantic, PyJWT ···
@@ -157,26 +155,19 @@ uvicorn main:app --reload
 
 <br/>
 
-### 🪛 파인튜닝
+### 🪛 AI
 - **Embedding 모델 성능 평가** 
     - bge-m3
     - multilingual-e5-large (✅)
-    - 방법:
     <br/> 
      benchmark dataset 1000개 생성(conetext - question) 후 question을 통해 각 {question별 context} - {retrieve한 context} 간의 hitrate 비교.
 - **HyQE**
-    문서별 가상의 질문을 생성 후, {HyQE질문} - {retrieve(query)} 간 cosine similarity를 통해 답변간 우선순위 rerank.
-    
-- **HyQE 질문을 위한 LLM 모델 학습**
-
-
-<br/>
-
-### 📢 AI 모델
-- 
+- **HyQE 질문을 위한 LLM 모델 미세조정**
 
 ### 📢 Tool Calling
 https://python.langchain.com/docs/concepts/tool_calling/
+
+<br/>
 
 LangChain을 활용한 Tool Calling 으로 Agentic 하게 구현하고자 함
 - query에 따른 각 collection 선택 후 retrieve
