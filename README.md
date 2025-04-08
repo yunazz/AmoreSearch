@@ -12,6 +12,16 @@ AmoreSearch는 sLLM을 기반으로 아모레퍼시픽에서 사용할 수 있�
 
 <br/>
 
+### 👥 개발자
+| 역할 | 이름 | GitHub | 담당 업무 |
+|------|------|--------|----------|
+| 팀원 | 박서윤 | [Se0y00n](https://github.com/Se0y00n) | 백엔드(AI) |
+| 팀원 | 박유나 | [yunazz](https://github.com/yunazz) |CI/CD, 프론트엔드, 백엔드(AI, FastApi), 서버배포 |
+| 팀장 | 유경상 | [kyungsangYu](https://github.com/kyungsangYu) | 백엔드(AI, FastApi) |
+| 팀원 | 장예린 | [yerin7797](https://github.com/yerin7797) | 백엔드(AI) |
+
+<br/>
+
 ### 🛠️ 기술스텍
 - **프론트엔드**: `Nuxt.js` → NuxtImg, Vuetify ···
 - **백엔드**: `FastAPI` → Langchain, Chromadb, PyMySQL, Pydantic, PyJWT ···
